@@ -35,13 +35,24 @@ const TradeHistory: React.FC<Props> = ({ trades }) => {
                                 <tr key={trade.id} className="border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-white/5">
                                     <td className="py-3 font-mono text-xs">{new Date(trade.timestamp).toLocaleTimeString()}</td>
                                     <td className="py-3">
-                                        <span className={`text-[10px] font-black px-1.5 py-0.5 uppercase ${trade.type === 'BUY' ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100'}`}>
-                                            {trade.type}
-                                        </span>
+                                        <div className="flex flex-col gap-1">
+                                            <span className={`text-[10px] font-black px-1.5 py-0.5 uppercase w-fit ${trade.type === 'BUY' ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100'}`}>
+                                                {trade.type}
+                                            </span>
+                                            {trade.status === 'FAILED' && (
+                                                <span className="text-[10px] font-black px-1.5 py-0.5 uppercase bg-red-500 text-white w-fit">
+                                                    FAILED
+                                                </span>
+                                            )}
+                                        </div>
                                     </td>
                                     <td className="py-3 font-bold uppercase">{trade.symbol}</td>
-                                    <td className="py-3 text-right font-mono">${trade.price.toLocaleString()}</td>
-                                    <td className="py-3 text-right font-mono font-bold">${trade.totalUsd.toLocaleString()}</td>
+                                    <td className="py-3 text-right font-mono">
+                                        {trade.status === 'FAILED' ? '-' : `$${trade.price.toLocaleString()}`}
+                                    </td>
+                                    <td className="py-3 text-right font-mono font-bold">
+                                        {trade.status === 'FAILED' ? '$0' : `$${trade.totalUsd.toLocaleString()}`}
+                                    </td>
                                 </tr>
                             ))
                         )}

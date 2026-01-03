@@ -44,7 +44,7 @@ export interface TransactionData {
     amount?: number;
     toAddress?: string; // Recipient (required for SEND)
     network?: string;
-    summary?: string; 
+    summary?: string;
 }
 
 // New Interface for Portfolio Analysis
@@ -143,6 +143,7 @@ export interface TradeRecord {
     amount: number;
     totalUsd: number;
     type: TradeType;
+    status: 'SUCCESS' | 'FAILED'; // Added status
     timestamp: number;
 }
 
