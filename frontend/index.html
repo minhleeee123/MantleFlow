@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CryptoInsight AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              neo: {
+                bg: '#f3f4f6',
+                dark: '#0a0a0a', // Darker black for better contrast
+                card: '#1a1a1a', // Dark grey for cards
+                primary: '#8b5cf6', // Violet
+                secondary: '#a3e635', // Lime
+                accent: '#f472b6', // Pink
+                yellow: '#fcd34d',
+                white: '#ffffff',
+                black: '#000000',
+              }
+            },
+            fontFamily: {
+              sans: ['Space Grotesk', 'Inter', 'sans-serif'],
+              mono: ['Space Mono', 'Courier New', 'monospace'],
+            },
+            boxShadow: {
+              'neo': '4px 4px 0px 0px rgba(0,0,0,1)',
+              'neo-sm': '2px 2px 0px 0px rgba(0,0,0,1)',
+              'neo-lg': '6px 6px 0px 0px rgba(0,0,0,1)',
+              'neo-dark': '4px 4px 0px 0px rgba(255,255,255,1)', // White shadow for dark mode
+              'neo-lime': '4px 4px 0px 0px #a3e635', // Lime shadow for dark mode
+            },
+            borderWidth: {
+              '3': '3px',
+            },
+            animation: {
+              'progress-stripes': 'progress-stripes 1s linear infinite',
+              'blink': 'blink 1s step-end infinite',
+              'page-enter': 'page-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            },
+            keyframes: {
+              'progress-stripes': {
+                '0%': { backgroundPosition: '1rem 0' },
+                '100%': { backgroundPosition: '0 0' },
+              },
+              'blink': {
+                '0%, 100%': { opacity: '1' },
+                '50%': { opacity: '0' },
+              },
+              'page-enter': {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+      body {
+        background-color: #f0f2f5;
+        color: #000000;
+        font-family: 'Space Grotesk', sans-serif;
+      }
+      .dark body {
+        background-color: #050505; /* Pure black background */
+        color: #ffffff;
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+        border-left: 2px solid black;
+        background: #e5e5e5;
+      }
+      .dark ::-webkit-scrollbar {
+        border-left: 2px solid white;
+        background: #1a1a1a;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #a3e635; 
+        border: 2px solid black;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #8b5cf6; 
+        border: 2px solid white;
+      }
+      
+      /* Neobrutalist Base Classes */
+      .neo-card {
+        background-color: white;
+        border: 2px solid black;
+        box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+      }
+      .dark .neo-card {
+        background-color: #1a1a1a;
+        border: 2px solid white;
+        box-shadow: 4px 4px 0px 0px #a3e635; /* Lime shadow in dark mode */
+      }
+      
+      .neo-input {
+        border: 2px solid black;
+        box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+        border-radius: 0;
+      }
+      .dark .neo-input {
+        border: 2px solid white;
+        background-color: #000000;
+        color: white;
+        box-shadow: 2px 2px 0px 0px #a3e635;
+      }
+
+      .neo-btn {
+        border: 2px solid black;
+        box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+        transition: all 0.1s;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      .neo-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 0px 0px 0px 0px rgba(0,0,0,1);
+      }
+      .dark .neo-btn {
+        border: 2px solid white;
+        box-shadow: 2px 2px 0px 0px #a3e635;
+      }
+      .dark .neo-btn:active {
+        box-shadow: 0px 0px 0px 0px #a3e635;
+      }
+      
+      /* Striped Progress Bar Animation */
+      .bg-stripes {
+        background-image: linear-gradient(45deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 75%, transparent 75%, transparent);
+        background-size: 1rem 1rem;
+      }
+      .dark .bg-stripes {
+        background-image: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent);
+      }
+
+      /* Caro / Grid Pattern */
+      .bg-checkered {
+        background-color: #ffffff;
+        background-image:
+          linear-gradient(to right, #e5e5e5 1px, transparent 1px),
+          linear-gradient(to bottom, #e5e5e5 1px, transparent 1px);
+        background-size: 24px 24px;
+      }
+      .dark .bg-checkered {
+        background-color: #050505;
+        background-image:
+          linear-gradient(to right, #262626 1px, transparent 1px),
+          linear-gradient(to bottom, #262626 1px, transparent 1px);
+        background-size: 24px 24px;
+      }
+
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "recharts": "https://aistudiocdn.com/recharts@^3.4.1",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "ethers": "https://esm.sh/ethers@6.13.2",
+    "three": "https://aistudiocdn.com/three@^0.181.2"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
