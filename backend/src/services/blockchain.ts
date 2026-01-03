@@ -6,9 +6,9 @@ const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY!;
 
 const TOKEN_ADDRESSES: Record<string, string> = {
     'USDC': process.env.USDC_ADDRESS!,
-    'MNT': process.env.MNT_ADDRESS!,
+    'MNT': ethers.ZeroAddress,
     // For demo purposes, mapping ETH/BTC to these same test tokens
-    'ETH': process.env.MNT_ADDRESS!,
+    'ETH': ethers.ZeroAddress,
     'BTC': process.env.USDC_ADDRESS!
 };
 

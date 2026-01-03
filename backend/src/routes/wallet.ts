@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { ethers } from 'ethers';
 import { authMiddleware } from '../middleware/auth';
 import { AuthRequest } from '../types';
+import { PrismaClient } from '@prisma/client';
 
 const router = Router();
 router.use(authMiddleware);
@@ -61,6 +62,54 @@ router.get('/balance', async (req: AuthRequest, res) => {
     } catch (error: any) {
         console.error('Balance fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch balances' });
+    }
+});
+
+const prisma = new PrismaClient();
+// Force restart
+
+// GET /api/wallet/transactions
+// List user's transactions
+router.get('/transactions', async (req: AuthRequest, res) => {
+    try {
+        const userId = req.user!.userId;
+        const transactions = await prisma.transaction.findMany({
+            where: { userId },
+            orderBy: { createdAt: 'desc' }
+        });
+        res.json(transactions);
+    } catch (error) {
+        console.error('Fetch transactions error:', error);
+        res.status(500).json({ error: 'Failed to fetch transactions' });
+    }
+});
+
+// POST /api/wallet/transactions
+// Record a new transaction (from frontend)
+router.post('/transactions', async (req: AuthRequest, res) => {
+    try {
+        const userId = req.user!.userId;
+        const { type, token, amount, txHash } = req.body;
+
+        if (!['DEPOSIT', 'WITHDRAW'].includes(type) || !amount) {
+            return res.status(400).json({ error: 'Invalid transaction data' });
+        }
+
+        const transaction = await prisma.transaction.create({
+            data: {
+                userId,
+                type,
+                token,
+                amount: parseFloat(amount),
+                txHash,
+                status: 'SUCCESS'
+            }
+        });
+
+        res.json(transaction);
+    } catch (error) {
+        console.error('Create transaction error:', error);
+        res.status(500).json({ error: 'Failed to record transaction' });
     }
 });
 

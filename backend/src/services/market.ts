@@ -7,7 +7,8 @@ const SYMBOL_MAP: Record<string, string> = {
     'ETH': 'ethereum',
     'SOL': 'solana',
     'MATIC': 'matic-network',
-    'AVAX': 'avalanche-2'
+    'AVAX': 'avalanche-2',
+    'MNT': 'mantle'
 };
 
 // Simple in-memory cache

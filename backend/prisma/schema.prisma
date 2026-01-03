@@ -15,6 +15,7 @@ model User {
   walletAddress String    @unique
   createdAt     DateTime  @default(now())
   triggers      Trigger[]
+  transactions  Transaction[]
 }
 
 model Trigger {
@@ -55,4 +56,20 @@ model Execution {
   executedAt    DateTime @default(now())
   
   @@index([triggerId])
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  
+  type        String   // DEPOSIT, WITHDRAW
+  token       String   // USDC, MNT
+  amount      Float
+  txHash      String?
+  status      String   @default("SUCCESS")
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([userId])
 }

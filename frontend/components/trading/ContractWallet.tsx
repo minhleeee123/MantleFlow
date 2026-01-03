@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { Wallet, ArrowDownCircle, ArrowUpCircle, RefreshCw } from 'lucide-react';
+import { Wallet, ArrowDownCircle, ArrowUpCircle, RefreshCw, History, ExternalLink } from 'lucide-react';
+import { transactionsApi } from '../../services/backendApi';
 
 const CONTRACT_ADDRESS = '0xaD893d3b35FA8cc23A24a0fdF0B79cc22a1a5E44';
 
@@ -22,11 +23,22 @@ interface Props {
     userAddress: string;
 }
 
+interface Transaction {
+    id: string;
+    type: 'DEPOSIT' | 'WITHDRAW';
+    token: string;
+    amount: number;
+    txHash?: string;
+    createdAt: string;
+}
+
 export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
     const [usdcBalance, setUsdcBalance] = useState('0');
     const [mntBalance, setMntBalance] = useState('0');
     const [walletMnt, setWalletMnt] = useState('0');
     const [walletUsdc, setWalletUsdc] = useState('0');
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -36,7 +48,7 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
     const [mntDepositAmount, setMntDepositAmount] = useState('');
     const [mntWithdrawAmount, setMntWithdrawAmount] = useState('');
 
-    const fetchBalances = async () => {
+    const fetchData = async () => {
         if (!window.ethereum) return;
         setError('');
 
@@ -45,7 +57,7 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
             const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
             const usdcContract = new ethers.Contract(USDC_ADDRESS, ERC20_ABI, provider);
 
-            // 1. Contract Balances (Funds managed by Bot)
+            // 1. Contract Balances
             const botUsdc = await contract.getBalance(userAddress, USDC_ADDRESS);
             setUsdcBalance(ethers.formatUnits(botUsdc, 6));
 
@@ -62,17 +74,34 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
             const walletUsdcBal = await usdcContract.balanceOf(signerAddress);
             setWalletUsdc(ethers.formatUnits(walletUsdcBal, 6));
 
+            // 3. Transactions
+            try {
+                const history = await transactionsApi.list();
+                setTransactions(history);
+            } catch (err) {
+                console.warn('Failed to load history', err);
+            }
+
         } catch (error: any) {
-            console.error('Error fetching balances:', error);
-            setError('Failed to fetch balances. Ensure you are on Mantle Sepolia.');
+            console.error('Error fetching data:', error);
+            setError('Failed to fetch data. Ensure you are on Mantle Sepolia.');
         }
     };
 
     useEffect(() => {
-        fetchBalances();
-        const interval = setInterval(fetchBalances, 10000);
+        fetchData();
+        const interval = setInterval(fetchData, 10000);
         return () => clearInterval(interval);
     }, [userAddress]);
+
+    const recordTransaction = async (type: 'DEPOSIT' | 'WITHDRAW', token: string, amount: number, txHash: string) => {
+        try {
+            await transactionsApi.create({ type, token, amount, txHash });
+            fetchData(); // Refresh list
+        } catch (error) {
+            console.error('Failed to record transaction', error);
+        }
+    };
 
     const depositUSDC = async () => {
         if (!window.ethereum || !usdcDepositAmount) return;
@@ -107,9 +136,9 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
             const depositTx = await contract.deposit(USDC_ADDRESS, amountWei);
             await depositTx.wait();
 
+            await recordTransaction('DEPOSIT', 'USDC', amount, depositTx.hash);
             alert(`Deposited ${amount} USDC successfully!`);
             setUsdcDepositAmount('');
-            fetchBalances();
         } catch (error: any) {
             console.error('Deposit error:', error);
             setError(error.reason || error.message);
@@ -146,9 +175,9 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
             });
             await tx.wait();
 
+            await recordTransaction('DEPOSIT', 'MNT', amount, tx.hash);
             alert(`Deposited ${amount} MNT successfully!`);
             setMntDepositAmount('');
-            fetchBalances();
         } catch (error: any) {
             console.error('Deposit error:', error);
             setError(error.reason || error.message);
@@ -183,9 +212,9 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
             const tx = await contract.withdraw(ethers.ZeroAddress, amountWei);
             await tx.wait();
 
+            await recordTransaction('WITHDRAW', 'MNT', amount, tx.hash);
             alert(`Withdrew ${amount} MNT successfully!`);
             setMntWithdrawAmount('');
-            fetchBalances();
         } catch (error: any) {
             console.error('Withdraw error:', error);
             setError(error.reason || error.message);
@@ -219,9 +248,9 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
             const tx = await contract.withdraw(USDC_ADDRESS, amountWei);
             await tx.wait();
 
+            await recordTransaction('WITHDRAW', 'USDC', amount, tx.hash);
             alert(`Withdrew ${amount} USDC successfully!`);
             setUsdcWithdrawAmount('');
-            fetchBalances();
         } catch (error: any) {
             console.error('Withdraw error:', error);
             setError(error.reason || error.message);
@@ -231,15 +260,15 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
     };
 
     return (
-        <div className="bg-neo-secondary border-2 border-black shadow-neo p-6 mb-6">
+        <div className="bg-neo-secondary dark:bg-gray-800 border-2 border-black dark:border-white shadow-neo dark:shadow-none p-6 mb-6 transition-colors">
             <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-black dark:text-white">
                     <Wallet className="w-6 h-6" />
                     <h3 className="font-black text-xl uppercase">Smart Contract Wallet (Testnet)</h3>
                 </div>
                 <button
-                    onClick={fetchBalances}
-                    className="p-2 hover:bg-black/5 rounded-full transition-colors"
+                    onClick={fetchData}
+                    className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors text-black dark:text-white"
                     title="Refresh Balances"
                 >
                     <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
@@ -247,19 +276,19 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
             </div>
 
             {error && (
-                <div className="bg-red-100 border-2 border-red-500 text-red-700 p-3 mb-4 font-bold text-sm">
+                <div className="bg-red-100 dark:bg-red-900/30 border-2 border-red-500 text-red-700 dark:text-red-300 p-3 mb-4 font-bold text-sm">
                     ⚠️ {error}
                 </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* USDC Section */}
-                <div className="bg-white border-2 border-black p-4 relative group">
-                    <div className="absolute top-2 right-2 text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded border border-gray-300">
+                <div className="bg-white dark:bg-gray-900 border-2 border-black dark:border-gray-500 p-4 relative group">
+                    <div className="absolute top-2 right-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded border border-gray-300 dark:border-gray-600">
                         Wallet: {parseFloat(walletUsdc).toFixed(2)} USDC
                     </div>
-                    <div className="text-sm font-bold mb-2 text-indigo-600">USDC (Stablecoin)</div>
-                    <div className="text-3xl font-black mb-4">{parseFloat(usdcBalance).toFixed(2)}</div>
+                    <div className="text-sm font-bold mb-2 text-indigo-600 dark:text-indigo-400">USDC (Stablecoin)</div>
+                    <div className="text-3xl font-black mb-4 text-black dark:text-white">{parseFloat(usdcBalance).toFixed(2)}</div>
 
                     <div className="space-y-2">
                         {/* Deposit Input */}
@@ -269,12 +298,12 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                                 value={usdcDepositAmount}
                                 onChange={(e) => setUsdcDepositAmount(e.target.value)}
                                 placeholder="Amount"
-                                className="w-24 px-2 py-1 border-2 border-black font-mono text-sm"
+                                className="w-24 px-2 py-1 border-2 border-black dark:border-gray-500 bg-white dark:bg-gray-800 text-black dark:text-white font-mono text-sm placeholder-gray-400"
                             />
                             <button
                                 onClick={depositUSDC}
                                 disabled={loading || !usdcDepositAmount}
-                                className="flex-1 bg-green-500 text-white px-3 py-2 font-bold border-2 border-black hover:bg-green-600 disabled:opacity-50 text-sm flex items-center justify-center gap-1"
+                                className="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-2 font-bold border-2 border-black dark:border-gray-500 disabled:opacity-50 text-sm flex items-center justify-center gap-1"
                             >
                                 <ArrowDownCircle className="w-4 h-4" />
                                 Deposit
@@ -288,12 +317,12 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                                 value={usdcWithdrawAmount}
                                 onChange={(e) => setUsdcWithdrawAmount(e.target.value)}
                                 placeholder="Amount"
-                                className="w-24 px-2 py-1 border-2 border-black font-mono text-sm"
+                                className="w-24 px-2 py-1 border-2 border-black dark:border-gray-500 bg-white dark:bg-gray-800 text-black dark:text-white font-mono text-sm placeholder-gray-400"
                             />
                             <button
                                 onClick={withdrawUSDC}
                                 disabled={loading || !usdcWithdrawAmount}
-                                className="flex-1 bg-red-500 text-white px-3 py-2 font-bold border-2 border-black hover:bg-red-600 disabled:opacity-50 text-sm flex items-center justify-center gap-1"
+                                className="flex-1 bg-red-500 hover:bg-red-600 text-white px-3 py-2 font-bold border-2 border-black dark:border-gray-500 disabled:opacity-50 text-sm flex items-center justify-center gap-1"
                             >
                                 <ArrowUpCircle className="w-4 h-4" />
                                 Withdraw
@@ -303,12 +332,12 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                 </div>
 
                 {/* MNT Section */}
-                <div className="bg-white border-2 border-black p-4 relative group">
-                    <div className="absolute top-2 right-2 text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded border border-gray-300">
+                <div className="bg-white dark:bg-gray-900 border-2 border-black dark:border-gray-500 p-4 relative group">
+                    <div className="absolute top-2 right-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded border border-gray-300 dark:border-gray-600">
                         Wallet: {parseFloat(walletMnt).toFixed(3)} MNT
                     </div>
-                    <div className="text-sm font-bold mb-2 text-indigo-600">MNT (Native)</div>
-                    <div className="text-3xl font-black mb-4">{parseFloat(mntBalance).toFixed(4)}</div>
+                    <div className="text-sm font-bold mb-2 text-indigo-600 dark:text-indigo-400">MNT (Native)</div>
+                    <div className="text-3xl font-black mb-4 text-black dark:text-white">{parseFloat(mntBalance).toFixed(4)}</div>
 
                     <div className="space-y-2 mt-4">
                         {/* Deposit MNT */}
@@ -318,12 +347,12 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                                 value={mntDepositAmount}
                                 onChange={(e) => setMntDepositAmount(e.target.value)}
                                 placeholder="Amount"
-                                className="w-24 px-2 py-1 border-2 border-black font-mono text-sm"
+                                className="w-24 px-2 py-1 border-2 border-black dark:border-gray-500 bg-white dark:bg-gray-800 text-black dark:text-white font-mono text-sm placeholder-gray-400"
                             />
                             <button
                                 onClick={depositMNT}
                                 disabled={loading || !mntDepositAmount}
-                                className="flex-1 bg-green-500 text-white px-3 py-2 font-bold border-2 border-black hover:bg-green-600 disabled:opacity-50 text-sm flex items-center justify-center gap-1"
+                                className="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-2 font-bold border-2 border-black dark:border-gray-500 disabled:opacity-50 text-sm flex items-center justify-center gap-1"
                             >
                                 <ArrowDownCircle className="w-4 h-4" />
                                 Deposit
@@ -337,12 +366,12 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                                 value={mntWithdrawAmount}
                                 onChange={(e) => setMntWithdrawAmount(e.target.value)}
                                 placeholder="Amount"
-                                className="w-24 px-2 py-1 border-2 border-black font-mono text-sm"
+                                className="w-24 px-2 py-1 border-2 border-black dark:border-gray-500 bg-white dark:bg-gray-800 text-black dark:text-white font-mono text-sm placeholder-gray-400"
                             />
                             <button
                                 onClick={withdrawMNT}
                                 disabled={loading || !mntWithdrawAmount}
-                                className="flex-1 bg-red-500 text-white px-3 py-2 font-bold border-2 border-black hover:bg-red-600 disabled:opacity-50 text-sm flex items-center justify-center gap-1"
+                                className="flex-1 bg-red-500 hover:bg-red-600 text-white px-3 py-2 font-bold border-2 border-black dark:border-gray-500 disabled:opacity-50 text-sm flex items-center justify-center gap-1"
                             >
                                 <ArrowUpCircle className="w-4 h-4" />
                                 Withdraw
@@ -352,7 +381,59 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                 </div>
             </div>
 
-            <div className="mt-4 text-xs font-mono text-gray-500 text-center break-all">
+            {/* Transaction History Section */}
+            <div className="mt-6 border-t-2 border-black dark:border-white pt-4">
+                <div className="flex items-center gap-2 mb-3 text-black dark:text-white">
+                    <History className="w-5 h-5" />
+                    <h4 className="font-bold uppercase">Recent Transactions</h4>
+                </div>
+
+                <div className="bg-white dark:bg-gray-900 border-2 border-black dark:border-gray-500 max-h-60 overflow-y-auto">
+                    {transactions.length === 0 ? (
+                        <div className="p-4 text-center text-gray-500 font-mono text-sm">No transactions yet.</div>
+                    ) : (
+                        <table className="w-full text-sm text-left">
+                            <thead className="bg-gray-100 dark:bg-gray-800 text-xs uppercase font-bold text-gray-700 dark:text-gray-300 sticky top-0">
+                                <tr>
+                                    <th className="px-4 py-2 border-b">Time</th>
+                                    <th className="px-4 py-2 border-b">Type</th>
+                                    <th className="px-4 py-2 border-b">Amount</th>
+                                    <th className="px-4 py-2 border-b">Tx</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {transactions.map((tx) => (
+                                    <tr key={tx.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 font-mono">
+                                        <td className="px-4 py-2 text-gray-600 dark:text-gray-400">
+                                            {new Date(tx.createdAt).toLocaleTimeString()}
+                                        </td>
+                                        <td className={`px-4 py-2 font-bold ${tx.type === 'DEPOSIT' ? 'text-green-600' : 'text-red-500'}`}>
+                                            {tx.type}
+                                        </td>
+                                        <td className="px-4 py-2 text-black dark:text-white">
+                                            {tx.amount} {tx.token}
+                                        </td>
+                                        <td className="px-4 py-2">
+                                            {tx.txHash && (
+                                                <a
+                                                    href={`https://sepolia.mantlescan.xyz/tx/${tx.txHash}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-500 hover:underline flex items-center gap-1"
+                                                >
+                                                    View <ExternalLink className="w-3 h-3" />
+                                                </a>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+            </div>
+
+            <div className="mt-4 text-xs font-mono text-gray-500 dark:text-gray-400 text-center break-all">
                 Contract: {CONTRACT_ADDRESS}
             </div>
         </div>

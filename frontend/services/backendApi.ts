@@ -75,3 +75,16 @@ export const marketApi = {
         return response.data.prices;
     },
 };
+
+// Transactions API
+export const transactionsApi = {
+    create: async (data: { type: 'DEPOSIT' | 'WITHDRAW', token: string, amount: number, txHash?: string }) => {
+        const response = await api.post('/wallet/transactions', data);
+        return response.data;
+    },
+
+    list: async () => {
+        const response = await api.get('/wallet/transactions');
+        return response.data;
+    }
+};
