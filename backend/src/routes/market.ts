@@ -45,4 +45,34 @@ router.get('/prices', async (req, res) => {
     }
 });
 
+import { getMetric } from '../services/metrics';
+
+// ... existing code ...
+
+// Get advanced metrics
+router.get('/metrics', async (req, res) => {
+    try {
+        const symbol = (req.query.symbol as string) || 'MNT';
+        const metricsStr = (req.query.metrics as string) || 'PRICE';
+        const metrics = metricsStr.split(',').map(m => m.trim().toUpperCase());
+
+        const results: Record<string, number | null> = {};
+
+        await Promise.all(metrics.map(async (metric) => {
+            try {
+                const val = await getMetric(metric, symbol);
+                results[metric] = val;
+            } catch (error) {
+                console.error(`Failed to fetch ${metric}:`, error);
+                results[metric] = null;
+            }
+        }));
+
+        res.json(results);
+    } catch (error) {
+        console.error('Metrics API Error:', error);
+        res.status(500).json({ error: 'Failed to fetch metrics' });
+    }
+});
+
 export default router;

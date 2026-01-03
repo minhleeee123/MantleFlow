@@ -74,6 +74,11 @@ export const marketApi = {
         const response = await api.get(`/market/prices?symbols=${symbols.join(',')}`);
         return response.data.prices;
     },
+
+    getMetrics: async (symbol: string, metrics: string[]) => {
+        const response = await api.get(`/market/metrics?symbol=${symbol}&metrics=${metrics.join(',')}`);
+        return response.data;
+    },
 };
 
 // Transactions API
