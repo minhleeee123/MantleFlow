@@ -202,6 +202,20 @@ export async function startAutoExecutor() {
                             data: { status: 'EXECUTED' }
                         });
 
+                        // Sync to Wallet Transaction History
+                        await prisma.transaction.create({
+                            data: {
+                                userId: trigger.userId,
+                                type: trigger.type, // BUY or SELL
+                                token: trigger.symbol,
+                                amount: trigger.amount, // Note: For BUY uses Quote? No, trigger.amount is usually Base or Quote based on logic. 
+                                // In blockchain.ts: If BUY -> amount is Quote (USDC). If SELL -> amount is Base (MNT).
+                                // But here we just log what was in trigger.
+                                txHash,
+                                status: 'SUCCESS'
+                            }
+                        });
+
                         console.log(`✅ Successfully executed trigger ${trigger.id} | TX: ${txHash}`);
 
                         // TODO: Send email notification

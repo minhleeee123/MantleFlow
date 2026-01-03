@@ -1,5 +1,5 @@
 import React from 'react';
-import { History, CheckCircle } from 'lucide-react';
+import { History, ExternalLink } from 'lucide-react';
 import { TradeRecord } from '../../types';
 
 interface Props {
@@ -23,38 +23,49 @@ const TradeHistory: React.FC<Props> = ({ trades }) => {
                             <th className="pb-2">Pair</th>
                             <th className="pb-2 text-right">Price</th>
                             <th className="pb-2 text-right">Total (USDT)</th>
+                            <th className="pb-2 text-center">Tx</th>
                         </tr>
                     </thead>
                     <tbody className="text-sm">
                         {trades.length === 0 ? (
                             <tr>
-                                <td colSpan={5} className="py-4 text-center text-gray-400 font-bold uppercase text-xs">No trades executed yet.</td>
+                                <td colSpan={6} className="py-4 text-center text-gray-400 font-bold uppercase text-xs">No trades executed yet.</td>
                             </tr>
                         ) : (
-                            trades.map(trade => (
-                                <tr key={trade.id} className="border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-white/5">
-                                    <td className="py-3 font-mono text-xs">{new Date(trade.timestamp).toLocaleTimeString()}</td>
-                                    <td className="py-3">
-                                        <div className="flex flex-col gap-1">
-                                            <span className={`text-[10px] font-black px-1.5 py-0.5 uppercase w-fit ${trade.type === 'BUY' ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100'}`}>
-                                                {trade.type}
-                                            </span>
-                                            {trade.status === 'FAILED' && (
-                                                <span className="text-[10px] font-black px-1.5 py-0.5 uppercase bg-red-500 text-white w-fit">
-                                                    FAILED
+                            trades
+                                .filter(trade => trade.totalUsd > 0 && trade.price > 0)
+                                .map(trade => (
+                                    <tr key={trade.id} className="border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-white/5">
+                                        <td className="py-3 font-mono text-xs">{new Date(trade.timestamp).toLocaleTimeString()}</td>
+                                        <td className="py-3">
+                                            <div className="flex flex-col gap-1">
+                                                <span className={`text-[10px] font-black px-1.5 py-0.5 uppercase w-fit ${trade.type === 'BUY' ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100'}`}>
+                                                    {trade.type}
                                                 </span>
+                                            </div>
+                                        </td>
+                                        <td className="py-3 font-bold uppercase">{trade.symbol}</td>
+                                        <td className="py-3 text-right font-mono">
+                                            {`$${trade.price.toLocaleString()}`}
+                                        </td>
+                                        <td className="py-3 text-right font-mono font-bold">
+                                            {`$${trade.totalUsd.toLocaleString()}`}
+                                        </td>
+                                        <td className="py-3 text-center">
+                                            {trade.txHash && (
+                                                <a
+                                                    href={`https://sepolia.mantlescan.xyz/tx/${trade.txHash}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-bold text-xs"
+                                                    title="View on MantleScan"
+                                                >
+                                                    View <ExternalLink className="w-3 h-3" />
+                                                </a>
                                             )}
-                                        </div>
-                                    </td>
-                                    <td className="py-3 font-bold uppercase">{trade.symbol}</td>
-                                    <td className="py-3 text-right font-mono">
-                                        {trade.status === 'FAILED' ? '-' : `$${trade.price.toLocaleString()}`}
-                                    </td>
-                                    <td className="py-3 text-right font-mono font-bold">
-                                        {trade.status === 'FAILED' ? '$0' : `$${trade.totalUsd.toLocaleString()}`}
-                                    </td>
-                                </tr>
-                            ))
+                                        </td>
+                                    </tr>
+                                ))
                         )}
                     </tbody>
                 </table>

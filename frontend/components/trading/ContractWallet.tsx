@@ -407,7 +407,7 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                                         <td className="px-4 py-2 text-gray-600 dark:text-gray-400">
                                             {new Date(tx.createdAt).toLocaleTimeString()}
                                         </td>
-                                        <td className={`px-4 py-2 font-bold ${tx.type === 'DEPOSIT' ? 'text-green-600' : 'text-red-500'}`}>
+                                        <td className={`px-4 py-2 font-bold ${['DEPOSIT', 'BUY'].includes(tx.type) ? 'text-green-600' : 'text-red-500'}`}>
                                             {tx.type}
                                         </td>
                                         <td className="px-4 py-2 text-black dark:text-white">

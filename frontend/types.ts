@@ -144,6 +144,7 @@ export interface TradeRecord {
     totalUsd: number;
     type: TradeType;
     status: 'SUCCESS' | 'FAILED'; // Added status
+    txHash?: string;
     timestamp: number;
 }
 

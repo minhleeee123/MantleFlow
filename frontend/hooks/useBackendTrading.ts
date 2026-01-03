@@ -58,6 +58,8 @@ export const useBackendTrading = (walletAddress: string | null) => {
                 amount: e.amount,
                 totalUsd: e.amount * e.price,
                 type: e.type,
+                status: e.status, // Add status
+                txHash: e.txHash, // Add txHash
                 timestamp: new Date(e.executedAt).getTime(),
             }));
             setTrades(formattedTrades);
