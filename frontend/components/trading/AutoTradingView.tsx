@@ -15,7 +15,7 @@ interface Props {
     marketPrices?: Record<string, number>; // Optional prop for price feed
     notificationEmail: string;
     onUpdateBalance: (amount: number, type: 'DEPOSIT' | 'WITHDRAW') => void;
-    onAddTrigger: (trigger: Omit<TradeTrigger, 'id' | 'createdAt' | 'status'>) => void;
+    onAddTrigger: (trigger: Omit<TradeTrigger, 'id' | 'createdAt' | 'status'>) => Promise<void> | void;
     onCancelTrigger: (id: string) => void;
     executeTrigger?: (id: string, price: number) => void; // Added prop type
     onUpdateEmail: (email: string) => void;
@@ -37,11 +37,19 @@ const AutoTradingView: React.FC<Props> = ({
 }) => {
     const [emailInput, setEmailInput] = useState(notificationEmail);
     const [isSaved, setIsSaved] = useState(false);
+    const liveBotRef = React.useRef<HTMLDivElement>(null); // Ref for scrolling
 
     const handleSaveEmail = () => {
         onUpdateEmail(emailInput);
         setIsSaved(true);
         setTimeout(() => setIsSaved(false), 2000);
+    };
+
+    const handleSmartTriggerSuccess = () => {
+        // Scroll to Live Bot section after short delay to allow render
+        setTimeout(() => {
+            liveBotRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 500);
     };
 
     return (
@@ -62,7 +70,10 @@ const AutoTradingView: React.FC<Props> = ({
                     {/* Left Column: Triggers */}
                     <div className="flex flex-col gap-6">
                         {/* New Smart AI Trigger */}
-                        <SmartTriggerSection onAddTrigger={onAddTrigger} />
+                        <SmartTriggerSection
+                            onAddTrigger={onAddTrigger}
+                            onSuccess={handleSmartTriggerSuccess} // Pass callback
+                        />
 
                         {/* Legacy Manual Trigger */}
                         <TriggerForm onAddTrigger={onAddTrigger} />
@@ -110,28 +121,30 @@ const AutoTradingView: React.FC<Props> = ({
                 </div>
 
                 {/* Live Bot Operations Section */}
-                {triggers.length > 0 && (
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-2 border-b-2 border-black dark:border-white pb-2">
-                            <div className="bg-black text-white p-1">
-                                <Bot className="w-5 h-5" />
+                <div ref={liveBotRef}>
+                    {triggers.length > 0 && (
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-2 border-b-2 border-black dark:border-white pb-2">
+                                <div className="bg-black text-white p-1">
+                                    <Bot className="w-5 h-5" />
+                                </div>
+                                <h3 className="text-xl font-black uppercase text-black dark:text-white">Live Bot Operations</h3>
+                                <span className="ml-auto text-xs font-bold bg-green-500 text-white px-2 py-0.5 border border-black animate-pulse">SYSTEM ACTIVE</span>
                             </div>
-                            <h3 className="text-xl font-black uppercase text-black dark:text-white">Live Bot Operations</h3>
-                            <span className="ml-auto text-xs font-bold bg-green-500 text-white px-2 py-0.5 border border-black animate-pulse">SYSTEM ACTIVE</span>
-                        </div>
 
-                        <div className="grid grid-cols-1 gap-6">
-                            {triggers.map(trigger => (
-                                <LiveStrategyCard
-                                    key={trigger.id}
-                                    trigger={trigger}
-                                    currentPrice={marketPrices[trigger.symbol]}
-                                    onExecute={executeTrigger} // Pass execution handler
-                                />
-                            ))}
+                            <div className="grid grid-cols-1 gap-6">
+                                {triggers.map(trigger => (
+                                    <LiveStrategyCard
+                                        key={trigger.id}
+                                        trigger={trigger}
+                                        currentPrice={marketPrices[trigger.symbol]}
+                                        onExecute={executeTrigger} // Pass execution handler
+                                    />
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
 
                 {/* History Section */}
                 <TradeHistory trades={trades} />

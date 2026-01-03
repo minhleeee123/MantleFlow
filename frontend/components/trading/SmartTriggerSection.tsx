@@ -4,12 +4,14 @@ import { SmartTradePlan, TradeTrigger } from '../../types';
 import { BrainCircuit, Play, Bot, Loader2 } from 'lucide-react';
 
 interface Props {
-    onAddTrigger: (trigger: Omit<TradeTrigger, 'id' | 'createdAt' | 'status'>) => void;
+    onAddTrigger: (trigger: Omit<TradeTrigger, 'id' | 'createdAt' | 'status'>) => Promise<void> | void;
+    onSuccess?: () => void;
 }
 
 const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger }) => {
     const [input, setInput] = useState('');
     const [isParsing, setIsParsing] = useState(false);
+    const [isDeploying, setIsDeploying] = useState(false); // New state
     const [plan, setPlan] = useState<SmartTradePlan | null>(null);
 
     const handleAnalyze = async () => {
@@ -26,21 +28,29 @@ const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger }) => {
         }
     };
 
-    const handleDeploy = () => {
+    const handleDeploy = async () => {
         if (!plan) return;
-        
-        onAddTrigger({
-            symbol: plan.symbol,
-            targetPrice: 0, // Placeholder, actual logic uses smartConditions
-            condition: 'ABOVE', // Placeholder
-            amount: plan.amount,
-            type: plan.action,
-            smartConditions: plan.conditions
-        });
 
-        // Reset
-        setPlan(null);
-        setInput('');
+        setIsDeploying(true);
+        try {
+            await onAddTrigger({
+                symbol: plan.symbol,
+                targetPrice: 0,
+                condition: 'ABOVE',
+                amount: plan.amount,
+                type: plan.action,
+                smartConditions: plan.conditions
+            });
+
+            // Reset only on success
+            setPlan(null);
+            setInput('');
+            if (onSuccess) onSuccess(); // Call onSuccess
+        } catch (error) {
+            console.error("Deploy failed", error);
+        } finally {
+            setIsDeploying(false);
+        }
     };
 
     return (
@@ -54,13 +64,13 @@ const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger }) => {
             <div className="mb-6">
                 <label className="text-xs font-bold uppercase text-gray-500 mb-1 block">Describe your strategy</label>
                 <div className="relative">
-                    <textarea 
+                    <textarea
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder="e.g. Buy BTC if price is below 62000 and RSI is under 30..."
                         className="w-full h-24 p-3 border-2 border-black dark:border-white bg-gray-50 dark:bg-black text-black dark:text-white font-medium text-sm outline-none resize-none"
                     />
-                    <button 
+                    <button
                         onClick={handleAnalyze}
                         disabled={isParsing || !input.trim()}
                         className="absolute bottom-2 right-2 bg-neo-primary text-white px-3 py-1 text-xs font-black uppercase border-2 border-black shadow-neo-sm hover:translate-y-0.5 hover:translate-x-0.5 hover:shadow-none transition-all disabled:opacity-50 flex items-center gap-1"
@@ -84,14 +94,16 @@ const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger }) => {
                                     <span className="text-sm bg-black text-white px-2 py-0.5">${plan.amount}</span>
                                 </div>
                             </div>
-                            <button 
+                            <button
                                 onClick={handleDeploy}
-                                className="flex items-center gap-2 bg-black text-white px-4 py-2 font-black uppercase text-sm border-2 border-transparent hover:bg-green-600 transition-colors shadow-neo-sm"
+                                disabled={isDeploying}
+                                className="flex items-center gap-2 bg-black text-white px-4 py-2 font-black uppercase text-sm border-2 border-transparent hover:bg-green-600 transition-colors shadow-neo-sm disabled:opacity-70 disabled:cursor-wait"
                             >
-                                <Bot className="w-4 h-4" /> Deploy Agent
+                                {isDeploying ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />}
+                                {isDeploying ? 'Deploying...' : 'Deploy Agent'}
                             </button>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 gap-2">
                             {plan.conditions.map((cond, idx) => (
                                 <div key={idx} className="flex items-center justify-between bg-white dark:bg-black border border-black dark:border-gray-700 p-2 text-sm">

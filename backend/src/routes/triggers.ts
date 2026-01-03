@@ -62,7 +62,7 @@ router.post('/', async (req: AuthRequest, res) => {
         const { symbol, targetPrice, condition, amount, type, smartConditions } = req.body;
 
         // Validate input
-        if (!symbol || !targetPrice || !condition || !amount || !type) {
+        if (!symbol || targetPrice === undefined || !condition || !amount || !type) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
@@ -74,8 +74,14 @@ router.post('/', async (req: AuthRequest, res) => {
             return res.status(400).json({ error: 'Invalid type. Must be BUY or SELL' });
         }
 
-        if (amount <= 0 || targetPrice <= 0) {
-            return res.status(400).json({ error: 'Amount and price must be positive' });
+        // Amount must always be positive
+        if (amount <= 0) {
+            return res.status(400).json({ error: 'Amount must be positive' });
+        }
+
+        // Target price must be positive for Simple Triggers
+        if (!smartConditions && targetPrice <= 0) {
+            return res.status(400).json({ error: 'Target price must be positive' });
         }
 
         const trigger = await prisma.trigger.create({
