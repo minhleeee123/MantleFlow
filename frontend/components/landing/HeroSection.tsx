@@ -58,12 +58,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onStart }) => {
     onComplete: () => setTitleDone(true)
   });
 
-  const { displayText: subtitleText } = useTypewriter('Automated Trading Terminal', {
-    speed: 50,
-    startDelay: 500, // Wait a bit even if technically triggered immediately, but we can control via rendered condition too
-    onComplete: () => setSubtitleDone(true)
-  });
-
   return (
     <div className="relative border-b-2 border-black dark:border-white w-full flex flex-col shrink-0 overflow-hidden min-h-[700px] justify-center">
 
@@ -90,7 +84,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onStart }) => {
           </span>
 
           <span className="block text-2xl md:text-5xl lg:text-6xl mt-3 font-extrabold stroke-text bg-neo-yellow/20 px-4 transform skew-x-[-10deg] min-h-[1.2em]">
-            {titleDone && <Typewriter text="Automated Trading Terminal" speed={40} onComplete={() => setSubtitleDone(true)} />}
+            {titleDone && <Typewriter text="Automated Trading Terminal" speed={80} onComplete={() => setSubtitleDone(true)} />}
           </span>
         </h1>
 
@@ -98,7 +92,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onStart }) => {
         <p className="mb-10 text-lg md:text-2xl font-medium text-gray-700 dark:text-gray-300 max-w-3xl font-mono leading-relaxed px-4 relative z-10 min-h-[4em]">
           {subtitleDone && (
             <>
-              <Typewriter text="Stop staring at charts. Start automating." speed={30} onComplete={() => setDescLine1Done(true)} />
+              <Typewriter text="Stop staring at charts. Start automating." speed={60} onComplete={() => setDescLine1Done(true)} />
               <br className="hidden md:block" />
             </>
           )}
@@ -106,13 +100,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onStart }) => {
           {descLine1Done && (
             <div className="mt-2 inline-flex flex-wrap justify-center gap-2">
               <span className="bg-neo-accent/20 px-1 border-b-2 border-black dark:border-white">
-                <Typewriter text="Smart Triggers" speed={30} delay={0} />
+                <Typewriter text="Smart Triggers" speed={50} delay={0} />
               </span>,
               <span className="bg-neo-primary/20 px-1 border-b-2 border-black dark:border-white mx-1">
-                <Typewriter text="Risk Management" speed={30} delay={500} />
+                <Typewriter text="Risk Management" speed={50} delay={500} />
               </span>, and
               <span className="bg-neo-secondary/20 px-1 border-b-2 border-black dark:border-white">
-                <Typewriter text="24/7 Execution" speed={30} delay={1000} />
+                <Typewriter text="24/7 Execution" speed={50} delay={1000} />
               </span>.
             </div>
           )}
