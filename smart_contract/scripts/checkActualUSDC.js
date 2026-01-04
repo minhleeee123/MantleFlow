@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 require("dotenv").config();
 
-const OLD_CONTRACT = '0xaD893d3b35FA8cc23A24a0fdF0B79cc22a1a5E44';
+const OLD_CONTRACT = '0xFaEDc6793E72AFF05d29e6f0550d0FF8b90c4c05'; // V2
 const USDC_ADDRESS = '0xAcab8129E2cE587fD203FD770ec9ECAFA2C88080';
 
 const ERC20_ABI = [

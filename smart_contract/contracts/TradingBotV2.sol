@@ -48,8 +48,8 @@ contract TradingBotV2 is Ownable, ReentrancyGuard {
     // Agni Router address on Mantle Sepolia
     address public constant AGNI_ROUTER = 0xb5Dc27be0a565A4A80440f41c74137001920CB22;
     
-    // Wrapped MNT address
-    address public immutable WMNT;
+    // Wrapped MNT address (from transaction analysis)
+    address public constant WMNT = 0x67A1f4A939b477A6b7c5BF94D97E45dE87E608eF;
 
     // User balances: user => token => amount
     mapping(address => mapping(address => uint256)) public balances;
@@ -90,9 +90,6 @@ contract TradingBotV2 is Ownable, ReentrancyGuard {
 
     constructor() Ownable(msg.sender) {
         authorizedExecutors[msg.sender] = true;
-        
-        // Get WMNT address from router
-        WMNT = IAgniRouter(AGNI_ROUTER).WETH9();
     }
 
     // ============ MODIFIERS ============

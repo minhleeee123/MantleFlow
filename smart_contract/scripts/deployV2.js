@@ -36,8 +36,8 @@ async function main() {
     console.log("🔧 Agni Router:", agniRouter);
     console.log("🪙  WMNT Address:", wmnt);
     console.log("👑 Owner:", owner);
-    console.log("📊 Slippage Tolerance:", (slippage / 100).toFixed(2) + "%");
-    console.log("💰 Default Fee:", (fee / 10000).toFixed(2) + "%\n");
+    console.log("📊 Slippage Tolerance:", (Number(slippage) / 100).toFixed(2) + "%");
+    console.log("💰 Default Fee:", (Number(fee) / 10000).toFixed(2) + "%\n");
 
     // Save deployment info
     const deployment = {
