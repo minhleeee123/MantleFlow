@@ -40,12 +40,21 @@ const FeatureGrid: React.FC = () => {
     return (
         <div className="py-24 px-6 shrink-0">
             <div className="max-w-7xl mx-auto">
-                <div className="mb-16 text-center">
-                    <h2 className="text-5xl md:text-6xl font-black text-black dark:text-white uppercase mb-4 tracking-tight">Core Features</h2>
-                    <div className="flex justify-center gap-2 mb-8">
+                <div className="mb-16 text-center relative">
+                    <h2 className="text-5xl md:text-6xl font-black text-black dark:text-white uppercase mb-4 tracking-tight relative z-10">Core Features</h2>
+                    <div className="flex justify-center gap-2 mb-8 relative z-10">
                         <div className="w-4 h-4 bg-black dark:bg-white"></div>
                         <div className="w-4 h-4 bg-neo-primary"></div>
                         <div className="w-4 h-4 bg-neo-secondary"></div>
+                    </div>
+
+                    {/* 3D Mascot - Features */}
+                    <div className="hidden xl:block absolute -right-20 -top-16 z-0 pointer-events-none animate-[float_7s_ease-in-out_infinite]">
+                        <img
+                            src="/picture/mascot_features-removebg-preview.png"
+                            alt="MantleFlow Bot Strong"
+                            className="w-128 h-128 object-contain transform rotate-6 opacity-80"
+                        />
                     </div>
                 </div>
 

@@ -29,14 +29,25 @@ const HowItWorks: React.FC = () => {
     return (
         <div className="py-24 shrink-0">
             <div className="container mx-auto px-6">
-                <div className="mb-16 text-center">
-                    <span className="bg-black text-white px-3 py-1 text-sm font-black uppercase">Workflow</span>
-                    <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase mt-4 mb-4">
-                        From Strategy to Profit
-                    </h2>
-                    <p className="max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-400 font-medium">
-                        Automate your trading workflow with intelligent agents.
-                    </p>
+                <div className="mb-16 flex flex-col md:flex-row items-center justify-center gap-6">
+                    {/* 3D Mascot - Workflow */}
+                    <div className="hidden lg:block animate-[float_5s_ease-in-out_infinite_1s] shrink-0">
+                        <img
+                            src="/picture/mascot_workflow-removebg-preview.png"
+                            alt="MantleFlow Bot Working"
+                            className="w-48 h-48 object-contain transform -rotate-12"
+                        />
+                    </div>
+
+                    <div className="text-center md:text-left">
+                        <span className="bg-black text-white px-3 py-1 text-sm font-black uppercase">Workflow</span>
+                        <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase mt-4 mb-4">
+                            From Strategy to Profit
+                        </h2>
+                        <p className="max-w-2xl text-lg text-gray-600 dark:text-gray-400 font-medium relative z-10">
+                            Automate your trading workflow with intelligent agents.
+                        </p>
+                    </div>
                 </div>
 
                 {/* Workflow 1: Auto-Trading */}

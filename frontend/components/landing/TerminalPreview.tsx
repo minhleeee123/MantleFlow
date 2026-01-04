@@ -82,13 +82,19 @@ const TerminalPreview: React.FC = () => {
     <div ref={containerRef} className="w-full py-16 overflow-hidden relative z-10 shrink-0">
       <div className="container mx-auto px-6 flex flex-col items-center">
 
-        <div className="mb-8 text-center">
-          <div className="inline-block bg-neo-accent text-black px-2 py-1 text-xs font-black uppercase mb-2 border border-black transform -rotate-2">
+        <div className="mb-8 text-center relative w-full max-w-4xl flex flex-col items-center">
+          {/* 3D Mascot - Demo - Positioned relative in flex flow to avoid overflow clipping */}
+          <div className="hidden lg:block animate-[float_6s_ease-in-out_infinite_0.5s] z-20 mb-4">
+            <img
+              src="/picture/mascot_demo-removebg-preview.png"
+              alt="MantleFlow Bot Hacking"
+              className="w-72 h-72 object-contain drop-shadow-xl transform rotate-12"
+            />
+          </div>
+
+          <div className="inline-block bg-neo-accent text-black px-2 py-1 text-xs font-black uppercase mb-2 border border-black transform -rotate-2 relative z-30">
             Interactive Demo
           </div>
-          <h3 className="text-xl font-bold text-gray-500 uppercase">
-            Type any key to hack the matrix
-          </h3>
         </div>
 
         <div className="w-full max-w-4xl bg-black text-green-500 font-mono text-sm md:text-base border-2 border-black dark:border-white shadow-neo-lg rounded-none transform transition-transform hover:scale-[1.01] duration-300">

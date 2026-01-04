@@ -59,12 +59,21 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onStart }) => {
         </h1>
 
         {/* Subtitle */}
-        <p className="mb-10 text-lg md:text-2xl font-medium text-gray-700 dark:text-gray-300 max-w-3xl font-mono leading-relaxed px-4">
+        <p className="mb-10 text-lg md:text-2xl font-medium text-gray-700 dark:text-gray-300 max-w-3xl font-mono leading-relaxed px-4 relative z-10">
           Stop staring at charts. Start automating. <br className="hidden md:block" />
           <span className="bg-neo-accent/20 px-1 border-b-2 border-black dark:border-white">Smart Triggers</span>,
           <span className="bg-neo-primary/20 px-1 border-b-2 border-black dark:border-white mx-1">Risk Management</span>, and
           <span className="bg-neo-secondary/20 px-1 border-b-2 border-black dark:border-white">24/7 Execution</span>.
         </p>
+
+        {/* 3D Mascot - Hero */}
+        <div className="hidden xl:block absolute right-[5%] top-1/2 -translate-y-1/2 z-20 pointer-events-none animate-[float_4s_ease-in-out_infinite]">
+          <img
+            src="/picture/mascot_hero-removebg-preview.png"
+            alt="MantleFlow Bot Waving"
+            className="w-80 h-80 object-contain drop-shadow-2xl"
+          />
+        </div>
 
         {/* CTA Buttons */}
         <div className="flex flex-col md:flex-row gap-6 w-full md:w-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">

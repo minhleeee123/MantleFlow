@@ -38,7 +38,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
             Join the revolution of AI-powered decentralized trading. <br />
             Secure, Smart, and Brutally Efficient.
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-4 relative z-10">
             <button
               onClick={onStart}
               className="bg-black text-white px-12 py-5 font-black uppercase text-xl border-2 border-white shadow-neo-dark hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all"
@@ -46,6 +46,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
               Get Started Now
             </button>
           </div>
+
+
+
+
         </div>
       </div>
 

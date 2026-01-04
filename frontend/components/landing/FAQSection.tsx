@@ -42,14 +42,23 @@ const FAQSection: React.FC = () => {
     return (
         <div className="py-24 px-6 shrink-0">
             <div className="max-w-4xl mx-auto">
-                <div className="mb-12 text-center">
+                <div className="mb-12 text-center relative">
                     <div className="inline-flex items-center gap-2 bg-neo-accent border-2 border-black px-3 py-1 mb-4 shadow-neo-sm transform -rotate-2">
                         <HelpCircle className="w-5 h-5 text-black" strokeWidth={2.5} />
                         <span className="text-sm font-black uppercase text-black">Support Center</span>
                     </div>
-                    <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase tracking-tight">
+                    <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase tracking-tight relative z-10">
                         Frequently Asked Questions
                     </h2>
+
+                    {/* 3D Mascot - FAQ */}
+                    <div className="hidden lg:block absolute -left-32 top-1/2 -translate-y-1/2 z-0 pointer-events-none animate-[float_4s_ease-in-out_infinite_2s]">
+                        <img
+                            src="/picture/mascot_faq-removebg-preview.png"
+                            alt="MantleFlow Bot Thinking"
+                            className="w-48 h-48 object-contain transform -rotate-12"
+                        />
+                    </div>
                 </div>
 
                 <div className="space-y-4">
