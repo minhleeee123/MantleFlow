@@ -1,9 +1,9 @@
 {
   "network": "mantleSepolia",
-  "contractAddress": "0x8648c3a4dB1298f101eFA813D4C711512aDCfee3",
+  "contractAddress": "0xE74507225cf7AA3A9df3C758B2d4DD747583cBBe",
   "agniRouter": "0xb5Dc27be0a565A4A80440f41c74137001920CB22",
   "wmnt": "0x67A1f4A939b477A6b7c5BF94D97E45dE87E608eF",
   "deployer": "0xE412d04DA2A211F7ADC80311CC0FF9F03440B64E",
-  "timestamp": "2026-01-04T05:11:34.566Z",
-  "blockNumber": 32979410
+  "timestamp": "2026-01-04T05:44:36.196Z",
+  "blockNumber": 32980401
 }

@@ -200,10 +200,15 @@ contract TradingBotV2 is Ownable, ReentrancyGuard {
             // Wrap native MNT to WMNT first
             IWMNT(WMNT).deposit{value: amountIn}();
             
-            // Now approve WMNT to router
-            IWMNT(WMNT).approve(AGNI_ROUTER, amountIn);
+            // Approve WMNT to router (Check allowance first to optimize/debug)
+            // Use IERC20 interface for compatibility with SafeERC20 if needed, 
+            // but here we use standard approve with manual reset if needed.
+            IERC20(WMNT).approve(AGNI_ROUTER, 0); // Reset
+            IERC20(WMNT).approve(AGNI_ROUTER, amountIn); // Set
             
-            // Execute swap: WMNT → tokenOut
+            require(IERC20(WMNT).allowance(address(this), AGNI_ROUTER) >= amountIn, "WMNT Allowance failed");
+
+            // Execute swap: WMNT -> tokenOut
             IAgniRouter.ExactInputSingleParams memory params = IAgniRouter.ExactInputSingleParams({
                 tokenIn: WMNT,
                 tokenOut: tokenOut,
