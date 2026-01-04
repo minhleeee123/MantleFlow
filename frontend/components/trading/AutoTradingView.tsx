@@ -7,6 +7,7 @@ import ActiveTriggers from './ActiveTriggers';
 import TradeHistory from './TradeHistory';
 import LiveStrategyCard from './LiveStrategyCard';
 import { Bot, Bell, Check, Mail } from 'lucide-react';
+import { UserGuide } from './UserGuide';
 
 interface Props {
     wallet: IPaperWallet;
@@ -55,6 +56,8 @@ const AutoTradingView: React.FC<Props> = ({
     return (
         <div className="flex-1 overflow-y-auto p-4 md:p-8 animate-page-enter bg-checkered">
             <div className="max-w-6xl mx-auto space-y-8">
+                {/* User Guide Section */}
+                <UserGuide />
 
                 {/* Top Section: Contract Wallet */}
                 {userWalletAddress ? (
@@ -64,6 +67,8 @@ const AutoTradingView: React.FC<Props> = ({
                         PLEASE CONNECT WALLET TO ACCESS TRADING
                     </div>
                 )}
+
+
 
                 {/* Main Control Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -3,32 +3,32 @@ import { Plus, Minus, HelpCircle } from 'lucide-react';
 
 const FAQS = [
     {
-        question: "How does the 'Vision Analysis' actually work?",
-        answer: "Unlike traditional indicators that just read numbers, our Vision Agent uses the Gemini 2.5 multimodal capabilities. It captures a snapshot of your current chart (including your manual drawings), analyzes visual patterns (like wedges, flags, or candles), and correlates them with numerical data to provide a 'human-like' technical analysis."
+        question: "How does the 'Vision Agent' analysis work?",
+        answer: "Our Vision Agent utilizes the multimodal capabilities of Gemini 2.5. It doesn't just read price data—it actually 'sees' the chart patterns, wedges, and trends in your uploaded screenshots, effectively combining visual technical analysis with quantitative data."
     },
     {
-        question: "Is my private key safe when using Portfolio Guard?",
-        answer: "Absolutely. We are a non-custodial platform. We use Ethers.js to connect to your browser wallet (like MetaMask). We strictly read public on-chain data to analyze your portfolio. We never ask for, store, or have access to your private keys or seed phrases. All transaction signing happens within your wallet."
+        question: "Is my private key safe?",
+        answer: "Absolutely. We are a non-custodial platform. We never ask for your private keys. Instead, you deploy a personal 'Smart Wallet' (Account Abstraction) on Mantle Sepolia. You authorize our AI Bot as a 'Session Key' operator, allowing it to execute trades within strict limits while you retain full ownership of your funds."
     },
     {
-        question: "Can the Auto-Trading bot execute real transactions?",
-        answer: "Currently, the Auto-Trading Arena is a 'Paper Trading' simulation environment designed for backtesting and strategy validation without financial risk. However, you can execute real, single transactions (Send/Swap) manually through the chat interface using the Natural Language Executor."
+        question: "Does the Auto-Trading Bot execute real transactions?",
+        answer: "Yes! Unlike paper trading simulators, our bot executes REAL on-chain transactions on the Mantle Sepolia Testnet. When your AI triggers a 'Buy', the bot actively interacts with the blockchain to swap tokens in your Smart Wallet."
     },
     {
-        question: "Which blockchains do you currently support?",
-        answer: "For wallet connection and portfolio analysis, we support major EVM-compatible chains including Ethereum Mainnet, Binance Smart Chain (BSC), Polygon, and Avalanche C-Chain. Solana support is currently in beta for price tracking, with full wallet integration coming in v3.0."
+        question: "Which blockchains do you support?",
+        answer: "We are currently built exclusively on the Mantle Sepolia Testnet. This allows for high-speed, low-cost transaction execution, which is crucial for high-frequency AI trading strategies."
     },
     {
         question: "Does the AI provide financial advice?",
-        answer: "No. CryptoInsight AI is an analytics and data aggregation tool. The 'Verdicts' and 'Scores' are generated based on mathematical models and historical data patterns. They are for informational purposes only. You should always Do Your Own Research (DYOR) before making any investment decisions."
+        answer: "No. CryptoInsight AI is an advanced analytics tool. All 'Verdicts' and 'Scores' are generated based on mathematical models and historical data patterns. They are for informational purposes only. You should always Do Your Own Research (DYOR)."
     },
     {
-        question: "What is the difference between Gemini 2.5 Flash and older models?",
-        answer: "Gemini 2.5 Flash offers significantly lower latency and a massive context window compared to previous iterations. This allows us to feed it entire weeks of OHLCV minute-data, live sentiment feeds, and complex whitepapers simultaneously, resulting in a much deeper and more nuanced market analysis."
+        question: "What makes the 'Smart Trigger' different from limit orders?",
+        answer: "Standard limit orders just check price (e.g., 'Buy at $2000'). Our Smart Triggers allow you to use natural language (e.g., 'Buy ETH if RSI is below 30 and volume is spiking'). The AI parses your intent into complex logic that traditional DEXs cannot handle."
     },
     {
-        question: "Do I need to pay to use the advanced features?",
-        answer: "For this Hackathon build (v2.5 Flash), all features including Vision Analysis, Portfolio Guard, and the Auto-Trading Simulator are completely free to use. We may introduce premium tiers for high-frequency API usage in the future, but the core analysis tools will remain accessible."
+        question: "Is the platform free to use?",
+        answer: "Yes, for this Hackathon release, all features including the Vision Agent, Portfolio Guard, and Auto-Trading Bot are completely free to use on the Testnet."
     }
 ];
 
@@ -56,8 +56,8 @@ const FAQSection: React.FC = () => {
                     {FAQS.map((faq, index) => {
                         const isOpen = openIndex === index;
                         return (
-                            <div 
-                                key={index} 
+                            <div
+                                key={index}
                                 className={`border-2 border-black dark:border-white transition-all duration-300 ${isOpen ? 'bg-neo-yellow shadow-neo' : 'bg-white dark:bg-[#1a1a1a] hover:shadow-neo-sm'}`}
                             >
                                 <button
@@ -71,8 +71,8 @@ const FAQSection: React.FC = () => {
                                         {isOpen ? <Minus className="w-5 h-5" strokeWidth={3} /> : <Plus className="w-5 h-5" strokeWidth={3} />}
                                     </div>
                                 </button>
-                                
-                                <div 
+
+                                <div
                                     className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
                                 >
                                     <div className="p-6 pt-0 text-base md:text-lg font-medium leading-relaxed border-t-2 border-black text-black">
