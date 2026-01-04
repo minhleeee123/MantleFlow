@@ -1,11 +1,22 @@
-🔍 Inspecting User Smart Wallet...
-👤 User EOA: 0xe412d04da2a211f7adc80311cc0ff9f03440b64e
-💳 Smart Wallet: 0x2ECA994e6f8fb0663039C14df63AB88CBb3C0750
+﻿============================================================
+≡ƒÆ░ SMART CONTRACT WALLET STATUS
+============================================================
+≡ƒôì Address: 0xe412d04da2a211f7adc80311cc0ff9f03440b64e
+≡ƒÆ╡ Native MNT Balance: 1980.478465858880225 MNT
 
-💰 BALANCE REPORT:
-   - Native MNT: 0.097
-   - Wrapped MNT: 100.203
-   - TOTAL MNT:  100.3000
-   - USDC:       100.0
+≡ƒôè Account Activity:
+   Total Triggers: 5
+   Total Transactions: 6
 
----------------------------------------------------
+≡ƒô£ Last 5 Transactions:
+   1. BUY  5      MNT    | SUCCESS
+      TX: 0xdd066fb8d323f3...
+   2. BUY  5      MNT    | SUCCESS
+      TX: 0x77f6b5b3a55c8a...
+   3. BUY  5      MNT    | SUCCESS
+      TX: 0x0fc73d5ece65b1...
+   4. BUY  5      MNT    | SUCCESS
+      TX: 0x007d88d2c97621...
+   5. BUY  10     MNT    | SUCCESS
+      TX: 0x5dd0497f46372e...
+============================================================

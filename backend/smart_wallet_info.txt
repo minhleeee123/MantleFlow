@@ -1,0 +1,14 @@
+﻿======================================================================
+≡ƒöì LOCATING SMART CONTRACT WALLET
+======================================================================
+
+≡ƒæñ MetaMask Address (EOA): 0xe412d04da2a211f7adc80311cc0ff9f03440b64e
+
+≡ƒÅª Smart Contract Wallet: 0x2ECA994e6f8fb0663039C14df63AB88CBb3C0750
+≡ƒöù Explorer: https://explorer.sepolia.mantle.xyz/address/0x2ECA994e6f8fb0663039C14df63AB88CBb3C0750
+
+≡ƒÆ░ Balance Information:
+   Native MNT: 0.097 MNT
+
+   Total MNT (via service): 100.3 MNT
+======================================================================

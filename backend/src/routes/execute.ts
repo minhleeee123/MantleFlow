@@ -125,9 +125,12 @@ router.post('/:triggerId', async (req: AuthRequest, res) => {
                 select: { email: true }
             });
 
+            let emailSent = false;
+            let emailAddress = null;
+
             if (user?.email) {
                 console.log(`📧 Sending email to ${user.email}...`);
-                await sendSwapSuccessEmail(
+                emailSent = await sendSwapSuccessEmail(
                     user.email,
                     txHash,
                     trigger.symbol,
@@ -135,13 +138,22 @@ router.post('/:triggerId', async (req: AuthRequest, res) => {
                     trigger.type as 'BUY' | 'SELL',
                     currentPrice
                 );
+                emailAddress = user.email;
             }
 
             res.json({
                 success: true,
                 txHash,
                 executionId: execution.id,
-                message: 'Trade executed successfully'
+                message: 'Trade executed successfully',
+                emailNotification: emailSent ? {
+                    sent: true,
+                    to: emailAddress,
+                    checkInbox: 'https://mail.google.com/mail/u/0/#inbox'
+                } : {
+                    sent: false,
+                    reason: 'No email configured for this user'
+                }
             });
         } catch (blockchainError) {
             // Update execution with failure

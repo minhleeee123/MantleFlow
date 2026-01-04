@@ -77,6 +77,14 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
         if (!window.ethereum) return;
 
         try {
+            setLoading(true);
+            setError(''); // Clear previous errors
+
+            // Clear cache to force fresh fetch
+            console.log('🔄 Refreshing wallet data...');
+            localStorage.removeItem('cache_usdc_balance');
+            localStorage.removeItem('cache_mnt_balance');
+
             // 1. Get Smart Wallet Address from Backend (Source of Truth)
             const addr = await walletApi.getAddress();
             setSmartWalletAddress(addr);
@@ -134,6 +142,8 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
 
         } catch (error: any) {
             console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
         }
     };
 

@@ -4,7 +4,8 @@ const MANTLE_RPC = process.env.MANTLE_RPC_URL || 'https://rpc.sepolia.mantle.xyz
 // const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS!; // Deprecated V1
 const FACTORY_ADDRESS = process.env.FACTORY_ADDRESS!;
 const FUSIONX_ROUTER = process.env.FUSIONX_ROUTER!;
-const WMNT_ADDRESS = process.env.WMNT_ADDRESS!;
+// Address for Mantle Sepolia
+const WMNT_ADDRESS = '0x514528de7275e6e0e8f4083499474aa96eb84306';
 const USDC_ADDRESS = process.env.USDC_ADDRESS!;
 
 // Admin/Bot Key to sign "executeCall"
@@ -203,13 +204,26 @@ export async function getUserBalance(
         // If 'MNT', get native balance + WMNT balance
         if (tokenSymbol === 'MNT' || tokenSymbol === 'ETH') {
             const balNative = await provider.getBalance(walletAddr);
+            console.log(`[getUserBalance] Native MNT for ${walletAddr}:`, ethers.formatEther(balNative));
 
             // Also check WMNT balance
-            const wmntContract = new ethers.Contract(WMNT_ADDRESS, ERC20_ABI, provider);
-            const balWmnt = await wmntContract.balanceOf(walletAddr);
+            let balWmnt = 0n;
+            try {
+                const wmntContract = new ethers.Contract(
+                    ethers.getAddress(WMNT_ADDRESS), // Ensure proper checksum
+                    ERC20_ABI,
+                    provider
+                );
+                balWmnt = await wmntContract.balanceOf(walletAddr);
+                console.log(`[getUserBalance] WMNT balance:`, ethers.formatEther(balWmnt));
+            } catch (wmntError: any) {
+                console.warn(`[getUserBalance] WMNT query failed:`, wmntError.message);
+                // Continue with just native balance
+            }
 
             // Total MNT = Native + Wrapped
             const totalMnt = balNative + balWmnt;
+            console.log(`[getUserBalance] Total MNT:`, ethers.formatEther(totalMnt));
 
             return parseFloat(ethers.formatEther(totalMnt));
         }
