@@ -9,7 +9,7 @@ async function main() {
     const [deployer] = await ethers.getSigners();
     const deployment = JSON.parse(fs.readFileSync("deployment-wallet.json"));
 
-    const FUSIONX_ROUTER = "0x8fC0B6585d73C94575555B3970D7A79c5bfc6E36";
+    const AGNI_ROUTER = "0xb5Dc27be0a565A4A80440f41c74137001920CB22";
     const WMNT = "0x67A1f4A939b477A6b7c5BF94D97E45dE87E608eF";
     const USDC = "0xAcab8129E2cE587fD203FD770ec9ECAFA2C88080";
 
@@ -61,18 +61,17 @@ async function main() {
     const dataApprove = erc20Interface.encodeFunctionData("approve", [FUSIONX_ROUTER, amountIn]);
 
     // C. Construct "Swap" Call
-    // FusionX might use same ExactInputSingle or slightly different. 
-    // Assuming V3 compatible based on earlier research.
+    // FusionX Router
     const routerABI = [
         "function exactInputSingle(tuple(address tokenIn, address tokenOut, uint24 fee, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum, uint160 sqrtPriceLimitX96) params) external payable returns (uint256 amountOut)"
     ];
     const routerInterface = new ethers.Interface(routerABI);
 
-    // Try generic fee for FusionX
+    // FusionX Pool Fee: 3000 (0.3%)
     const swapParams = {
         tokenIn: WMNT,
         tokenOut: USDC,
-        fee: 3000, // 0.3% is common default
+        fee: 3000,
         recipient: walletAddr,
         deadline: Math.floor(Date.now() / 1000) + 1200,
         amountIn: amountIn,
@@ -100,11 +99,11 @@ async function main() {
     }
 
     // Step 2: Approve
-    console.log("\n2️⃣  Bot -> Wallet: Execute APPROVE...");
+    console.log("\n2️⃣  Bot -> Wallet: Execute APPROVE (FusionX)...");
     try {
         const txApprove = await UserWallet.executeCall(WMNT, 0, dataApprove);
         await txApprove.wait();
-        console.log("   ✅ Approved Agni Router");
+        console.log("   ✅ Approved FusionX Router");
     } catch (e) {
         console.error("   ❌ Approve Failed:", e.message);
         return;
