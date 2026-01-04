@@ -4,6 +4,7 @@ import { authMiddleware } from '../middleware/auth';
 import { AuthRequest } from '../types';
 import { getCurrentPrice } from '../services/market';
 import { executeSwap } from '../services/blockchain';
+import { sendSwapSuccessEmail } from '../services/emailService';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -117,6 +118,24 @@ router.post('/:triggerId', async (req: AuthRequest, res) => {
                 where: { id: trigger.id },
                 data: { status: 'EXECUTED' }
             });
+
+            // [NEW] Gửi email thông báo
+            const user = await prisma.user.findUnique({
+                where: { id: req.user!.userId },
+                select: { email: true }
+            });
+
+            if (user?.email) {
+                console.log(`📧 Sending email to ${user.email}...`);
+                await sendSwapSuccessEmail(
+                    user.email,
+                    txHash,
+                    trigger.symbol,
+                    trigger.amount,
+                    trigger.type as 'BUY' | 'SELL',
+                    currentPrice
+                );
+            }
 
             res.json({
                 success: true,

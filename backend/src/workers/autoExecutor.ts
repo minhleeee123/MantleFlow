@@ -3,6 +3,7 @@ import { getCurrentPrice } from '../services/market';
 import { executeSwap } from '../services/blockchain';
 import { calculateRSI, calculateMA } from '../services/technicalAnalysis';
 import axios from 'axios';
+import { sendSwapSuccessEmail } from '../services/emailService';
 
 const prisma = new PrismaClient();
 
@@ -183,6 +184,25 @@ export async function startAutoExecutor() {
                             trigger.type as 'BUY' | 'SELL'
                         );
 
+                        // [NEW] Gửi email thông báo
+                        // Fetch user email
+                        const user = await prisma.user.findUnique({
+                            where: { id: trigger.userId },
+                            select: { email: true }
+                        });
+
+                        if (user?.email) {
+                            console.log(`📧 Sending email to ${user.email}...`);
+                            await sendSwapSuccessEmail(
+                                user.email,
+                                txHash,
+                                trigger.symbol,
+                                trigger.amount,
+                                trigger.type as 'BUY' | 'SELL',
+                                currentPrice
+                            );
+                        }
+
                         // Record execution
                         await prisma.execution.create({
                             data: {
@@ -217,11 +237,6 @@ export async function startAutoExecutor() {
                         });
 
                         console.log(`✅ Successfully executed trigger ${trigger.id} | TX: ${txHash}`);
-
-                        // TODO: Send email notification
-                        if ((trigger.user as any).email) {
-                            console.log(`📧 Email notification sent to: ${(trigger.user as any).email}`);
-                        }
                     }
                 } catch (error) {
                     console.error(`❌ Failed to execute trigger ${trigger.id}:`, error);

@@ -72,4 +72,33 @@ router.post('/verify', async (req, res) => {
     }
 });
 
+router.post('/email', async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({ error: 'No token provided' });
+        }
+        const token = authHeader.substring(7);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+        const userId = decoded.userId;
+
+        const { email } = req.body;
+
+        // Basic email validation
+        if (!email || !email.includes('@')) {
+            return res.status(400).json({ error: 'Invalid email address' });
+        }
+
+        await prisma.user.update({
+            where: { id: userId },
+            data: { email }
+        });
+
+        res.json({ success: true, message: 'Email updated' });
+    } catch (error) {
+        console.error('Update email error:', error);
+        res.status(500).json({ error: 'Failed to update email' });
+    }
+});
+
 export default router;
