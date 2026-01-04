@@ -25,16 +25,21 @@ interface Transaction {
 }
 
 export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
-    const [smartWalletAddress, setSmartWalletAddress] = useState<string | null>(null);
+    // Initialize state with LocalStorage Cache
+    const [smartWalletAddress, setSmartWalletAddress] = useState<string | null>(() => localStorage.getItem('cache_wallet_address'));
     const [factoryAddress, setFactoryAddress] = useState<string | null>(null);
     const [operatorAddress, setOperatorAddress] = useState<string | null>(null);
-    const [currentOperator, setCurrentOperator] = useState<string | null>(null);
+    const [currentOperator, setCurrentOperator] = useState<string | null>(() => localStorage.getItem('cache_wallet_operator'));
 
-    const [usdcBalance, setUsdcBalance] = useState('0');
-    const [mntBalance, setMntBalance] = useState('0');
+    const [usdcBalance, setUsdcBalance] = useState(() => localStorage.getItem('cache_usdc_balance') || '0');
+    const [mntBalance, setMntBalance] = useState(() => localStorage.getItem('cache_mnt_balance') || '0');
     const [walletMnt, setWalletMnt] = useState('0');
     const [walletUsdc, setWalletUsdc] = useState('0');
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [transactions, setTransactions] = useState<Transaction[]>(() => {
+        try {
+            return JSON.parse(localStorage.getItem('cache_transactions') || '[]');
+        } catch { return []; }
+    });
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -50,7 +55,7 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
     }, []);
 
     useEffect(() => {
-        fetchData();
+        fetchData(); // Fetch fresh data
         const interval = setInterval(fetchData, 10000);
         return () => clearInterval(interval);
     }, [userAddress, smartWalletAddress]);
@@ -65,6 +70,9 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
         }
     };
 
+    // Helper to persist state
+    const updateCache = (key: string, value: string) => localStorage.setItem(key, value);
+
     const fetchData = async () => {
         if (!window.ethereum) return;
 
@@ -72,6 +80,7 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
             // 1. Get Smart Wallet Address from Backend (Source of Truth)
             const addr = await walletApi.getAddress();
             setSmartWalletAddress(addr);
+            if (addr) updateCache('cache_wallet_address', addr);
 
             // Fix: Clear lingering setup errors if wallet is found
             if (addr) {
@@ -94,8 +103,12 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
             if (addr) {
                 const balances = await walletApi.getBalance();
                 if (balances && balances.balances) {
-                    setUsdcBalance(balances.balances.USDC.toString());
-                    setMntBalance(balances.balances.MNT.toString());
+                    const u = balances.balances.USDC.toString();
+                    const m = balances.balances.MNT.toString();
+                    setUsdcBalance(u);
+                    setMntBalance(m);
+                    updateCache('cache_usdc_balance', u);
+                    updateCache('cache_mnt_balance', m);
                 }
 
                 // Check Operator Permissions
@@ -103,6 +116,7 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                     try {
                         const op = await getSmartWalletOperator(addr);
                         setCurrentOperator(op);
+                        if (op) updateCache('cache_wallet_operator', op);
                     } catch (e) {
                         console.warn('Failed to fetch operator', e);
                     }
@@ -113,6 +127,7 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
             try {
                 const history = await transactionsApi.list();
                 setTransactions(history);
+                updateCache('cache_transactions', JSON.stringify(history));
             } catch (err) {
                 console.warn('Failed to load history', err);
             }
