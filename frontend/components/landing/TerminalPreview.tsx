@@ -82,13 +82,13 @@ const TerminalPreview: React.FC = () => {
     <div ref={containerRef} className="w-full py-16 overflow-hidden relative z-10 shrink-0">
       <div className="container mx-auto px-6 flex flex-col items-center">
 
-        <div className="mb-8 text-center relative w-full max-w-4xl flex flex-col items-center">
+        <div className="my-16 text-center relative w-full max-w-4xl flex flex-col items-center">
           {/* 3D Mascot - Demo - Positioned relative in flex flow to avoid overflow clipping */}
-          <div className="hidden lg:block animate-[float_6s_ease-in-out_infinite_0.5s] z-20 mb-4">
+          <div className="hidden lg:block animate-[float_6s_ease-in-out_infinite_0.5s] z-20 mb-8">
             <img
               src="/picture/mascot_demo-removebg-preview.png"
               alt="MantleFlow Bot Hacking"
-              className="w-72 h-72 object-contain drop-shadow-xl transform rotate-12"
+              className="w-96 h-96 object-contain drop-shadow-xl transform rotate-12"
             />
           </div>
 

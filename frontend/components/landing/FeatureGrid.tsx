@@ -49,7 +49,7 @@ const FeatureGrid: React.FC = () => {
                     </div>
 
                     {/* 3D Mascot - Features */}
-                    <div className="hidden xl:block absolute -right-20 -top-16 z-0 pointer-events-none animate-[float_7s_ease-in-out_infinite]">
+                    <div className="hidden xl:block absolute -right-20 -top-40 z-0 pointer-events-none animate-[float_7s_ease-in-out_infinite]">
                         <img
                             src="/picture/mascot_features-removebg-preview.png"
                             alt="MantleFlow Bot Strong"
