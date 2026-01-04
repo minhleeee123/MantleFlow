@@ -1,9 +1,10 @@
 import React from 'react';
 import { FeatureBlock } from '../DocHelpers';
+import { Brain, BarChart2, Bot, Wallet, Link, Globe } from 'lucide-react';
 
 export const FeaturesContent = () => (
     <div className="space-y-6">
-        <FeatureBlock title="🧠 AI Chat Agent (Gemini 2.5 Flash)">
+        <FeatureBlock title={<div className="flex items-center gap-2"><Brain className="w-5 h-5" /> AI Chat Agent (Gemini 2.5 Flash)</div>}>
             <ul className="list-disc ml-5 space-y-2">
                 <li><strong>Intent Classification:</strong> Automatically classifies user intent into 4 categories: ANALYZE (coin analysis), PORTFOLIO_ANALYSIS (portfolio review), TRANSACTION (Web3 txn preview), and CHAT (general conversation).</li>
                 <li><strong>Market Analysis Agent:</strong> Fetches real-time data from CoinGecko API including price history, market cap, volume. Generates comprehensive reports with charts (Recharts), Fear & Greed Index (Alternative.me), Long/Short ratios (Binance API), and AI-generated tokenomics visualizations.</li>
@@ -13,7 +14,7 @@ export const FeaturesContent = () => (
             </ul>
         </FeatureBlock>
 
-        <FeatureBlock title="📊 Market Analysis Dashboard">
+        <FeatureBlock title={<div className="flex items-center gap-2"><BarChart2 className="w-5 h-5" /> Market Analysis Dashboard</div>}>
             <ul className="list-disc ml-5 space-y-2">
                 <li><strong>Price Charts:</strong> 7-day historical data from CoinGecko API (<code>/coins/{'{id}'}/market_chart</code>), rendered as responsive line charts using Recharts with gradients and tooltips.</li>
                 <li><strong>Fear & Greed Index:</strong> Real-time sentiment score (0-100) from Alternative.me API, displayed as radial gauge with color coding (Fear = Red, Greed = Green).</li>
@@ -23,7 +24,7 @@ export const FeaturesContent = () => (
             </ul>
         </FeatureBlock>
 
-        <FeatureBlock title="🤖 Auto-Trading System">
+        <FeatureBlock title={<div className="flex items-center gap-2"><Bot className="w-5 h-5" /> Auto-Trading System</div>}>
             <ul className="list-disc ml-5 space-y-2">
                 <li><strong>Simple Triggers:</strong> Price-based execution with 2 conditions: ABOVE (execute when price ≥ target) or BELOW (execute when price ≤ target). Stored in MySQL <code>Trigger</code> table with <code>status</code> field tracking lifecycle.</li>
                 <li><strong>Smart Triggers (AI-Powered):</strong> Multi-condition strategies supporting 6 metrics: PRICE (CoinGecko), RSI (calculated from 14-period historical data), VOLUME (24h USD volume), MA (50-period moving average), SENTIMENT (Fear & Greed Index), and GAS (Etherscan Gas Oracle). All conditions must pass for execution (AND logic).</li>
@@ -33,7 +34,7 @@ export const FeaturesContent = () => (
             </ul>
         </FeatureBlock>
 
-        <FeatureBlock title="💼 Smart Account Wallet (Account Abstraction)">
+        <FeatureBlock title={<div className="flex items-center gap-2"><Wallet className="w-5 h-5" /> Smart Account Wallet (Account Abstraction)</div>}>
             <ul className="list-disc ml-5 space-y-2">
                 <li><strong>WalletFactory Contract:</strong> Deploys minimal proxy clones using EIP-1167 standard. Each <code>deployWallet(operator)</code> call creates a new TradingWallet instance initialized with <code>owner=msg.sender</code> and <code>operator=backend_address</code>. Maintains <code>userWallets</code> mapping for O(1) address lookup.</li>
                 <li><strong>Non-Custodial Architecture:</strong> User is the wallet's "owner" with full control. Only owner can call <code>withdraw(token, amount)</code> and <code>setOperator(newOperator)</code>. Backend "operator" can only execute trades via <code>executeCall(target, value, data)</code>, cannot withdraw funds.</li>
@@ -44,7 +45,7 @@ export const FeaturesContent = () => (
             </ul>
         </FeatureBlock>
 
-        <FeatureBlock title="🔗 Web3 Integration & Authentication">
+        <FeatureBlock title={<div className="flex items-center gap-2"><Link className="w-5 h-5" /> Web3 Integration & Authentication</div>}>
             <ul className="list-disc ml-5 space-y-2">
                 <li><strong>MetaMask Connection:</strong> Frontend calls <code>window.ethereum.request({'{method: "eth_requestAccounts"}'}</code> to prompt wallet connection. Retrieves address and balances (native + ERC20) via ethers.js providers.</li>
                 <li><strong>Signature-Based Auth:</strong> User signs message: <code>"Sign this message to login to Auto-Trading Platform.\nTimestamp: {'{Date.now()}'}"</code> using <code>personal_sign</code>. Backend verifies with <code>ethers.verifyMessage()</code>, comparing recovered address to claimed address.</li>
@@ -54,7 +55,7 @@ export const FeaturesContent = () => (
             </ul>
         </FeatureBlock>
 
-        <FeatureBlock title="📡 Backend APIs & Data Flow">
+        <FeatureBlock title={<div className="flex items-center gap-2"><Globe className="w-5 h-5" /> Backend APIs & Data Flow</div>}>
             <ul className="list-disc ml-5 space-y-2">
                 <li><strong>Authentication Routes:</strong> <code>POST /api/auth/login</code> (signature verification, JWT issuance), <code>POST /api/auth/verify</code> (token validation). All protected routes pass through <code>authMiddleware</code> which decodes JWT and attaches <code>req.user</code>.</li>
                 <li><strong>Trigger Management:</strong> <code>GET/POST/PATCH/DELETE /api/triggers</code> for CRUD operations. Validates input (symbol, targetPrice, condition, amount, type). Stores <code>smartConditions</code> as JSON for AI-generated strategies.</li>

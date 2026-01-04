@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Server, Code, Cpu } from 'lucide-react';
+import { Box, Server, Code, Cpu, Target } from 'lucide-react';
 import { InfoCard } from '../DocHelpers';
 
 export const IntroContent = () => (
@@ -31,7 +31,7 @@ export const IntroContent = () => (
         </div>
 
         <div className="bg-neo-accent p-5 border-2 border-black shadow-neo">
-            <h3 className="text-lg font-black uppercase mb-3">🎯 What Makes This Unique?</h3>
+            <h3 className="text-lg font-black uppercase mb-3 flex items-center gap-2"><Target className="w-5 h-5" /> What Makes This Unique?</h3>
             <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
                     <span className="font-black text-lg">•</span>

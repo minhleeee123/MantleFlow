@@ -1,5 +1,6 @@
 import React from 'react';
 import { SecurityItem } from '../DocHelpers';
+import { AlertTriangle } from 'lucide-react';
 
 export const SecurityContent = () => (
     <div className="space-y-6">
@@ -32,7 +33,7 @@ export const SecurityContent = () => (
 
         <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 p-4 mt-6">
             <h4 className="font-bold flex items-center gap-2 mb-2">
-                ⚠️ Security Considerations for Production
+                <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" /> Security Considerations for Production
             </h4>
             <ul className="text-sm space-y-1 ml-4 list-disc">
                 <li>Enable slippage protection in swap params (currently 0 for demo)</li>

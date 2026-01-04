@@ -90,19 +90,19 @@ const Documentation: React.FC = () => {
     return (
         <div className="flex h-full w-full bg-[#f0f2f5] dark:bg-[#050505] text-black dark:text-white animate-page-enter">
             {/* LEFT SIDEBAR */}
-            <div className="w-64 flex-shrink-0 border-r-2 border-black dark:border-white bg-white dark:bg-[#111] overflow-y-auto custom-scrollbar">
-                <div className="p-6">
-                    <h2 className="text-xl font-black uppercase mb-6 flex items-center gap-2">
-                        <BookOpen className="w-6 h-6 text-neo-primary" /> Docs
+            <div className="w-64 flex-shrink-0 border-r-2 border-black dark:border-white bg-neo-yellow dark:bg-[#111] overflow-y-auto custom-scrollbar">
+                <div className="p-4">
+                    <h2 className="text-xl font-black uppercase mb-6 flex items-center gap-2 px-2 mt-4">
+                        <BookOpen className="w-6 h-6 text-black" /> Docs
                     </h2>
 
                     <div className="space-y-8">
                         {categories.map((cat) => (
                             <div key={cat.title}>
-                                <h3 className="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">
+                                <h3 className="text-xs font-black text-black dark:text-gray-500 uppercase tracking-widest mb-2 px-2 border-b-2 border-black dark:border-white pb-1">
                                     {cat.title}
                                 </h3>
-                                <div className="space-y-1">
+                                <div className="space-y-2 mt-2">
                                     {cat.items.map((itemId) => {
                                         const section = sections[itemId];
                                         const isActive = activeSection === itemId;
@@ -111,14 +111,16 @@ const Documentation: React.FC = () => {
                                                 key={itemId}
                                                 onClick={() => setActiveSection(itemId)}
                                                 className={`
-                                                    w-full text-left px-3 py-2 text-sm font-bold border-l-4 transition-all flex items-center gap-2
+                                                    w-full text-left px-3 py-2 text-sm font-bold border-2 transition-all flex items-center gap-3
                                                     ${isActive
-                                                        ? 'border-neo-primary bg-neo-bg dark:bg-white/5 text-black dark:text-white'
-                                                        : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-900'
+                                                        ? 'bg-neo-primary border-black dark:border-white text-white shadow-neo-sm'
+                                                        : 'bg-white border-transparent hover:border-black text-black'
                                                     }
                                                 `}
                                             >
-                                                {section.title}
+                                                <div className="overflow-hidden">
+                                                    {section.title}
+                                                </div>
                                             </button>
                                         );
                                     })}
@@ -134,7 +136,7 @@ const Documentation: React.FC = () => {
                 <div className="max-w-4xl mx-auto min-h-full pb-20">
                     <div className="mb-8 border-b-4 border-black dark:border-white pb-4">
                         <div className="flex items-center gap-3 mb-2">
-                            <span className="p-2 bg-neo-primary border-2 border-black shadow-neo-sm">
+                            <span className="p-2 bg-yellow-400 border-2 border-black shadow-neo-sm">
                                 {React.createElement(sections[activeSection].icon, { className: "w-6 h-6 text-black" })}
                             </span>
                             <h1 className="text-4xl font-black uppercase tracking-tight">{sections[activeSection].title}</h1>
