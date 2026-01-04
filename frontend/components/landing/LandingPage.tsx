@@ -7,6 +7,7 @@ import StatsSection from './StatsSection';
 import HowItWorks from './HowItWorks';
 import FAQSection from './FAQSection';
 import Footer from './Footer';
+import EyeFollowMascot from './EyeFollowMascot';
 
 interface LandingPageProps {
   onStart?: () => void;
@@ -15,6 +16,7 @@ interface LandingPageProps {
 const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
   return (
     <div className="flex-1 flex flex-col w-full h-full overflow-y-auto scroll-smooth animate-page-enter" style={{ transform: 'scale(0.8)', transformOrigin: 'top center' }}>
+      <EyeFollowMascot />
       <HeroSection onStart={onStart} />
       <StatsSection />
       <TechTicker />
