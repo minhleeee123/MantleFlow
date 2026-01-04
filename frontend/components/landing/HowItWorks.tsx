@@ -27,9 +27,9 @@ const HowItWorks: React.FC = () => {
     ];
 
     return (
-        <div className="py-24 shrink-0">
+        <div className="py-8 shrink-0">
             <div className="container mx-auto px-6">
-                <div className="mb-16 flex flex-col md:flex-row items-center justify-center gap-6">
+                <div className="mb-8 flex flex-col md:flex-row items-center justify-center gap-6">
                     {/* 3D Mascot - Workflow */}
                     <div className="hidden lg:block animate-[float_5s_ease-in-out_infinite_1s] shrink-0">
                         <img
@@ -51,7 +51,7 @@ const HowItWorks: React.FC = () => {
                 </div>
 
                 {/* Workflow 1: Auto-Trading */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-24">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-12">
                     {steps.map((step, idx) => (
                         <div
                             key={idx}
@@ -84,7 +84,7 @@ const HowItWorks: React.FC = () => {
                 </div>
 
                 {/* Workflow 2: Chat Interface */}
-                <div className="mb-16 text-center">
+                <div className="mb-8 text-center">
                     <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase mt-4 mb-4">
                         From Chat to Chain
                     </h2>
