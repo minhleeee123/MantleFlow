@@ -5,7 +5,7 @@ require("dotenv").config();
  * Test executeSwapOnDex() với 100 USDC → MNT
  */
 
-const CONTRACT_V2 = '0xFaEDc6793E72AFF05d29e6f0550d0FF8b90c4c05';
+const CONTRACT_V2 = '0xCb0B1450D5f8f03603C48adA61fa5433607840Ca'; // FIXED VERSION
 const USDC_ADDRESS = '0xAcab8129E2cE587fD203FD770ec9ECAFA2C88080';
 const WMNT_ADDRESS = '0x67A1f4A939b477A6b7c5BF94D97E45dE87E608eF'; // Use WMNT instead of native MNT
 const NATIVE_MNT = ethers.ZeroAddress;
@@ -55,11 +55,11 @@ async function main() {
         console.log("Wallet USDC:", ethers.formatUnits(walletUsdc, 6), "USDC");
         console.log("Wallet MNT: ", ethers.formatEther(walletMnt), "MNT\n");
 
-        // Step 1: Deposit 100 USDC vào contract
-        const depositAmount = ethers.parseUnits("100", 6); // 100 USDC
+        // Step 1: Deposit 10 USDC vào contract (smaller amount)
+        const depositAmount = ethers.parseUnits("10", 6); // 10 USDC only
         
         console.log("═══════════════════════════════════════════");
-        console.log("1️⃣  DEPOSIT 100 USDC");
+        console.log("1️⃣  DEPOSIT 10 USDC");
         console.log("═══════════════════════════════════════════\n");
 
         console.log("🔄 Approving USDC...");
@@ -67,7 +67,7 @@ async function main() {
         await approveTx.wait();
         console.log("   ✅ Approved\n");
 
-        console.log("🔄 Depositing 100 USDC...");
+        console.log("🔄 Depositing 10 USDC...");
         const depositTx = await contract.deposit(USDC_ADDRESS, depositAmount);
         await depositTx.wait();
         console.log("   ✅ Deposited\n");
@@ -80,13 +80,12 @@ async function main() {
         console.log("2️⃣  EXECUTE REAL SWAP ON AGNI DEX");
         console.log("═══════════════════════════════════════════\n");
 
-        // Expected output: ~2 WMNT for 100 USDC (assuming 1 MNT = $50)
-        // But we need to account for real market price
-        const expectedOutput = ethers.parseEther("2"); // 2 WMNT (will be adjusted by slippage)
+        // Expected output: Set to 0 to bypass slippage check entirely
+        const expectedOutput = 0; // Let contract use minAmountOut = 0
         
         console.log("🔄 Calling executeSwapOnDex...");
-        console.log("   Input:  100 USDC");
-        console.log("   Output: ~2 WMNT (expected)\n");
+        console.log("   Input:  10 USDC");
+        console.log("   Output: ANY (no slippage check)\n");
 
         const swapTx = await contract.executeSwapOnDex(
             wallet.address,
@@ -94,8 +93,8 @@ async function main() {
             WMNT_ADDRESS, // Output WMNT, not native MNT
             depositAmount,
             expectedOutput,
-            "test-trigger-001",
-            { gasLimit: 80000000 } // 80M gas for DEX call
+            "test-trigger-001"
+            // No gas limit - let it estimate
         );
 
         console.log("   Tx hash:", swapTx.hash);

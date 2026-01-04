@@ -7,6 +7,17 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
+ * @title IWMNT
+ * @dev WMNT (Wrapped MNT) interface for wrapping/unwrapping
+ */
+interface IWMNT {
+    function deposit() external payable;
+    function withdraw(uint256) external;
+    function approve(address spender, uint256 amount) external returns (bool);
+    function balanceOf(address) external view returns (uint256);
+}
+
+/**
  * @title IAgniRouter
  * @dev Agni Finance Router V3 interface (Uniswap V3 style)
  */
@@ -184,39 +195,59 @@ contract TradingBotV2 is Ownable, ReentrancyGuard {
         // Calculate minimum output with slippage
         uint256 minAmountOut = (expectedAmountOut * (10000 - slippageTolerance)) / 10000;
 
-        // Handle native MNT vs WMNT
-        address actualTokenIn = tokenIn;
-        address actualTokenOut = tokenOut;
-        
+        // Handle native MNT wrapping
         if (tokenIn == address(0)) {
-            actualTokenIn = WMNT; // Router needs WMNT, not native MNT
-        }
-        if (tokenOut == address(0)) {
-            actualTokenOut = WMNT;
-        }
-
-        // Approve router if ERC20
-        if (actualTokenIn != address(0)) {
-            IERC20(actualTokenIn).forceApprove(AGNI_ROUTER, amountIn);
-        }
-
-        // Execute swap on Agni
-        IAgniRouter.ExactInputSingleParams memory params = IAgniRouter.ExactInputSingleParams({
-            tokenIn: actualTokenIn,
-            tokenOut: actualTokenOut,
-            fee: DEFAULT_FEE,
-            recipient: address(this),
-            deadline: block.timestamp + 300, // 5 minutes
-            amountIn: amountIn,
-            amountOutMinimum: minAmountOut,
-            sqrtPriceLimitX96: 0
-        });
-
-        if (tokenIn == address(0)) {
-            // Native MNT swap
-            amountOut = IAgniRouter(AGNI_ROUTER).exactInputSingle{value: amountIn}(params);
-        } else {
+            // Wrap native MNT to WMNT first
+            IWMNT(WMNT).deposit{value: amountIn}();
+            
+            // Now approve WMNT to router
+            IWMNT(WMNT).approve(AGNI_ROUTER, amountIn);
+            
+            // Execute swap: WMNT → tokenOut
+            IAgniRouter.ExactInputSingleParams memory params = IAgniRouter.ExactInputSingleParams({
+                tokenIn: WMNT,
+                tokenOut: tokenOut,
+                fee: DEFAULT_FEE,
+                recipient: address(this),
+                deadline: block.timestamp + 300,
+                amountIn: amountIn,
+                amountOutMinimum: minAmountOut,
+                sqrtPriceLimitX96: 0
+            });
+            
             amountOut = IAgniRouter(AGNI_ROUTER).exactInputSingle(params);
+            
+        } else {
+            // ERC20 token swap
+            address actualTokenOut = tokenOut;
+            
+            // If output is native MNT, we'll receive WMNT and unwrap it
+            if (tokenOut == address(0)) {
+                actualTokenOut = WMNT;
+            }
+            
+            // Approve tokenIn to router
+            IERC20(tokenIn).approve(AGNI_ROUTER, 0);
+            IERC20(tokenIn).approve(AGNI_ROUTER, amountIn);
+            
+            // Execute swap
+            IAgniRouter.ExactInputSingleParams memory params = IAgniRouter.ExactInputSingleParams({
+                tokenIn: tokenIn,
+                tokenOut: actualTokenOut,
+                fee: DEFAULT_FEE,
+                recipient: address(this),
+                deadline: block.timestamp + 300,
+                amountIn: amountIn,
+                amountOutMinimum: minAmountOut,
+                sqrtPriceLimitX96: 0
+            });
+            
+            amountOut = IAgniRouter(AGNI_ROUTER).exactInputSingle(params);
+            
+            // If output should be native MNT, unwrap WMNT
+            if (tokenOut == address(0)) {
+                IWMNT(WMNT).withdraw(amountOut);
+            }
         }
 
         // Credit user with output tokens
