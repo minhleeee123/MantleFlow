@@ -84,12 +84,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onStart }) => {
 
         {/* Title */}
         <h1 className="mb-8 text-6xl md:text-8xl lg:text-9xl font-black text-black dark:text-white uppercase tracking-tighter leading-none select-none min-h-[1em] flex flex-col items-center">
-          <span className="block mb-1 relative inline-block min-h-[1em]">
+          <span className="block mb-3 relative inline-block min-h-[1em]">
             {titleText}
             <span className="animate-pulse">_</span>
           </span>
 
-          <span className="block text-2xl md:text-5xl lg:text-6xl mt-1 font-extrabold stroke-text bg-neo-yellow/20 px-4 transform skew-x-[-10deg] min-h-[1.2em]">
+          <span className="block text-2xl md:text-5xl lg:text-6xl mt-3 font-extrabold stroke-text bg-neo-yellow/20 px-4 transform skew-x-[-10deg] min-h-[1.2em]">
             {titleDone && <Typewriter text="Automated Trading Terminal" speed={40} onComplete={() => setSubtitleDone(true)} />}
           </span>
         </h1>
