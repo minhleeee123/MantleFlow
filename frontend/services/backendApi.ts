@@ -81,9 +81,27 @@ export const marketApi = {
     },
 };
 
+// Wallet API
+export const walletApi = {
+    getConfig: async () => {
+        const response = await api.get('/wallet/config');
+        return response.data;
+    },
+
+    getAddress: async () => {
+        const response = await api.get('/wallet/address');
+        return response.data.address;
+    },
+
+    getBalance: async () => {
+        const response = await api.get('/wallet/balance');
+        return response.data;
+    }
+};
+
 // Transactions API
 export const transactionsApi = {
-    create: async (data: { type: 'DEPOSIT' | 'WITHDRAW', token: string, amount: number, txHash?: string }) => {
+    create: async (data: { type: 'DEPOSIT' | 'WITHDRAW' | 'DEPLOY', token: string, amount: number, txHash?: string }) => {
         const response = await api.post('/wallet/transactions', data);
         return response.data;
     },

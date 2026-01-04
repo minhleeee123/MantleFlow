@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { Wallet, ArrowDownCircle, ArrowUpCircle, RefreshCw, History, ExternalLink } from 'lucide-react';
-import { transactionsApi } from '../../services/backendApi';
-
-const CONTRACT_ADDRESS = '0xaD893d3b35FA8cc23A24a0fdF0B79cc22a1a5E44';
-
-const CONTRACT_ABI = [
-    'function deposit(address token, uint256 amount) external payable',
-    'function withdraw(address token, uint256 amount) external',
-    'function getBalance(address user, address token) external view returns (uint256)'
-];
-
-const ERC20_ABI = [
-    'function approve(address spender, uint256 amount) external returns (bool)',
-    'function allowance(address owner, address spender) external view returns (uint256)',
-    'function balanceOf(address account) external view returns (uint256)'
-];
+import { Wallet, ArrowDownCircle, ArrowUpCircle, RefreshCw, History, ExternalLink, Power, ShieldAlert, ShieldCheck } from 'lucide-react';
+import { transactionsApi, walletApi } from '../../services/backendApi';
+import { deploySmartWallet, withdrawFromSmartWallet, getSmartWalletOperator, setSmartWalletOperator } from '../../services/web3Service';
 
 const USDC_ADDRESS = '0xAcab8129E2cE587fD203FD770ec9ECAFA2C88080';
+const ERC20_ABI = [
+    'function approve(address spender, uint256 amount) external returns (bool)',
+    'function balanceOf(address account) external view returns (uint256)',
+    'function transfer(address recipient, uint256 amount) external returns (bool)'
+];
 
 interface Props {
     userAddress: string;
@@ -25,7 +17,7 @@ interface Props {
 
 interface Transaction {
     id: string;
-    type: 'DEPOSIT' | 'WITHDRAW';
+    type: 'DEPOSIT' | 'WITHDRAW' | 'DEPLOY';
     token: string;
     amount: number;
     txHash?: string;
@@ -33,6 +25,11 @@ interface Transaction {
 }
 
 export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
+    const [smartWalletAddress, setSmartWalletAddress] = useState<string | null>(null);
+    const [factoryAddress, setFactoryAddress] = useState<string | null>(null);
+    const [operatorAddress, setOperatorAddress] = useState<string | null>(null);
+    const [currentOperator, setCurrentOperator] = useState<string | null>(null);
+
     const [usdcBalance, setUsdcBalance] = useState('0');
     const [mntBalance, setMntBalance] = useState('0');
     const [walletMnt, setWalletMnt] = useState('0');
@@ -48,33 +45,66 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
     const [mntDepositAmount, setMntDepositAmount] = useState('');
     const [mntWithdrawAmount, setMntWithdrawAmount] = useState('');
 
+    useEffect(() => {
+        fetchConfig();
+    }, []);
+
+    useEffect(() => {
+        fetchData();
+        const interval = setInterval(fetchData, 10000);
+        return () => clearInterval(interval);
+    }, [userAddress, smartWalletAddress]);
+
+    const fetchConfig = async () => {
+        try {
+            const config = await walletApi.getConfig();
+            setFactoryAddress(config.factoryAddress);
+            setOperatorAddress(config.operatorAddress);
+        } catch (e) {
+            console.error("Failed to load config", e);
+        }
+    };
+
     const fetchData = async () => {
         if (!window.ethereum) return;
-        setError('');
 
         try {
+            // 1. Get Smart Wallet Address from Backend (Source of Truth)
+            const addr = await walletApi.getAddress();
+            setSmartWalletAddress(addr);
+
+            // 2. Wallet Balances (MetaMask)
             const provider = new ethers.BrowserProvider(window.ethereum);
-            const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
-            const usdcContract = new ethers.Contract(USDC_ADDRESS, ERC20_ABI, provider);
-
-            // 1. Contract Balances
-            const botUsdc = await contract.getBalance(userAddress, USDC_ADDRESS);
-            setUsdcBalance(ethers.formatUnits(botUsdc, 6));
-
-            const botMnt = await contract.getBalance(userAddress, ethers.ZeroAddress);
-            setMntBalance(ethers.formatEther(botMnt));
-
-            // 2. Wallet Balances
             const signer = await provider.getSigner();
             const signerAddress = await signer.getAddress();
 
             const walletMntBal = await provider.getBalance(signerAddress);
             setWalletMnt(ethers.formatEther(walletMntBal));
 
+            const usdcContract = new ethers.Contract(USDC_ADDRESS, ERC20_ABI, provider);
             const walletUsdcBal = await usdcContract.balanceOf(signerAddress);
             setWalletUsdc(ethers.formatUnits(walletUsdcBal, 6));
 
-            // 3. Transactions
+            // 3. Smart Wallet Balances (if exists)
+            if (addr) {
+                const balances = await walletApi.getBalance();
+                if (balances && balances.balances) {
+                    setUsdcBalance(balances.balances.USDC.toString());
+                    setMntBalance(balances.balances.MNT.toString());
+                }
+
+                // Check Operator Permissions
+                if (window.ethereum) {
+                    try {
+                        const op = await getSmartWalletOperator(addr);
+                        setCurrentOperator(op);
+                    } catch (e) {
+                        console.warn('Failed to fetch operator', e);
+                    }
+                }
+            }
+
+            // 4. Transactions
             try {
                 const history = await transactionsApi.list();
                 setTransactions(history);
@@ -84,61 +114,63 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
 
         } catch (error: any) {
             console.error('Error fetching data:', error);
-            setError('Failed to fetch data. Ensure you are on Mantle Sepolia.');
         }
     };
 
-    useEffect(() => {
-        fetchData();
-        const interval = setInterval(fetchData, 10000);
-        return () => clearInterval(interval);
-    }, [userAddress]);
-
-    const recordTransaction = async (type: 'DEPOSIT' | 'WITHDRAW', token: string, amount: number, txHash: string) => {
+    const handleDeploy = async () => {
+        if (!factoryAddress || !userAddress || !operatorAddress) return;
+        setLoading(true);
+        setError('');
         try {
-            await transactionsApi.create({ type, token, amount, txHash });
-            fetchData(); // Refresh list
-        } catch (error) {
-            console.error('Failed to record transaction', error);
+            // NOTE: We now pass operatorAddress to deploySmartWallet, NOT userAddress
+            const hash = await deploySmartWallet(factoryAddress, operatorAddress);
+            await transactionsApi.create({ type: 'DEPLOY', token: 'ETH', amount: 0, txHash: hash });
+            alert("Wallet Activation Tx Sent! Waiting for confirmation...");
+
+            setTimeout(fetchData, 5000);
+        } catch (e: any) {
+            console.error(e);
+            setError(e.message || "Deployment failed");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAuthorize = async () => {
+        if (!smartWalletAddress || !operatorAddress) return;
+        setLoading(true);
+        try {
+            const hash = await setSmartWalletOperator(smartWalletAddress, operatorAddress);
+            alert("Authorization Tx Sent! Bot will be able to trade soon.");
+            setTimeout(fetchData, 5000);
+        } catch (e: any) {
+            setError(e.message || "Authorization failed");
+        } finally {
+            setLoading(false);
         }
     };
 
     const depositUSDC = async () => {
-        if (!window.ethereum || !usdcDepositAmount) return;
+        if (!window.ethereum || !usdcDepositAmount || !smartWalletAddress) return;
         const amount = parseFloat(usdcDepositAmount);
-        if (isNaN(amount) || amount <= 0) {
-            setError('Invalid amount');
-            return;
-        }
+        if (isNaN(amount) || amount <= 0) return;
 
         try {
             setLoading(true);
-            setError('');
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
-
             const usdcContract = new ethers.Contract(USDC_ADDRESS, ERC20_ABI, signer);
-            const balance = await usdcContract.balanceOf(signer.getAddress());
+
             const amountWei = ethers.parseUnits(amount.toString(), 6);
 
-            if (balance < amountWei) {
-                throw new Error('Insufficient USDC in wallet');
-            }
+            console.log('Transferring USDC to Smart Wallet...');
+            const tx = await usdcContract.transfer(smartWalletAddress, amountWei);
+            await tx.wait();
 
-            // Approve USDC
-            console.log('Approving USDC...');
-            const approveTx = await usdcContract.approve(CONTRACT_ADDRESS, amountWei);
-            await approveTx.wait();
-
-            // Deposit
-            const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-            console.log('Depositing USDC...');
-            const depositTx = await contract.deposit(USDC_ADDRESS, amountWei);
-            await depositTx.wait();
-
-            await recordTransaction('DEPOSIT', 'USDC', amount, depositTx.hash);
+            await transactionsApi.create({ type: 'DEPOSIT', token: 'USDC', amount, txHash: tx.hash });
             alert(`Deposited ${amount} USDC successfully!`);
             setUsdcDepositAmount('');
+            fetchData();
         } catch (error: any) {
             console.error('Deposit error:', error);
             setError(error.reason || error.message);
@@ -148,36 +180,28 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
     };
 
     const depositMNT = async () => {
-        if (!window.ethereum || !mntDepositAmount) return;
+        if (!window.ethereum || !mntDepositAmount || !smartWalletAddress) return;
         const amount = parseFloat(mntDepositAmount);
-        if (isNaN(amount) || amount <= 0) {
-            setError('Invalid amount');
-            return;
-        }
+        if (isNaN(amount) || amount <= 0) return;
 
         try {
             setLoading(true);
-            setError('');
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
 
-            const balance = await provider.getBalance(signer.getAddress());
             const amountWei = ethers.parseEther(amount.toString());
 
-            if (balance < amountWei) {
-                throw new Error('Insufficient MNT in wallet');
-            }
-
-            const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-
-            const tx = await contract.deposit(ethers.ZeroAddress, amountWei, {
+            console.log('Sending MNT to Smart Wallet...');
+            const tx = await signer.sendTransaction({
+                to: smartWalletAddress,
                 value: amountWei
             });
             await tx.wait();
 
-            await recordTransaction('DEPOSIT', 'MNT', amount, tx.hash);
+            await transactionsApi.create({ type: 'DEPOSIT', token: 'MNT', amount, txHash: tx.hash });
             alert(`Deposited ${amount} MNT successfully!`);
             setMntDepositAmount('');
+            fetchData();
         } catch (error: any) {
             console.error('Deposit error:', error);
             setError(error.reason || error.message);
@@ -187,84 +211,77 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
     };
 
     const withdrawMNT = async () => {
-        if (!window.ethereum || !mntWithdrawAmount) return;
+        if (!mntWithdrawAmount || !smartWalletAddress) return;
         const amount = parseFloat(mntWithdrawAmount);
-        if (isNaN(amount) || amount <= 0) {
-            setError('Invalid amount');
-            return;
-        }
+        if (isNaN(amount) || amount <= 0) return;
 
         try {
             setLoading(true);
-            setError('');
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            const signer = await provider.getSigner();
-            const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-
-            const amountWei = ethers.parseEther(amount.toString());
-
-            // Check Contract Balance
-            const currentBal = await contract.getBalance(userAddress, ethers.ZeroAddress);
-            if (currentBal < amountWei) {
-                throw new Error('Insufficient MNT balance in contract');
-            }
-
-            const tx = await contract.withdraw(ethers.ZeroAddress, amountWei);
-            await tx.wait();
-
-            await recordTransaction('WITHDRAW', 'MNT', amount, tx.hash);
+            const hash = await withdrawFromSmartWallet(smartWalletAddress, 'MNT', amount.toString(), 18);
+            await transactionsApi.create({ type: 'WITHDRAW', token: 'MNT', amount, txHash: hash });
             alert(`Withdrew ${amount} MNT successfully!`);
             setMntWithdrawAmount('');
+            fetchData();
         } catch (error: any) {
-            console.error('Withdraw error:', error);
-            setError(error.reason || error.message);
+            setError(error.message);
         } finally {
             setLoading(false);
         }
     };
 
     const withdrawUSDC = async () => {
-        if (!window.ethereum || !usdcWithdrawAmount) return;
+        if (!usdcWithdrawAmount || !smartWalletAddress) return;
         const amount = parseFloat(usdcWithdrawAmount);
-        if (isNaN(amount) || amount <= 0) {
-            setError('Invalid amount');
-            return;
-        }
+        if (isNaN(amount) || amount <= 0) return;
 
         try {
             setLoading(true);
-            setError('');
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            const signer = await provider.getSigner();
-            const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-
-            const amountWei = ethers.parseUnits(amount.toString(), 6);
-
-            const currentBal = await contract.getBalance(userAddress, USDC_ADDRESS);
-            if (currentBal < amountWei) {
-                throw new Error('Insufficient USDC balance in contract');
-            }
-
-            const tx = await contract.withdraw(USDC_ADDRESS, amountWei);
-            await tx.wait();
-
-            await recordTransaction('WITHDRAW', 'USDC', amount, tx.hash);
+            const hash = await withdrawFromSmartWallet(smartWalletAddress, USDC_ADDRESS, amount.toString(), 6);
+            await transactionsApi.create({ type: 'WITHDRAW', token: 'USDC', amount, txHash: hash });
             alert(`Withdrew ${amount} USDC successfully!`);
             setUsdcWithdrawAmount('');
+            fetchData();
         } catch (error: any) {
-            console.error('Withdraw error:', error);
-            setError(error.reason || error.message);
+            setError(error.message);
         } finally {
             setLoading(false);
         }
     };
+
+    if (!smartWalletAddress) {
+        return (
+            <div className="bg-neo-secondary dark:bg-gray-800 border-2 border-black dark:border-white shadow-neo p-6 mb-6 text-center transition-colors">
+                <div className="flex flex-col items-center gap-4">
+                    <Wallet className="w-12 h-12 text-black dark:text-white" />
+                    <h3 className="font-black text-2xl uppercase text-black dark:text-white">Activate Trading Account</h3>
+                    <p className="text-gray-600 dark:text-gray-300 max-w-md">
+                        To use the Auto-Trading Bot, you need to deploy your personal Smart Wallet on Mantle Sepolia.
+                        This wallet allows the bot to execute trades securely while you retain full ownership.
+                    </p>
+                    {error && <div className="text-red-500 font-bold">{error}</div>}
+                    <button
+                        onClick={handleDeploy}
+                        disabled={loading}
+                        className="bg-green-500 text-white px-8 py-3 font-black uppercase text-lg border-2 border-black shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all flex items-center gap-2"
+                    >
+                        <Power className="w-5 h-5" />
+                        {loading ? 'Activating...' : 'Activate Now'}
+                    </button>
+                    <div className="text-xs text-gray-400 mt-2">Factory: {shortAddr(factoryAddress || '...')}</div>
+                </div>
+            </div>
+        );
+    }
+
+    const needsAuth = operatorAddress && currentOperator && operatorAddress.toLowerCase() !== currentOperator.toLowerCase();
 
     return (
         <div className="bg-neo-secondary dark:bg-gray-800 border-2 border-black dark:border-white shadow-neo dark:shadow-none p-6 mb-6 transition-colors">
             <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2 text-black dark:text-white">
                     <Wallet className="w-6 h-6" />
-                    <h3 className="font-black text-xl uppercase">Smart Contract Wallet (Testnet)</h3>
+                    <h3 className="font-black text-xl uppercase">Smart Trading Wallet</h3>
+                    <span className="text-xs font-mono bg-black text-white px-2 py-0.5 rounded" title={smartWalletAddress}>{shortAddr(smartWalletAddress)}</span>
                 </div>
                 <button
                     onClick={fetchData}
@@ -281,13 +298,29 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                 </div>
             )}
 
+            {needsAuth && (
+                <div className="bg-orange-100 dark:bg-orange-900/30 border-2 border-orange-500 text-orange-700 dark:text-orange-300 p-4 mb-4 flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                        <ShieldAlert className="w-5 h-5" />
+                        <span className="font-bold text-sm">Bot Authorization Missing</span>
+                    </div>
+                    <button
+                        onClick={handleAuthorize}
+                        disabled={loading}
+                        className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 font-bold border-2 border-black text-xs uppercase"
+                    >
+                        {loading ? 'Authorizing...' : 'Authorize Bot'}
+                    </button>
+                </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* USDC Section */}
                 <div className="bg-white dark:bg-gray-900 border-2 border-black dark:border-gray-500 p-4 relative group">
                     <div className="absolute top-2 right-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded border border-gray-300 dark:border-gray-600">
-                        Wallet: {parseFloat(walletUsdc).toFixed(2)} USDC
+                        MetaMask: {parseFloat(walletUsdc).toFixed(2)} USDC
                     </div>
-                    <div className="text-sm font-bold mb-2 text-indigo-600 dark:text-indigo-400">USDC (Stablecoin)</div>
+                    <div className="text-sm font-bold mb-2 text-indigo-600 dark:text-indigo-400">USDC (Trading)</div>
                     <div className="text-3xl font-black mb-4 text-black dark:text-white">{parseFloat(usdcBalance).toFixed(2)}</div>
 
                     <div className="space-y-2">
@@ -334,7 +367,7 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                 {/* MNT Section */}
                 <div className="bg-white dark:bg-gray-900 border-2 border-black dark:border-gray-500 p-4 relative group">
                     <div className="absolute top-2 right-2 text-xs font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded border border-gray-300 dark:border-gray-600">
-                        Wallet: {parseFloat(walletMnt).toFixed(3)} MNT
+                        MetaMask: {parseFloat(walletMnt).toFixed(3)} MNT
                     </div>
                     <div className="text-sm font-bold mb-2 text-indigo-600 dark:text-indigo-400">MNT (Native)</div>
                     <div className="text-3xl font-black mb-4 text-black dark:text-white">{parseFloat(mntBalance).toFixed(4)}</div>
@@ -387,7 +420,6 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                     <History className="w-5 h-5" />
                     <h4 className="font-bold uppercase">Recent Transactions</h4>
                 </div>
-
                 <div className="bg-white dark:bg-gray-900 border-2 border-black dark:border-gray-500 max-h-60 overflow-y-auto">
                     {transactions.length === 0 ? (
                         <div className="p-4 text-center text-gray-500 font-mono text-sm">No transactions yet.</div>
@@ -407,7 +439,7 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                                         <td className="px-4 py-2 text-gray-600 dark:text-gray-400">
                                             {new Date(tx.createdAt).toLocaleTimeString()}
                                         </td>
-                                        <td className={`px-4 py-2 font-bold ${['DEPOSIT', 'BUY'].includes(tx.type) ? 'text-green-600' : 'text-red-500'}`}>
+                                        <td className={`px-4 py-2 font-bold ${['DEPOSIT', 'BUY', 'DEPLOY'].includes(tx.type) ? 'text-green-600' : 'text-red-500'}`}>
                                             {tx.type}
                                         </td>
                                         <td className="px-4 py-2 text-black dark:text-white">
@@ -415,12 +447,7 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                                         </td>
                                         <td className="px-4 py-2">
                                             {tx.txHash && (
-                                                <a
-                                                    href={`https://sepolia.mantlescan.xyz/tx/${tx.txHash}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-blue-500 hover:underline flex items-center gap-1"
-                                                >
+                                                <a href={`https://sepolia.mantlescan.xyz/tx/${tx.txHash}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline flex items-center gap-1">
                                                     View <ExternalLink className="w-3 h-3" />
                                                 </a>
                                             )}
@@ -434,8 +461,14 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
             </div>
 
             <div className="mt-4 text-xs font-mono text-gray-500 dark:text-gray-400 text-center break-all">
-                Contract: {CONTRACT_ADDRESS}
+                Contract: {smartWalletAddress}
+                {operatorAddress && ` | Operator: ${shortAddr(operatorAddress)}`}
             </div>
         </div>
     );
 };
+
+function shortAddr(addr: string) {
+    if (!addr) return '';
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+}

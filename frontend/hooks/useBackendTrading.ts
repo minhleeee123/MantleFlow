@@ -120,7 +120,7 @@ export const useBackendTrading = (walletAddress: string | null) => {
         const fetchPrices = async () => {
             if (triggers.length === 0) return;
 
-            const symbols = Array.from(new Set(triggers.map(t => t.symbol)));
+            const symbols = Array.from(new Set(triggers.map((t: TradeTrigger) => t.symbol)));
             try {
                 const prices = await marketApi.getPrices(symbols);
                 setMarketPrices(prices);

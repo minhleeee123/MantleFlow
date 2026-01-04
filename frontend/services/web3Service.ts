@@ -16,6 +16,20 @@ export interface WalletInfo {
 const USDC_ADDRESS = '0xAcab8129E2cE587fD203FD770ec9ECAFA2C88080';
 const ERC20_ABI = ['function balanceOf(address) view returns (uint256)'];
 
+const CHAIN_CONFIGS: Record<string, any> = {
+    "Mantle Sepolia": {
+        chainId: "0x138b",
+        chainName: "Mantle Sepolia",
+        rpcUrls: ["https://rpc.sepolia.mantle.xyz"],
+        nativeCurrency: {
+            name: "MNT",
+            symbol: "MNT",
+            decimals: 18
+        },
+        blockExplorerUrls: ["https://explorer.sepolia.mantle.xyz"]
+    }
+};
+
 export const connectToMetaMask = async (): Promise<WalletInfo | null> => {
     if (typeof window.ethereum === 'undefined') {
         alert("MetaMask is not installed! Please install it to use this feature.");
@@ -157,4 +171,69 @@ export const sendTransaction = async (
         console.error("Transaction Failed:", error);
         throw error;
     }
+};
+
+const FACTORY_ABI = ["function deployWallet(address operator) external returns (address)"];
+const WALLET_ABI = [
+    "function withdraw(address token, uint256 amount) external",
+    "function operator() view returns (address)",
+    "function setOperator(address _operator) external"
+];
+
+export const deploySmartWallet = async (factoryAddress: string, operatorAddress: string): Promise<string> => {
+    if (typeof window.ethereum === 'undefined') throw new Error("MetaMask not found");
+
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const factory = new ethers.Contract(factoryAddress, FACTORY_ABI, signer);
+
+    console.log(`Deploying wallet with Operator ${operatorAddress} via factory ${factoryAddress}`);
+    const tx = await factory.deployWallet(operatorAddress);
+    await tx.wait();
+
+    return tx.hash;
+};
+
+export const getSmartWalletOperator = async (walletAddress: string): Promise<string> => {
+    if (typeof window.ethereum === 'undefined') throw new Error("MetaMask not found");
+
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const wallet = new ethers.Contract(walletAddress, WALLET_ABI, provider);
+    return await wallet.operator();
+};
+
+export const setSmartWalletOperator = async (walletAddress: string, newOperator: string): Promise<string> => {
+    if (typeof window.ethereum === 'undefined') throw new Error("MetaMask not found");
+
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const wallet = new ethers.Contract(walletAddress, WALLET_ABI, signer);
+
+    const tx = await wallet.setOperator(newOperator);
+    await tx.wait();
+    return tx.hash;
+};
+
+export const withdrawFromSmartWallet = async (
+    walletAddress: string,
+    tokenAddress: string,
+    amount: string,
+    decimals: number = 18
+): Promise<string> => {
+    if (typeof window.ethereum === 'undefined') throw new Error("MetaMask not found");
+
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const wallet = new ethers.Contract(walletAddress, WALLET_ABI, signer);
+
+    // If native MNT, tokenAddress should be address(0) for withdraw? 
+    // TradingWallet.sol withdraw checks if token == address(0).
+    // Native MNT address in backend is usually address(0) for this check.
+    const targetToken = tokenAddress === 'MNT' ? ethers.ZeroAddress : tokenAddress;
+    const amountWei = ethers.parseUnits(amount, decimals);
+
+    const tx = await wallet.withdraw(targetToken, amountWei);
+    await tx.wait();
+
+    return tx.hash;
 };
