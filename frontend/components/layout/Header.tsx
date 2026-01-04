@@ -34,6 +34,8 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
     const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
     const [isWalletMenuOpen, setIsWalletMenuOpen] = useState(false);
+    const navRef = React.useRef<HTMLDivElement>(null);
+    const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
     const navItems: { id: ViewType; label: string; icon: any }[] = [
         { id: 'landing', label: 'Intro', icon: Home },
@@ -43,9 +45,22 @@ const Header: React.FC<HeaderProps> = ({
         { id: 'docs', label: 'Docs', icon: Book },
     ];
 
+    // Update sliding indicator position when active tab changes
+    React.useEffect(() => {
+        if (!navRef.current) return;
+
+        const activeButton = navRef.current.querySelector(`[data-tab="${currentView}"]`) as HTMLElement;
+        if (activeButton) {
+            const navRect = navRef.current.getBoundingClientRect();
+            const buttonRect = activeButton.getBoundingClientRect();
+            setIndicatorStyle({
+                left: buttonRect.left - navRect.left,
+                width: buttonRect.width
+            });
+        }
+    }, [currentView]);
+
     const handleConnect = async (walletId: string) => {
-        // In a real app, switch logic based on walletId (e.g. Phantom vs MetaMask)
-        // For now, we default to the existing MetaMask logic
         if (walletId !== 'metamask') {
             alert(`Support for ${walletId} is coming soon! Using MetaMask for now.`);
         }
@@ -111,24 +126,36 @@ const Header: React.FC<HeaderProps> = ({
 
                 {/* RIGHT: Navigation & Wallet */}
                 <div className="flex items-center gap-4 flex-shrink-0">
-                    {/* Nav Tabs */}
-                    <div className="hidden lg:flex items-center bg-gray-100 dark:bg-black p-1 border-2 border-black dark:border-white shadow-neo-sm">
+                    {/* Nav Tabs with Sliding Indicator */}
+                    <div ref={navRef} className="hidden lg:flex items-center bg-gray-100 dark:bg-black p-1 border-2 border-black dark:border-white shadow-neo-sm relative">
+                        {/* Animated Sliding Background */}
+                        <div
+                            className="absolute bg-neo-primary border-2 border-black dark:border-white transition-all duration-300 ease-out"
+                            style={{
+                                left: `${indicatorStyle.left}px`,
+                                width: `${indicatorStyle.width}px`,
+                                top: '4px',
+                                bottom: '4px',
+                                pointerEvents: 'none',
+                                zIndex: 0
+                            }}
+                        />
+
                         {navItems.map((item) => {
                             const isActive = currentView === item.id;
                             return (
                                 <button
                                     key={item.id}
+                                    data-tab={item.id}
                                     onClick={() => setCurrentView(item.id)}
                                     className={`
-                                flex items-center gap-2 px-3 py-1.5 font-black uppercase text-sm transition-all whitespace-nowrap
-                                ${isActive
-                                            ? 'bg-neo-primary text-white border-2 border-black dark:border-white shadow-sm'
-                                            : 'text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-800 border-2 border-transparent'
-                                        }
-                            `}
+                                        flex items-center gap-2 px-3 py-1.5 font-black uppercase text-sm whitespace-nowrap
+                                        transition-colors duration-300 ease-out relative z-10
+                                        ${isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white'}
+                                    `}
                                 >
-                                    <item.icon className={`w-4 h-4 ${isActive ? 'text-white' : ''}`} strokeWidth={2.5} />
-                                    <span>{item.label}</span>
+                                    <item.icon className="w-4 h-4 transition-all duration-300" strokeWidth={2.5} />
+                                    <span className="transition-all duration-300">{item.label}</span>
                                 </button>
                             );
                         })}
