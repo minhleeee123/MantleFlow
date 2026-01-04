@@ -1,5 +1,6 @@
 import React from 'react';
 import { MessageSquare, Cpu, CheckCircle } from 'lucide-react';
+import ScrollReveal from './ScrollReveal';
 
 const HowItWorks: React.FC = () => {
     const steps = [
@@ -29,69 +30,75 @@ const HowItWorks: React.FC = () => {
     return (
         <div className="py-8 shrink-0">
             <div className="container mx-auto px-6">
-                <div className="mb-8 flex flex-col md:flex-row items-center justify-center gap-6">
-                    {/* 3D Mascot - Workflow */}
-                    <div className="hidden lg:block animate-[float_5s_ease-in-out_infinite_1s] shrink-0">
-                        <img
-                            src="/picture/mascot_workflow-removebg-preview.png"
-                            alt="MantleFlow Bot Working"
-                            className="w-48 h-48 object-contain transform -rotate-12"
-                        />
-                    </div>
+                <ScrollReveal variant="fade-up">
+                    <div className="mb-8 flex flex-col md:flex-row items-center justify-center gap-6">
+                        {/* 3D Mascot - Workflow */}
+                        <div className="hidden lg:block animate-[float_5s_ease-in-out_infinite_1s] shrink-0">
+                            <img
+                                src="/picture/mascot_workflow-removebg-preview.png"
+                                alt="MantleFlow Bot Working"
+                                className="w-48 h-48 object-contain transform -rotate-12"
+                            />
+                        </div>
 
-                    <div className="text-center md:text-left">
-                        <span className="bg-black text-white px-3 py-1 text-sm font-black uppercase">Workflow</span>
-                        <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase mt-4 mb-4">
-                            From Strategy to Profit
-                        </h2>
-                        <p className="max-w-2xl text-lg text-gray-600 dark:text-gray-400 font-medium relative z-10">
-                            Automate your trading workflow with intelligent agents.
-                        </p>
+                        <div className="text-center md:text-left">
+                            <span className="bg-black text-white px-3 py-1 text-sm font-black uppercase">Workflow</span>
+                            <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase mt-4 mb-4">
+                                From Strategy to Profit
+                            </h2>
+                            <p className="max-w-2xl text-lg text-gray-600 dark:text-gray-400 font-medium relative z-10">
+                                Automate your trading workflow with intelligent agents.
+                            </p>
+                        </div>
                     </div>
-                </div>
+                </ScrollReveal>
 
                 {/* Workflow 1: Auto-Trading */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-12">
                     {steps.map((step, idx) => (
-                        <div
+                        <ScrollReveal
                             key={idx}
-                            className="relative group h-full animate-in fade-in zoom-in-95 duration-700 fill-mode-backwards"
-                            style={{ animationDelay: `${idx * 300}ms` }}
+                            variant={idx % 2 === 0 ? 'slide-left' : 'slide-right'}
+                            delay={idx * 150}
                         >
-                            {/* Connecting Line (Desktop) */}
-                            {idx !== steps.length - 1 && (
-                                <div className="hidden md:block absolute top-12 -right-4 w-8 h-1 bg-black dark:bg-white z-0 animate-in fade-in slide-in-from-left-4 duration-500 delay-500"></div>
-                            )}
+                            <div className="relative group h-full">
+                                {/* Connecting Line (Desktop) */}
+                                {idx !== steps.length - 1 && (
+                                    <div className="hidden md:block absolute top-12 -right-4 w-8 h-1 bg-black dark:bg-white z-0"></div>
+                                )}
 
-                            <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white p-8 relative z-10 shadow-neo group-hover:-translate-y-2 group-hover:shadow-neo-lg transition-all duration-300 h-full flex flex-col hover:border-l-4 hover:border-b-4">
-                                <div className={`w-16 h-16 ${step.color} border-2 border-black flex items-center justify-center mb-6 shadow-neo-sm transform group-hover:rotate-12 transition-transform shrink-0`}>
-                                    <step.icon className="w-8 h-8 text-black" strokeWidth={2.5} />
+                                <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white p-8 relative z-10 shadow-neo group-hover:-translate-y-2 group-hover:shadow-neo-lg transition-all duration-300 h-full flex flex-col hover:border-l-4 hover:border-b-4">
+                                    <div className={`w-16 h-16 ${step.color} border-2 border-black flex items-center justify-center mb-6 shadow-neo-sm transform group-hover:rotate-12 transition-transform shrink-0`}>
+                                        <step.icon className="w-8 h-8 text-black" strokeWidth={2.5} />
+                                    </div>
+
+                                    <div className="absolute top-4 right-4 text-6xl font-black text-gray-100 dark:text-gray-800 pointer-events-none select-none transition-colors group-hover:text-gray-200 dark:group-hover:text-gray-700">
+                                        0{step.id}
+                                    </div>
+
+                                    <h3 className="text-2xl font-black uppercase text-black dark:text-white mb-4 relative z-10">
+                                        {step.title}
+                                    </h3>
+                                    <p className="text-gray-700 dark:text-gray-300 font-medium leading-relaxed relative z-10 flex-1">
+                                        {step.desc}
+                                    </p>
                                 </div>
-
-                                <div className="absolute top-4 right-4 text-6xl font-black text-gray-100 dark:text-gray-800 pointer-events-none select-none transition-colors group-hover:text-gray-200 dark:group-hover:text-gray-700">
-                                    0{step.id}
-                                </div>
-
-                                <h3 className="text-2xl font-black uppercase text-black dark:text-white mb-4 relative z-10">
-                                    {step.title}
-                                </h3>
-                                <p className="text-gray-700 dark:text-gray-300 font-medium leading-relaxed relative z-10 flex-1">
-                                    {step.desc}
-                                </p>
                             </div>
-                        </div>
+                        </ScrollReveal>
                     ))}
                 </div>
 
                 {/* Workflow 2: Chat Interface */}
-                <div className="mb-8 text-center">
-                    <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase mt-4 mb-4">
-                        From Chat to Chain
-                    </h2>
-                    <p className="max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-400 font-medium">
-                        Prefer conversation? Use our AI assistant for deep analysis.
-                    </p>
-                </div>
+                <ScrollReveal variant="fade-up" delay={100}>
+                    <div className="mb-8 text-center">
+                        <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase mt-4 mb-4">
+                            From Chat to Chain
+                        </h2>
+                        <p className="max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-400 font-medium">
+                            Prefer conversation? Use our AI assistant for deep analysis.
+                        </p>
+                    </div>
+                </ScrollReveal>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
                     {[
@@ -117,33 +124,35 @@ const HowItWorks: React.FC = () => {
                             color: "bg-neo-secondary"
                         }
                     ].map((step, idx) => (
-                        <div
+                        <ScrollReveal
                             key={idx}
-                            className="relative group h-full animate-in fade-in zoom-in-95 duration-700 fill-mode-backwards"
-                            style={{ animationDelay: `${(idx + 3) * 300}ms` }}
+                            variant={idx % 2 === 0 ? 'slide-left' : 'slide-right'}
+                            delay={idx * 150}
                         >
-                            {/* Connecting Line (Desktop) */}
-                            {idx !== 2 && (
-                                <div className="hidden md:block absolute top-12 -right-4 w-8 h-1 bg-black dark:bg-white z-0 animate-in fade-in slide-in-from-left-4 duration-500 delay-500"></div>
-                            )}
+                            <div className="relative group h-full">
+                                {/* Connecting Line (Desktop) */}
+                                {idx !== 2 && (
+                                    <div className="hidden md:block absolute top-12 -right-4 w-8 h-1 bg-black dark:bg-white z-0"></div>
+                                )}
 
-                            <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white p-8 relative z-10 shadow-neo group-hover:-translate-y-2 group-hover:shadow-neo-lg transition-all duration-300 h-full flex flex-col hover:border-l-4 hover:border-b-4">
-                                <div className={`w-16 h-16 ${step.color} border-2 border-black flex items-center justify-center mb-6 shadow-neo-sm transform group-hover:rotate-12 transition-transform shrink-0`}>
-                                    <step.icon className="w-8 h-8 text-black" strokeWidth={2.5} />
+                                <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white p-8 relative z-10 shadow-neo group-hover:-translate-y-2 group-hover:shadow-neo-lg transition-all duration-300 h-full flex flex-col hover:border-l-4 hover:border-b-4">
+                                    <div className={`w-16 h-16 ${step.color} border-2 border-black flex items-center justify-center mb-6 shadow-neo-sm transform group-hover:rotate-12 transition-transform shrink-0`}>
+                                        <step.icon className="w-8 h-8 text-black" strokeWidth={2.5} />
+                                    </div>
+
+                                    <div className="absolute top-4 right-4 text-6xl font-black text-gray-100 dark:text-gray-800 pointer-events-none select-none transition-colors group-hover:text-gray-200 dark:group-hover:text-gray-700">
+                                        0{step.id}
+                                    </div>
+
+                                    <h3 className="text-2xl font-black uppercase text-black dark:text-white mb-4 relative z-10">
+                                        {step.title}
+                                    </h3>
+                                    <p className="text-gray-700 dark:text-gray-300 font-medium leading-relaxed relative z-10 flex-1">
+                                        {step.desc}
+                                    </p>
                                 </div>
-
-                                <div className="absolute top-4 right-4 text-6xl font-black text-gray-100 dark:text-gray-800 pointer-events-none select-none transition-colors group-hover:text-gray-200 dark:group-hover:text-gray-700">
-                                    0{step.id}
-                                </div>
-
-                                <h3 className="text-2xl font-black uppercase text-black dark:text-white mb-4 relative z-10">
-                                    {step.title}
-                                </h3>
-                                <p className="text-gray-700 dark:text-gray-300 font-medium leading-relaxed relative z-10 flex-1">
-                                    {step.desc}
-                                </p>
                             </div>
-                        </div>
+                        </ScrollReveal>
                     ))}
                 </div>
             </div>

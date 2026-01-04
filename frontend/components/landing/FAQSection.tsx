@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Minus, HelpCircle } from 'lucide-react';
+import ScrollReveal from './ScrollReveal';
 
 const FAQS = [
     {
@@ -42,53 +43,60 @@ const FAQSection: React.FC = () => {
     return (
         <div className="py-24 px-6 shrink-0">
             <div className="max-w-4xl mx-auto">
-                <div className="mb-12 text-center relative">
-                    <div className="inline-flex items-center gap-2 bg-neo-accent border-2 border-black px-3 py-1 mb-4 shadow-neo-sm transform -rotate-2">
-                        <HelpCircle className="w-5 h-5 text-black" strokeWidth={2.5} />
-                        <span className="text-sm font-black uppercase text-black">Support Center</span>
-                    </div>
-                    <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase tracking-tight relative z-10">
-                        Frequently Asked Questions
-                    </h2>
+                <ScrollReveal variant="fade-up">
+                    <div className="mb-12 text-center relative">
+                        <div className="inline-flex items-center gap-2 bg-neo-accent border-2 border-black px-3 py-1 mb-4 shadow-neo-sm transform -rotate-2">
+                            <HelpCircle className="w-5 h-5 text-black" strokeWidth={2.5} />
+                            <span className="text-sm font-black uppercase text-black">Support Center</span>
+                        </div>
+                        <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase tracking-tight relative z-10">
+                            Frequently Asked Questions
+                        </h2>
 
-                    {/* 3D Mascot - FAQ */}
-                    <div className="hidden lg:block absolute -left-32 top-1/2 -translate-y-1/2 z-0 pointer-events-none animate-[float_4s_ease-in-out_infinite_2s]">
-                        <img
-                            src="/picture/mascot_faq-removebg-preview.png"
-                            alt="MantleFlow Bot Thinking"
-                            className="w-48 h-48 object-contain transform -rotate-12"
-                        />
+                        {/* 3D Mascot - FAQ */}
+                        <div className="hidden lg:block absolute -left-32 top-1/2 -translate-y-1/2 z-0 pointer-events-none animate-[float_4s_ease-in-out_infinite_2s]">
+                            <img
+                                src="/picture/mascot_faq-removebg-preview.png"
+                                alt="MantleFlow Bot Thinking"
+                                className="w-48 h-48 object-contain transform -rotate-12"
+                            />
+                        </div>
                     </div>
-                </div>
+                </ScrollReveal>
 
                 <div className="space-y-4">
                     {FAQS.map((faq, index) => {
                         const isOpen = openIndex === index;
                         return (
-                            <div
+                            <ScrollReveal
                                 key={index}
-                                className={`border-2 border-black dark:border-white transition-all duration-300 ${isOpen ? 'bg-neo-yellow shadow-neo' : 'bg-white dark:bg-[#1a1a1a] hover:shadow-neo-sm'}`}
+                                variant="fade-up"
+                                delay={index * 80}
                             >
-                                <button
-                                    onClick={() => toggleFAQ(index)}
-                                    className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
-                                >
-                                    <span className={`text-lg md:text-xl font-black uppercase ${isOpen ? 'text-black' : 'text-black dark:text-white'}`}>
-                                        {faq.question}
-                                    </span>
-                                    <div className={`p-1 border-2 border-black shrink-0 ml-4 transition-transform duration-300 ${isOpen ? 'bg-black text-white rotate-180' : 'bg-white text-black'}`}>
-                                        {isOpen ? <Minus className="w-5 h-5" strokeWidth={3} /> : <Plus className="w-5 h-5" strokeWidth={3} />}
-                                    </div>
-                                </button>
-
                                 <div
-                                    className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                                    className={`border-2 border-black dark:border-white transition-all duration-300 ${isOpen ? 'bg-neo-yellow shadow-neo' : 'bg-white dark:bg-[#1a1a1a] hover:shadow-neo-sm'}`}
                                 >
-                                    <div className="p-6 pt-0 text-base md:text-lg font-medium leading-relaxed border-t-2 border-black text-black">
-                                        {faq.answer}
+                                    <button
+                                        onClick={() => toggleFAQ(index)}
+                                        className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+                                    >
+                                        <span className={`text-lg md:text-xl font-black uppercase ${isOpen ? 'text-black' : 'text-black dark:text-white'}`}>
+                                            {faq.question}
+                                        </span>
+                                        <div className={`p-1 border-2 border-black shrink-0 ml-4 transition-transform duration-300 ${isOpen ? 'bg-black text-white rotate-180' : 'bg-white text-black'}`}>
+                                            {isOpen ? <Minus className="w-5 h-5" strokeWidth={3} /> : <Plus className="w-5 h-5" strokeWidth={3} />}
+                                        </div>
+                                    </button>
+
+                                    <div
+                                        className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                                    >
+                                        <div className="p-6 pt-0 text-base md:text-lg font-medium leading-relaxed border-t-2 border-black text-black">
+                                            {faq.answer}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </ScrollReveal>
                         );
                     })}
                 </div>
