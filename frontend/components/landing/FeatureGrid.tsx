@@ -4,32 +4,32 @@ import { Eye, TrendingUp, Shield, Bot, ArrowUpRight, Zap, Globe, Lock } from 'lu
 const FEATURES = [
     {
         title: "Market Intelligence",
-        subtitle: "Powered by Gemini 1.5 Flash",
-        desc: "We aggregate real-time OHLCV data from CoinGecko, Fear/Greed Index from Alternative.me, and on-chain metrics. The AI synthesizes this into actionable reports, not just charts.",
+        subtitle: "Multi-Source Data Aggregation",
+        desc: "We aggregate real-time OHLCV data from CoinGecko, Fear/Greed Index, and on-chain metrics. The AI synthesizes this into actionable reports, not just charts.",
         icon: TrendingUp,
         color: "bg-neo-yellow",
         borderColor: "border-black"
     },
     {
         title: "Vision Analysis",
-        subtitle: "Multimodal Chart Reading",
-        desc: "Don't just read data, see it. Our agent captures your TradingView charts via screen stream, identifying support/resistance levels and candlestick patterns like a pro trader.",
+        subtitle: "Visual Pattern Recognition",
+        desc: "Our agent sees what you see. It captures chart images via screen stream, identifying key support/resistance levels and candlestick patterns instantly.",
         icon: Eye,
         color: "bg-neo-primary",
         borderColor: "border-black"
     },
     {
-        title: "Portfolio Guard",
-        subtitle: "Risk Management Agent",
+        title: "Smart Portfolio",
+        subtitle: "Real-time Risk Assessment",
         desc: "Connect MetaMask via Ethers.js. The AI audits your ERC-20 holdings, calculates real-time PnL, scores diversification, and suggests rebalancing strategies.",
         icon: Shield,
         color: "bg-neo-accent",
         borderColor: "border-black"
     },
     {
-        title: "Auto-Trading Arena",
-        subtitle: "Paper Trading Simulator",
-        desc: "Test strategies risk-free. Set natural language triggers (e.g., 'Sell ETH if price drops below $3k') and watch the bot execute in a simulated environment.",
+        title: "Auto-Trading",
+        subtitle: "Non-Custodial Execution",
+        desc: "Execute strategies with confidence. Set natural language triggers (e.g., 'Sell ETH if price drops below $3k') and let the Smart Wallet handle the execution securely.",
         icon: Bot,
         color: "bg-neo-secondary",
         borderColor: "border-black"
@@ -41,7 +41,7 @@ const FeatureGrid: React.FC = () => {
         <div className="py-24 px-6 shrink-0">
             <div className="max-w-7xl mx-auto">
                 <div className="mb-16 text-center">
-                    <h2 className="text-5xl md:text-6xl font-black text-black dark:text-white uppercase mb-4 tracking-tight">Core Capabilities</h2>
+                    <h2 className="text-5xl md:text-6xl font-black text-black dark:text-white uppercase mb-4 tracking-tight">Core Features</h2>
                     <div className="flex justify-center gap-2 mb-8">
                         <div className="w-4 h-4 bg-black dark:bg-white"></div>
                         <div className="w-4 h-4 bg-neo-primary"></div>

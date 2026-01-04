@@ -74,7 +74,6 @@ const HowItWorks: React.FC = () => {
 
                 {/* Workflow 2: Chat Interface */}
                 <div className="mb-16 text-center">
-                    <span className="bg-white text-black border-2 border-black px-3 py-1 text-sm font-black uppercase">Alternative</span>
                     <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase mt-4 mb-4">
                         From Chat to Chain
                     </h2>
