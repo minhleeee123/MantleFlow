@@ -275,6 +275,28 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
 
     const needsAuth = operatorAddress && currentOperator && operatorAddress.toLowerCase() !== currentOperator.toLowerCase();
 
+    const fundBot = async () => {
+        if (!operatorAddress) return;
+        if (!confirm(`Send 0.2 MNT to Bot Wallet (${shortAddr(operatorAddress)}) for gas?`)) return;
+
+        setLoading(true);
+        try {
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner();
+            const tx = await signer.sendTransaction({
+                to: operatorAddress,
+                value: ethers.parseEther("0.2")
+            });
+            await tx.wait();
+            alert("✅ Bot Gas Funded! The auto-trigger should work now.");
+        } catch (e: any) {
+            console.error(e);
+            setError(e.message || "Fund failed");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="bg-neo-secondary dark:bg-gray-800 border-2 border-black dark:border-white shadow-neo dark:shadow-none p-6 mb-6 transition-colors">
             <div className="flex justify-between items-center mb-4">
@@ -283,13 +305,25 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
                     <h3 className="font-black text-xl uppercase">Smart Trading Wallet</h3>
                     <span className="text-xs font-mono bg-black text-white px-2 py-0.5 rounded" title={smartWalletAddress}>{shortAddr(smartWalletAddress)}</span>
                 </div>
-                <button
-                    onClick={fetchData}
-                    className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors text-black dark:text-white"
-                    title="Refresh Balances"
-                >
-                    <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
-                </button>
+                <div className="flex items-center gap-2">
+                    {operatorAddress && (
+                        <button
+                            onClick={fundBot}
+                            disabled={loading}
+                            className="px-3 py-1 bg-purple-500 hover:bg-purple-600 text-white text-xs font-bold border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all flex items-center gap-1"
+                            title="Send Gas MNT to Bot"
+                        >
+                            ⛽ Fund Bot
+                        </button>
+                    )}
+                    <button
+                        onClick={fetchData}
+                        className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors text-black dark:text-white"
+                        title="Refresh Balances"
+                    >
+                        <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+                    </button>
+                </div>
             </div>
 
             {error && (

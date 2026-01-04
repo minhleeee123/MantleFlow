@@ -166,6 +166,19 @@ export async function executeSwap(
 
     } catch (error: any) {
         console.error("❌ Smart Wallet Execution Failed:", error);
+
+        // Check if error is due to Operator Gas
+        if (error.code === 'INSUFFICIENT_FUNDS' || error.message.includes('insufficient funds')) {
+            const provider = new ethers.JsonRpcProvider(MANTLE_RPC);
+            const botWallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider);
+            const bal = await provider.getBalance(botWallet.address);
+            console.log(`   ⛽ Bot Balance: ${ethers.formatEther(bal)} MNT`);
+
+            if (bal < ethers.parseEther("0.005")) {
+                throw new Error(`BOT_OPERATOR_INSUFFICIENT_GAS: Bot wallet (${botWallet.address}) needs MNT for gas.`);
+            }
+        }
+
         throw new Error(error.message || 'Swap execution failed');
     }
 }
@@ -187,10 +200,18 @@ export async function getUserBalance(
 
         const tokenAddress = TOKEN_ADDRESSES[tokenSymbol] || TOKEN_ADDRESSES['USDC'];
 
-        // If 'MNT', get native balance
+        // If 'MNT', get native balance + WMNT balance
         if (tokenSymbol === 'MNT' || tokenSymbol === 'ETH') {
-            const bal = await provider.getBalance(walletAddr);
-            return parseFloat(ethers.formatEther(bal));
+            const balNative = await provider.getBalance(walletAddr);
+
+            // Also check WMNT balance
+            const wmntContract = new ethers.Contract(WMNT_ADDRESS, ERC20_ABI, provider);
+            const balWmnt = await wmntContract.balanceOf(walletAddr);
+
+            // Total MNT = Native + Wrapped
+            const totalMnt = balNative + balWmnt;
+
+            return parseFloat(ethers.formatEther(totalMnt));
         }
 
         // ERC20 Balance
