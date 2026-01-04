@@ -41,7 +41,7 @@ const EyeFollowMascot: React.FC = () => {
             }}
         >
             {/* Robot Head */}
-            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="240" height="240" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
                 {/* Antenna */}
                 <line x1="60" y1="10" x2="60" y2="25" stroke="#000" strokeWidth="3" />
                 <circle cx="60" cy="8" r="5" fill="#FFD700" stroke="#000" strokeWidth="2" />
@@ -60,7 +60,6 @@ const EyeFollowMascot: React.FC = () => {
                         cy={eyePosition.y}
                         r="5"
                         fill="#000"
-                        style={{ transition: 'all 0.1s ease-out' }}
                     />
                 </g>
 
@@ -72,7 +71,6 @@ const EyeFollowMascot: React.FC = () => {
                         cy={eyePosition.y}
                         r="5"
                         fill="#000"
-                        style={{ transition: 'all 0.1s ease-out' }}
                     />
                 </g>
 
@@ -94,12 +92,7 @@ const EyeFollowMascot: React.FC = () => {
                 <circle cx="80" cy="32" r="2" fill="#000" />
             </svg>
 
-            {/* Label */}
-            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                <span className="text-xs font-black uppercase bg-neo-accent text-black px-2 py-1 border-2 border-black shadow-neo-sm">
-                    MantleBot
-                </span>
-            </div>
+
         </div>
     );
 };
