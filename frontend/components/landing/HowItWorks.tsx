@@ -59,7 +59,7 @@ const HowItWorks: React.FC = () => {
                         <ScrollReveal
                             key={idx}
                             variant={idx % 2 === 0 ? 'slide-left' : 'slide-right'}
-                            delay={idx * 150}
+                            delay={idx * 500}
                         >
                             <div className="relative group h-full">
                                 {/* Connecting Line (Desktop) */}
@@ -127,7 +127,7 @@ const HowItWorks: React.FC = () => {
                         <ScrollReveal
                             key={idx}
                             variant={idx % 2 === 0 ? 'slide-left' : 'slide-right'}
-                            delay={idx * 150}
+                            delay={idx * 500}
                         >
                             <div className="relative group h-full">
                                 {/* Connecting Line (Desktop) */}
