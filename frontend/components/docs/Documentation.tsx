@@ -149,7 +149,7 @@ const Documentation: React.FC = () => {
 
                     {/* Footer for content */}
                     <div className="mt-20 pt-6 border-t-2 border-dashed border-gray-300 dark:border-gray-700 text-sm text-gray-500">
-                        Designed with CryptoInsight Neo-Brutalism System
+                        Designed with MantleFlow Neo-Brutalism System
                     </div>
                 </div>
             </div>

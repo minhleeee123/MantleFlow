@@ -20,8 +20,8 @@ export const determineIntent = async (userMessage: string): Promise<{ type: 'ANA
 }
 
 export const chatWithModel = async (
-  userMessage: string, 
-  history: ChatMessage[], 
+  userMessage: string,
+  history: ChatMessage[],
   contextData?: CryptoData
 ): Promise<string> => {
   try {
@@ -32,7 +32,7 @@ export const chatWithModel = async (
         parts: [{ text: msg.text + (msg.data ? ` [System: User viewed data for ${msg.data.coinName}]` : "") }]
       }));
 
-    let systemInstruction = "You are CryptoInsight AI. You have access to real-time crypto tools.";
+    let systemInstruction = "You are MantleFlow AI. You have access to real-time crypto tools.";
     if (contextData) {
       systemInstruction += `\nCURRENT CONTEXT: User is viewing dashboard for ${contextData.coinName}.\nData: ${JSON.stringify(contextData)}`;
     }

@@ -129,7 +129,7 @@ const App: React.FC = () => {
         {
           id: 'welcome',
           role: 'model',
-          text: 'I am CryptoInsight AI. I analyze markets, check portfolio health, and draft web3 transactions. What\'s the move today?'
+          text: 'I am MantleFlow AI. I analyze markets, check portfolio health, and draft web3 transactions. What\'s the move today?'
         }
       ]
     }

@@ -39,31 +39,31 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onStart }) => {
 
       <div className="container mx-auto px-4 py-20 flex flex-col items-center text-center relative z-10">
 
-        {/* Live Ticker Badge - BTC Removed */}
+        {/* Live Ticker Badge - Updated for Auto-Trade */}
         <div className="mb-8 flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-700">
-          <div className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 border-2 border-transparent transform -rotate-1 shadow-neo-sm hover:rotate-0 transition-transform cursor-default">
-            <Sparkles className="w-4 h-4 text-neo-yellow" />
-            <span className="text-xs md:text-sm font-black uppercase tracking-widest">Gemini 2.5 Powered</span>
+          <div className="inline-flex items-center gap-2 bg-neo-accent text-black px-4 py-2 border-2 border-black transform -rotate-1 shadow-neo-sm hover:rotate-0 transition-transform cursor-default">
+            <Sparkles className="w-4 h-4" />
+            <span className="text-xs md:text-sm font-black uppercase tracking-widest">Auto-Trade Live</span>
           </div>
         </div>
 
         {/* Title */}
         <h1 className="mb-8 text-6xl md:text-8xl lg:text-9xl font-black text-black dark:text-white uppercase tracking-tighter leading-none select-none">
           <span className="block mb-2 md:mb-4 relative inline-block">
-            The Terminal
+            MantleFlow
           </span>
           <br className="hidden md:block" />
           <span className="block text-2xl md:text-5xl lg:text-6xl mt-4 font-extrabold stroke-text bg-neo-yellow/20 px-4 transform skew-x-[-10deg]">
-            Decentralized Intelligence
+            Automated Trading Terminal
           </span>
         </h1>
 
         {/* Subtitle */}
         <p className="mb-10 text-lg md:text-2xl font-medium text-gray-700 dark:text-gray-300 max-w-3xl font-mono leading-relaxed px-4">
-          Stop guessing. Start knowing. <br className="hidden md:block" />
-          <span className="bg-neo-accent/20 px-1 border-b-2 border-black dark:border-white">Real-time analytics</span>,
-          <span className="bg-neo-primary/20 px-1 border-b-2 border-black dark:border-white mx-1">Vision AI chart reading</span>, and
-          <span className="bg-neo-secondary/20 px-1 border-b-2 border-black dark:border-white">Automated Risk Management</span>.
+          Stop staring at charts. Start automating. <br className="hidden md:block" />
+          <span className="bg-neo-accent/20 px-1 border-b-2 border-black dark:border-white">Smart Triggers</span>,
+          <span className="bg-neo-primary/20 px-1 border-b-2 border-black dark:border-white mx-1">Risk Management</span>, and
+          <span className="bg-neo-secondary/20 px-1 border-b-2 border-black dark:border-white">24/7 Execution</span>.
         </p>
 
         {/* CTA Buttons */}

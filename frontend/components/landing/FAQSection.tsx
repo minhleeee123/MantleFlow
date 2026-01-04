@@ -20,7 +20,7 @@ const FAQS = [
     },
     {
         question: "Does the AI provide financial advice?",
-        answer: "No. CryptoInsight AI is an advanced analytics tool. All 'Verdicts' and 'Scores' are generated based on mathematical models and historical data patterns. They are for informational purposes only. You should always Do Your Own Research (DYOR)."
+        answer: "No. MantleFlow is an advanced analytics tool. All 'Verdicts' and 'Scores' are generated based on mathematical models and historical data patterns. They are for informational purposes only. You should always Do Your Own Research (DYOR)."
     },
     {
         question: "What makes the 'Smart Trigger' different from limit orders?",

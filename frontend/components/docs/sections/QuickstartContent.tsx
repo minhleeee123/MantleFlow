@@ -4,7 +4,7 @@ import { Rocket } from 'lucide-react';
 
 export const QuickstartContent = () => (
     <div className="space-y-8">
-        <p className="text-lg">Get CryptoInsight up and running in under 10 minutes. This guide covers installation and local deployment.</p>
+        <p className="text-lg">Get MantleFlow up and running in under 10 minutes. This guide covers installation and local deployment.</p>
 
         <div>
             <h3 className="text-xl font-black uppercase mb-4">Prerequisites</h3>

@@ -5,7 +5,7 @@ import { InfoCard } from '../DocHelpers';
 export const IntroContent = () => (
     <div className="space-y-6">
         <p className="text-lg font-bold leading-relaxed">
-            Welcome to the <span className="bg-yellow-200 dark:bg-yellow-900 px-1">CryptoInsight AI</span> documentation.
+            Welcome to the <span className="bg-yellow-200 dark:bg-yellow-900 px-1">MantleFlow</span> documentation.
             This platform combines the power of Generative AI (Gemini 2.5 Flash), decentralized settlement on Mantle Sepolia Network,
             and an automated background execution system to solve the complexity of crypto trading through natural language commands.
         </p>
@@ -14,7 +14,7 @@ export const IntroContent = () => (
             <h3 className="text-xl font-black uppercase mb-4">System Overview</h3>
             <div className="bg-gray-100 dark:bg-black p-4 border border-black font-mono text-xs md:text-sm overflow-x-auto whitespace-pre leading-relaxed">
                 {`┌─────────────────────────────────────────────────────────────────┐
-│                     CryptoInsight AI Platform                    │
+│                     MantleFlow Platform                          │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  ┌──────────────┐  ┌──────────────┐  ┌─────────────────────┐    │

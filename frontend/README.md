@@ -1,8 +1,8 @@
-# 🚀 CryptoInsight AI - Gemini-Powered Crypto Trading Platform
+# 🚀 MantleFlow - Gemini-Powered Crypto Trading Platform
 
 ## 📋 Tổng Quan Hệ Thống
 
-**CryptoInsight AI** là một nền tảng giao dịch và phân tích tiền điện tử thông minh được xây dựng với công nghệ **Google Gemini 2.5 Flash AI**, **React**, và **TypeScript**. Hệ thống cung cấp các tính năng phân tích thị trường theo thời gian thực, quản lý danh mục đầu tư, giao dịch tự động thông minh (Smart Trading), và tích hợp ví Web3.
+**MantleFlow** là một nền tảng giao dịch và phân tích tiền điện tử thông minh được xây dựng với công nghệ **Google Gemini 2.5 Flash AI**, **React**, và **TypeScript**. Hệ thống cung cấp các tính năng phân tích thị trường theo thời gian thực, quản lý danh mục đầu tư, giao dịch tự động thông minh (Smart Trading), và tích hợp ví Web3.
 
 ---
 
