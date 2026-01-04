@@ -32,7 +32,7 @@ import Documentation from './components/docs/Documentation';
 const INITIAL_USER_DATA = {
   name: "Crypto Explorer",
   email: "trader@mantleflow.ai",
-  joinDate: "September 2023",
+  joinDate: "September 2025",
   walletAddress: null as string | null,
   totalBalance: 0,
   portfolio: [

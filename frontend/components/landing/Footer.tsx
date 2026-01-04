@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="text-right text-xs font-bold text-gray-500 uppercase">
-          © 2024 MantleFlow Labs.<br />All rights reserved.
+          © 2025 MantleFlow Labs.<br />All rights reserved.
         </div>
       </div>
     </div>
