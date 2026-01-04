@@ -79,60 +79,32 @@ contract TradingWallet is Initializable {
     }
 
     /**
-     * @dev Bot executes swap on Agni. 
-     * IMPORTANT: Bot cannot send funds elsewhere, output MUST come back to this wallet.
+     * @dev Generic Execution.
+     * Allows Operator (Bot) to execute any transaction on behalf of the wallet.
+     * Backend/Bot is responsible for constructing valid calldata (e.g., Swap, Approve, etc.)
      */
-    function executeSwapOnAgni(
-        address tokenIn,
-        address tokenOut,
-        uint24 fee,
-        uint256 amountIn,
-        uint256 amountOutMinimum
-    ) external onlyOperatorOrOwner returns (uint256 amountOut) {
+    function executeCall(
+        address target,
+        uint256 value,
+        bytes calldata data
+    ) external onlyOperatorOrOwner returns (bytes memory result) {
         
-        address actualTokenIn = tokenIn;
-        address actualTokenOut = tokenOut;
+        // Security: Optional Whitelist check could go here
+        require(target != address(0), "Invalid target");
 
-        // 1. Wrap MNT if needed
-        if (tokenIn == address(0)) {
-            require(address(this).balance >= amountIn, "Insufficient MNT");
-            IWMNT(WMNT).deposit{value: amountIn}();
-            actualTokenIn = WMNT; 
-        } else {
-            require(IERC20(tokenIn).balanceOf(address(this)) >= amountIn, "Insufficient Token");
-        }
-
-        // Handle output MNT
-        if (tokenOut == address(0)) {
-            actualTokenOut = WMNT;
-        }
-
-        // 2. Approve Router
-        // Use IERC20 interface for WMNT to support approve
-        IERC20(actualTokenIn).approve(AGNI_ROUTER, 0);
-        IERC20(actualTokenIn).approve(AGNI_ROUTER, amountIn);
-
-        // 3. Prepare Params
-        IAgniRouter.ExactInputSingleParams memory params = IAgniRouter.ExactInputSingleParams({
-            tokenIn: actualTokenIn,
-            tokenOut: actualTokenOut,
-            fee: fee,
-            recipient: address(this), 
-            deadline: block.timestamp + 300,
-            amountIn: amountIn,
-            amountOutMinimum: amountOutMinimum,
-            sqrtPriceLimitX96: 0
-        });
-
-        // 4. Exec Swap
-        amountOut = IAgniRouter(AGNI_ROUTER).exactInputSingle(params);
+        // Execute
+        bool success;
+        (success, result) = target.call{value: value}(data);
         
-        // 5. Unwrap if output is MNT
-        if (tokenOut == address(0)) {
-             IWMNT(WMNT).withdraw(amountOut);
+        if (!success) {
+            // Bubble up revert reason
+            assembly {
+                let returndata_size := mload(result)
+                revert(add(32, result), returndata_size)
+            }
         }
-
-        emit SwapExecuted(tokenIn, tokenOut, amountIn, amountOut);
+        
+        emit SwapExecuted(target, address(0), value, 0); // Reusing event or define new one
     }
 
     /**
