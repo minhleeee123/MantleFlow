@@ -4,7 +4,7 @@ import { Plus, Minus, HelpCircle } from 'lucide-react';
 const FAQS = [
     {
         question: "How does the 'Vision Agent' analysis work?",
-        answer: "Our Vision Agent utilizes the multimodal capabilities of Gemini 2.5. It doesn't just read price data—it actually 'sees' the chart patterns, wedges, and trends in your uploaded screenshots, effectively combining visual technical analysis with quantitative data."
+        answer: "Our Vision Agent utilizes advanced multimodal AI capabilities. It doesn't just read price data—it actually 'sees' the chart patterns, wedges, and trends in your uploaded screenshots, effectively combining visual technical analysis with quantitative data."
     },
     {
         question: "Is my private key safe?",

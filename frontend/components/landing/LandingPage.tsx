@@ -14,7 +14,7 @@ interface LandingPageProps {
 
 const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
   return (
-    <div className="flex-1 flex flex-col w-full h-full overflow-y-auto scroll-smooth animate-page-enter">
+    <div className="flex-1 flex flex-col w-full h-full overflow-y-auto scroll-smooth animate-page-enter" style={{ transform: 'scale(0.8)', transformOrigin: 'top center' }}>
       <HeroSection onStart={onStart} />
       <StatsSection />
       <TechTicker />

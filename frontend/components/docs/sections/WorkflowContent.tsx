@@ -54,7 +54,7 @@ export const WorkflowContent = () => (
             │
             ▼
 ┌─────────────────────────────────┐
-│  Gemini 2.5 Flash:              │
+│  MantleFlow AI:              │
 │  smartTradeAgent.parseStrategy()│
 └──────────────┬──────────────────┘
                │ Structured JSON
@@ -208,7 +208,7 @@ POST /api/wallet/transactions
         │
         ▼
 ┌────────────────────────────────────┐
-│ Gemini AI: classifyIntent()       │
+│ MantleFlow AI: classifyIntent()       │
 │ Result: "ANALYZE"                  │
 └────────────┬───────────────────────┘
              │

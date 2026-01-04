@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
         <div>
           <h2 className="text-2xl font-black uppercase tracking-tighter">MantleFlow</h2>
-          <p className="text-gray-400 font-mono text-sm mt-1">Hackathon Build v2.5.0</p>
+          <p className="text-gray-400 font-mono text-sm mt-1">Hackathon Build</p>
         </div>
 
         <div className="flex gap-4">

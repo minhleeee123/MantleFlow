@@ -4,7 +4,7 @@ import { Brain, BarChart2, Bot, Wallet, Link, Globe } from 'lucide-react';
 
 export const FeaturesContent = () => (
     <div className="space-y-6">
-        <FeatureBlock title={<div className="flex items-center gap-2"><Brain className="w-5 h-5" /> AI Chat Agent (Gemini 2.5 Flash)</div>}>
+        <FeatureBlock title={<div className="flex items-center gap-2"><Brain className="w-5 h-5" /> AI Chat Agent</div>}>
             <ul className="list-disc ml-5 space-y-2">
                 <li><strong>Intent Classification:</strong> Automatically classifies user intent into 4 categories: ANALYZE (coin analysis), PORTFOLIO_ANALYSIS (portfolio review), TRANSACTION (Web3 txn preview), and CHAT (general conversation).</li>
                 <li><strong>Market Analysis Agent:</strong> Fetches real-time data from CoinGecko API including price history, market cap, volume. Generates comprehensive reports with charts (Recharts), Fear & Greed Index (Alternative.me), Long/Short ratios (Binance API), and AI-generated tokenomics visualizations.</li>

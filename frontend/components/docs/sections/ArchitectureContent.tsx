@@ -11,7 +11,7 @@ export const ArchitectureContent = () => (
 │                         USER INTERACTION LAYER                           │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│  MetaMask Extension  ◄──► Browser (React App) ◄──► Gemini AI API        │
+│  MetaMask Extension  ◄──► Browser (React App) ◄──► MantleFlow AI        │
 │      (Web3 Provider)           (Port 5173)           (Generative AI)    │
 │                                                                          │
 └────────────┬────────────────────────────────────────────────────────────┘

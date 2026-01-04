@@ -75,16 +75,12 @@ const Header: React.FC<HeaderProps> = ({
                         onClick={() => setCurrentView('landing')}
                     >
                         <span className="text-xl md:text-2xl font-black text-black dark:text-white tracking-tighter uppercase truncate">
-                            Gemini<span className="text-neo-primary">Crypto</span>
+                            Mantle<span className="text-neo-primary">Flow</span>
                         </span>
                     </div>
 
-                    {/* Version Badge, Theme Toggle & Snow Toggle */}
+                    {/* Theme Toggle & Snow Toggle */}
                     <div className="hidden sm:flex items-center gap-2">
-                        <span className="px-2 py-0.5 bg-black text-white dark:bg-white dark:text-black text-xs font-bold uppercase transform -rotate-2 border border-transparent whitespace-nowrap">
-                            v2.5 Flash
-                        </span>
-
                         <button
                             onClick={toggleTheme}
                             className="p-1.5 border-2 border-black dark:border-white shadow-neo-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all bg-white dark:bg-black text-black dark:text-white"

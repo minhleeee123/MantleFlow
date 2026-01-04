@@ -6,7 +6,7 @@ export const IntroContent = () => (
     <div className="space-y-6">
         <p className="text-lg font-bold leading-relaxed">
             Welcome to the <span className="bg-yellow-200 dark:bg-yellow-900 px-1">MantleFlow</span> documentation.
-            This platform combines the power of Generative AI (Gemini 2.5 Flash), decentralized settlement on Mantle Sepolia Network,
+            This platform combines the power of Generative AI, decentralized settlement on Mantle Sepolia Network,
             and an automated background execution system to solve the complexity of crypto trading through natural language commands.
         </p>
 
@@ -20,7 +20,7 @@ export const IntroContent = () => (
 │  ┌──────────────┐  ┌──────────────┐  ┌─────────────────────┐    │
 │  │   Frontend   │  │   Backend    │  │   Smart Contract    │    │
 │  │  (React 19)  │◄─┤  (Node.js)   │◄─┤  (Solidity 0.8.20)  │    │
-│  │   + Gemini AI│  │  + Prisma ORM│  │  + Wallet Factory   │    │
+│  │   + MantleFlow AI│  │  + Prisma ORM│  │  + Wallet Factory   │    │
 │  │   + Ethers.js│  │  + MySQL DB  │  │  + Agni DEX Router  │    │
 │  └──────────────┘  └──────────────┘  └─────────────────────┘    │
 │         │                 │                      │               │
@@ -39,7 +39,7 @@ export const IntroContent = () => (
                 </li>
                 <li className="flex items-start gap-2">
                     <span className="font-black text-lg">•</span>
-                    <span><strong>AI-Powered Trading:</strong> Convert natural language to executable on-chain strategies using Gemini 2.5 Flash</span>
+                    <span><strong>AI-Powered Trading:</strong> Convert natural language to executable on-chain strategies using advanced AI models</span>
                 </li>
                 <li className="flex items-start gap-2">
                     <span className="font-black text-lg">•</span>
@@ -54,7 +54,7 @@ export const IntroContent = () => (
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <InfoCard title="Frontend" icon={Box}>
-                React 19 with Vite. Features Neo-brutalist UI, real-time market charts (Recharts), MetaMask integration, and AI chat interface powered by Gemini SDK.
+                React 19 with Vite. Features Neo-brutalist UI, real-time market charts (Recharts), MetaMask integration, and AI chat interface.
             </InfoCard>
             <InfoCard title="Backend" icon={Server}>
                 Node.js/Express server with Prisma ORM (MySQL). Handles JWT auth, trigger CRUD, and auto-executor worker. Ethers.js for blockchain interactions.
@@ -63,7 +63,7 @@ export const IntroContent = () => (
                 WalletFactory deploys TradingWallet clones (EIP-1167). Each wallet supports deposits, withdrawals, and generic executeCall() for swaps via operator.
             </InfoCard>
             <InfoCard title="AI Agents" icon={Cpu}>
-                Gemini 2.5 Flash powers multiple agents: Market Analysis, Portfolio Evaluation, Transaction Parsing, and Smart Trade Strategy Generation.
+                Advanced AI powers multiple agents: Market Analysis, Portfolio Evaluation, Transaction Parsing, and Smart Trade Strategy Generation.
             </InfoCard>
         </div>
 

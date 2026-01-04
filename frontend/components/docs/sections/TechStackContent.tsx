@@ -26,7 +26,7 @@ export const TechStackContent = () => (
                     <tr>
                         <td className="p-4 bg-gray-50 dark:bg-white/5">AI</td>
                         <td className="p-4">@google/genai</td>
-                        <td className="p-4 text-gray-500">Gemini 2.5 Flash v1.30</td>
+                        <td className="p-4 text-gray-500">MantleFlow AI</td>
                     </tr>
                     <tr>
                         <td className="p-4 bg-gray-50 dark:bg-white/5">Web3</td>

@@ -6,7 +6,7 @@ const INITIAL_LOGS = [
   "> Connecting to CoinGecko API... [OK]",
   "> Fetching BTC/USDT OHLCV Data... [OK]",
   "> Analyzing Sentiment (Source: Alternative.me)... [FEAR: 32]",
-  "> Loading Gemini 2.5 Vision Module... [READY]",
+  "> Loading MantleFlow AI Module... [RE ADY]",
   "> Scanning Portfolio Addresses... [3 WALLETS FOUND]",
 ];
 
@@ -79,16 +79,16 @@ const TerminalPreview: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full py-16 overflow-hidden relative z-10 shrink-0">
+    <div ref={containerRef} className="w-full py-8 overflow-hidden relative z-10 shrink-0">
       <div className="container mx-auto px-6 flex flex-col items-center">
 
-        <div className="my-16 text-center relative w-full max-w-4xl flex flex-col items-center">
+        <div className="mt-0 mb-8 text-center relative w-full max-w-4xl flex flex-col items-center">
           {/* 3D Mascot - Demo - Positioned relative in flex flow to avoid overflow clipping */}
-          <div className="hidden lg:block animate-[float_6s_ease-in-out_infinite_0.5s] z-20 mb-8">
+          <div className="hidden lg:block animate-[float_6s_ease-in-out_infinite_0.5s] z-20 mb-4">
             <img
               src="/picture/mascot_demo-removebg-preview.png"
               alt="MantleFlow Bot Hacking"
-              className="w-96 h-96 object-contain drop-shadow-xl transform rotate-12"
+              className="w-80 h-80 object-contain drop-shadow-xl transform rotate-12"
             />
           </div>
 
@@ -107,7 +107,7 @@ const TerminalPreview: React.FC = () => {
             </div>
             <div className="text-gray-400 text-xs font-bold uppercase flex items-center gap-2 select-none">
               <Terminal className="w-3 h-3" />
-              mantleflow-core-v2.5.exe
+              mantleflow-core.exe
             </div>
             <div className="flex gap-2">
               <Minus className="w-4 h-4 text-gray-500 cursor-pointer" />
@@ -138,7 +138,7 @@ const TerminalPreview: React.FC = () => {
             ))}
 
             <div className="flex items-center gap-1">
-              <span className="text-neo-secondary">root@gemini:~#</span>
+              <span className="text-neo-secondary">root@mantleflow:~#</span>
               <span className="w-2 h-4 bg-green-500 animate-pulse block"></span>
             </div>
           </div>
