@@ -1,23 +1,65 @@
 import { ethers } from 'ethers';
 
 const MANTLE_RPC = process.env.MANTLE_RPC_URL || 'https://rpc.sepolia.mantle.xyz';
-const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS!;
+// const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS!; // Deprecated V1
+const FACTORY_ADDRESS = process.env.FACTORY_ADDRESS!;
+const FUSIONX_ROUTER = process.env.FUSIONX_ROUTER!;
+const WMNT_ADDRESS = process.env.WMNT_ADDRESS!;
+const USDC_ADDRESS = process.env.USDC_ADDRESS!;
+
+// Admin/Bot Key to sign "executeCall"
 const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY!;
 
 const TOKEN_ADDRESSES: Record<string, string> = {
-    'USDC': process.env.USDC_ADDRESS!,
+    'USDC': USDC_ADDRESS,
     'MNT': ethers.ZeroAddress,
-    // For demo purposes, mapping ETH/BTC to these same test tokens
+    'WMNT': WMNT_ADDRESS,
     'ETH': ethers.ZeroAddress,
-    'BTC': process.env.USDC_ADDRESS!
+    'BTC': USDC_ADDRESS // Mapping for demo
 };
 
-// Contract ABI - minimal needed
-const CONTRACT_ABI = [
-    'function executeSwap(address user, address tokenIn, address tokenOut, uint256 amountIn, uint256 amountOut, string triggerId) external returns (bool)',
-    'function getBalance(address user, address token) external view returns (uint256)',
-    'function getBalances(address user, address[] tokens) external view returns (uint256[])'
+// ----------------------------------------------------------------------
+// ABIS
+// ----------------------------------------------------------------------
+
+const FACTORY_ABI = [
+    "function userWallets(address user) view returns (address)"
 ];
+
+const WALLET_ABI = [
+    "function executeCall(address target, uint256 value, bytes calldata data) external returns (bytes)",
+    "function owner() view returns (address)",
+    "function operator() view returns (address)"
+];
+
+const WMNT_ABI = [
+    "function deposit() payable",
+    "function balanceOf(address) view returns (uint256)"
+];
+
+const ERC20_ABI = [
+    "function approve(address spender, uint256 amount) external returns (bool)",
+    "function balanceOf(address account) view returns (uint256)"
+];
+
+const ROUTER_ABI = [
+    "function exactInputSingle(tuple(address tokenIn, address tokenOut, uint24 fee, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum, uint160 sqrtPriceLimitX96) params) external payable returns (uint256 amountOut)"
+];
+
+// ----------------------------------------------------------------------
+// SERVICE METHODS
+// ----------------------------------------------------------------------
+
+export async function getSmartWalletAddress(userAddress: string): Promise<string> {
+    const provider = new ethers.JsonRpcProvider(MANTLE_RPC);
+    const factory = new ethers.Contract(FACTORY_ADDRESS, FACTORY_ABI, provider);
+    const wallet = await factory.userWallets(userAddress);
+
+    if (wallet === ethers.ZeroAddress) {
+        throw new Error("User has no Smart Wallet deployed.");
+    }
+    return wallet;
+}
 
 export async function executeSwap(
     userAddress: string,
@@ -25,77 +67,106 @@ export async function executeSwap(
     amount: number, // Amount in Token Unit (e.g. 100 USDT)
     type: 'BUY' | 'SELL'
 ): Promise<string> {
-    console.log(`🔗 [BLOCKCHAIN] Init swap for ${userAddress} | ${type} ${amount} ${symbol}`);
+    console.log(`🔗 [SMART WALLET] Init swap for ${userAddress} | ${type} ${amount} ${symbol}`);
 
     try {
         const provider = new ethers.JsonRpcProvider(MANTLE_RPC);
-        const wallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider);
-        const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, wallet);
+        const botWallet = new ethers.Wallet(ADMIN_PRIVATE_KEY, provider);
 
-        // 1. Identify Tokens
-        // Logic: 
-        // IF Buying BTC (using USDT) -> TokenIn=USDT, TokenOut=BTC
-        // IF Selling BTC (to USDT)   -> TokenIn=BTC,  TokenOut=USDT
-        // For this Hackathon, Base currency is always USDC/MNT
+        // 1. Get User's Smart Wallet Address
+        const smartWalletAddr = await getSmartWalletAddress(userAddress);
+        console.log(`   📍 Wallet: ${smartWalletAddr}`);
 
-        const USDC = TOKEN_ADDRESSES['USDC']; // Our stablecoin
-        const TARGET_TOKEN = TOKEN_ADDRESSES[symbol] || TOKEN_ADDRESSES['MNT']; // Default to MNT if unknown
+        const smartWallet = new ethers.Contract(smartWalletAddr, WALLET_ABI, botWallet);
+
+        // 2. Resolve Tokens
+        // BASE: USDC (We trade USDC <-> Token)
+        // If type = BUY: USDC -> Token
+        // If type = SELL: Token -> USDC
+
+        // Note: For hackathon demo, if Symbol=ETH or MNT, we treat it as WMNT for swapping
+        let targetTokenAddr = TOKEN_ADDRESSES[symbol];
+        if (symbol === 'MNT' || symbol === 'ETH') targetTokenAddr = WMNT_ADDRESS;
+        if (!targetTokenAddr) targetTokenAddr = WMNT_ADDRESS; // Default
 
         let tokenIn, tokenOut;
-        let amountInWei, amountOutWei;
+        let amountInWei, amountOutWei; // amountOut is minAmount
 
         if (type === 'BUY') {
-            tokenIn = USDC;
-            tokenOut = TARGET_TOKEN;
-            // Buying Target with USDC
-            // amount argument is usually the 'investment amount' (e.g. Buy $100 worth of BTC)
-            // So amountIn is USDC amount
-            amountInWei = ethers.parseUnits(amount.toString(), 6); // USDC is 6 decimals
-
-            // Mock Rate: 1 MNT = 50 USDC
-            // If buying $100 USDC -> get 2 MNT
-            // amountOut = amount / 50
-            const rate = 50;
-            const amountOutNum = amount / rate;
-            amountOutWei = ethers.parseEther(amountOutNum.toString()); // MNT is 18 decimals
+            // USDC -> Target
+            tokenIn = USDC_ADDRESS;
+            tokenOut = targetTokenAddr;
+            // Amount is in USDC (e.g. Buy with 100 USDC)
+            amountInWei = ethers.parseUnits(amount.toString(), 6);
         } else {
-            tokenIn = TARGET_TOKEN;
-            tokenOut = USDC;
-            // Selling Target for USDC
-            // amount argument is usually the AMOUNT OF ASSET (e.g. Sell 1 BTC)
-            // So amountIn is Target Token Quantity
-            amountInWei = ethers.parseEther(amount.toString()); // Assuming 18 decimals for Target
-
-            // Mock Rate: 1 MNT = 50 USDC
-            // If selling 1 MNT -> get $50 USDC
-            const rate = 50;
-            const amountOutNum = amount * rate;
-            amountOutWei = ethers.parseUnits(amountOutNum.toString(), 6);
+            // Target -> USDC
+            tokenIn = targetTokenAddr;
+            tokenOut = USDC_ADDRESS;
+            // Amount is in Target Token (e.g. Sell 1 ETH)
+            // Assuming 18 decimals for most targets except USDC/USDT
+            amountInWei = ethers.parseEther(amount.toString());
         }
 
-        const triggerId = `auto-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+        console.log(`   🔄 Swap Path: ${tokenIn} -> ${tokenOut} | Amt: ${amountInWei}`);
 
-        console.log(`   🚀 Sending Tx: In=${amountInWei} Out=${amountOutWei}`);
+        // ------------------------------------------------------------------
+        // EXECUTION SEQUENCE (Generic Execution)
+        // 1. (Optional) Wrap MNT if needed (skipped here, assuming funds are in USDC or WMNT)
+        //    *Actually, if User deposited MNT, we might need to wrap it first if selling MNT*
+        // ------------------------------------------------------------------
 
-        // 2. Execute Transaction
-        const tx = await contract.executeSwap(
-            userAddress,
-            tokenIn,
-            tokenOut,
-            amountInWei,
-            amountOutWei,
-            triggerId
-        );
+        // Special case: If Selling MNT, check if we need to wrap MNT -> WMNT first?
+        // User sends MNT to wallet. Wallet has MNT.
+        // We need to wrap MNT -> WMNT before swapping on V3.
+        if (type === 'SELL' && (symbol === 'MNT' || symbol === 'ETH')) {
+            console.log("   🎁 Wrapping MNT before swap...");
+            // Check MNT Balance? Trusted for now.
+            const wmntInt = new ethers.Interface(WMNT_ABI);
+            const dataWrap = wmntInt.encodeFunctionData("deposit", []);
 
-        console.log(`   ⏳ Waiting for Tx: ${tx.hash}`);
-        await tx.wait();
-        console.log(`   ✅ Swap Confirmed: ${tx.hash}`);
+            // Execute Wrap: executeCall(WMNT, amountInWei, depositData)
+            // We send value = amountInWei to wrap that amount
+            const txWrap = await smartWallet.executeCall(WMNT_ADDRESS, amountInWei, dataWrap);
+            await txWrap.wait();
+            console.log("   ✅ Wrapped MNT");
+        }
 
-        return tx.hash;
+        // 2. Approve Router
+        console.log("   🔓 Approving Router...");
+        const erc20Int = new ethers.Interface(ERC20_ABI);
+        const dataApprove = erc20Int.encodeFunctionData("approve", [FUSIONX_ROUTER, amountInWei]);
+
+        const txApprove = await smartWallet.executeCall(tokenIn, 0, dataApprove);
+        await txApprove.wait();
+        console.log("   ✅ Approved");
+
+        // 3. Execute Swap
+        console.log("   💱 Executing Swap via FusionX...");
+        const routerInt = new ethers.Interface(ROUTER_ABI);
+
+        const params = {
+            tokenIn: tokenIn,
+            tokenOut: tokenOut,
+            fee: 3000,
+            recipient: smartWalletAddr, // Fund stays in wallet
+            deadline: Math.floor(Date.now() / 1000) + 300,
+            amountIn: amountInWei,
+            amountOutMinimum: 0, // Slippage 100% for demo
+            sqrtPriceLimitX96: 0
+        };
+
+        const dataSwap = routerInt.encodeFunctionData("exactInputSingle", [params]);
+
+        const txSwap = await smartWallet.executeCall(FUSIONX_ROUTER, 0, dataSwap);
+        console.log(`   ⏳ Tx Sent: ${txSwap.hash}`);
+        await txSwap.wait();
+        console.log("   ✅ Swap Success");
+
+        return txSwap.hash;
 
     } catch (error: any) {
-        console.error("❌ Blockchain Execution Failed:", error);
-        throw new Error(error.message || 'Swap execution failed on-chain');
+        console.error("❌ Smart Wallet Execution Failed:", error);
+        throw new Error(error.message || 'Swap execution failed');
     }
 }
 
@@ -105,15 +176,29 @@ export async function getUserBalance(
 ): Promise<number> {
     try {
         const provider = new ethers.JsonRpcProvider(MANTLE_RPC);
-        const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+
+        // Get Wallet (or return 0 if not exists)
+        let walletAddr;
+        try {
+            walletAddr = await getSmartWalletAddress(userAddress);
+        } catch {
+            return 0; // No wallet = 0 balance
+        }
 
         const tokenAddress = TOKEN_ADDRESSES[tokenSymbol] || TOKEN_ADDRESSES['USDC'];
 
-        const balanceWei = await contract.getBalance(userAddress, tokenAddress);
+        // If 'MNT', get native balance
+        if (tokenSymbol === 'MNT' || tokenSymbol === 'ETH') {
+            const bal = await provider.getBalance(walletAddr);
+            return parseFloat(ethers.formatEther(bal));
+        }
 
-        // Format based on token decimals
+        // ERC20 Balance
+        const contract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
+        const balWei = await contract.balanceOf(walletAddr);
         const decimals = (tokenSymbol === 'USDC' || tokenSymbol === 'USDT') ? 6 : 18;
-        return parseFloat(ethers.formatUnits(balanceWei, decimals));
+        return parseFloat(ethers.formatUnits(balWei, decimals));
+
     } catch (error) {
         console.error('Error fetching balance:', error);
         return 0;

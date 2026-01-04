@@ -100,7 +100,7 @@ router.post('/:triggerId', async (req: AuthRequest, res) => {
                 req.user!.walletAddress,
                 trigger.symbol,
                 trigger.amount,
-                trigger.type
+                trigger.type as 'BUY' | 'SELL'
             );
 
             // Update execution with success

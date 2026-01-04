@@ -219,8 +219,8 @@ export async function startAutoExecutor() {
                         console.log(`✅ Successfully executed trigger ${trigger.id} | TX: ${txHash}`);
 
                         // TODO: Send email notification
-                        if (trigger.user.email) {
-                            console.log(`📧 Email notification sent to: ${trigger.user.email}`);
+                        if ((trigger.user as any).email) {
+                            console.log(`📧 Email notification sent to: ${(trigger.user as any).email}`);
                         }
                     }
                 } catch (error) {
