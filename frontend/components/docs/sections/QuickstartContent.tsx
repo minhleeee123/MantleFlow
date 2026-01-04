@@ -1,0 +1,42 @@
+import React from 'react';
+import { CheckItem, StepBlock, CodeBlock } from '../DocHelpers';
+
+export const QuickstartContent = () => (
+    <div className="space-y-8">
+        <p className="text-lg">Get CryptoInsight up and running in under 10 minutes. This guide covers installation and local deployment.</p>
+
+        <div>
+            <h3 className="text-xl font-black uppercase mb-4">Prerequisites</h3>
+            <ul className="space-y-2">
+                <CheckItem>Node.js 20+ and npm</CheckItem>
+                <CheckItem>Git for cloning repository</CheckItem>
+                <CheckItem>MySQL Database (local or cloud)</CheckItem>
+                <CheckItem>MetaMask installed in browser</CheckItem>
+            </ul>
+        </div>
+
+        <StepBlock step="1" title="Clone the Repository">
+            <CodeBlock code={`git clone https://github.com/your-username/hackathon15-1.git
+cd hackathon15-1`} />
+        </StepBlock>
+
+        <StepBlock step="2" title="Setup Backend">
+            <CodeBlock code={`cd backend
+npm install
+cp .env.example .env
+# Configure DATABASE_URL & PRIVATE_KEYS in .env
+npx prisma migrate dev
+npm run dev`} />
+        </StepBlock>
+
+        <StepBlock step="3" title="Setup Frontend">
+            <CodeBlock code={`cd frontend
+npm install
+npm run dev`} />
+        </StepBlock>
+
+        <div className="bg-neo-accent p-4 border-2 border-black font-bold text-center">
+            🚀 Open http://localhost:5173 to verify installation
+        </div>
+    </div>
+);

@@ -25,6 +25,7 @@ import InputArea from './components/chat/InputArea';
 import LoadingIndicator from './components/ui/LoadingIndicator';
 import AutoTradingView from './components/trading/AutoTradingView';
 import SnowEffect from './components/ui/SnowEffect';
+import Documentation from './components/docs/Documentation';
 
 // --- Types & Mock Data for Profile ---
 
@@ -237,7 +238,7 @@ const App: React.FC = () => {
         // 2. USDC
         const usdcItem: PortfolioItem = {
           symbol: 'USDC',
-          name: 'USDC (Testnet)',
+          name: 'USDC (Testnet) (Wallet)',
           amount: parseFloat(walletData.usdcBalance),
           avgPrice: 1.00,
           currentPrice: 1.00
@@ -466,6 +467,10 @@ const App: React.FC = () => {
                 isRefreshing={isRefreshingPortfolio}
                 onUpdateEmail={handleUpdateEmail}
               />
+            )}
+
+            {currentView === 'docs' && (
+              <Documentation />
             )}
 
             {currentView === 'auto-trade' && (
