@@ -73,6 +73,11 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
             const addr = await walletApi.getAddress();
             setSmartWalletAddress(addr);
 
+            // Fix: Clear lingering setup errors if wallet is found
+            if (addr) {
+                setError(prev => (prev && (prev.includes("exists") || prev.includes("reverted"))) ? '' : prev);
+            }
+
             // 2. Wallet Balances (MetaMask)
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
@@ -130,6 +135,11 @@ export const ContractWallet: React.FC<Props> = ({ userAddress }) => {
             setTimeout(fetchData, 5000);
         } catch (e: any) {
             console.error(e);
+            // Ignore "Wallet already exists" error and just refresh
+            if (e.message && e.message.includes("Wallet already exists")) {
+                fetchData();
+                return;
+            }
             setError(e.message || "Deployment failed");
         } finally {
             setLoading(false);
