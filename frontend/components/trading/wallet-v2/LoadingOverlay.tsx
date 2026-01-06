@@ -3,6 +3,7 @@ import { Loader2, Terminal, Wallet, ArrowRightLeft, ArrowDownCircle, ArrowUpCirc
 
 interface Props {
     message?: string;
+    action?: string;
 }
 
 const ProgressBar = () => (
@@ -11,19 +12,68 @@ const ProgressBar = () => (
     </div>
 );
 
-export const LoadingOverlay: React.FC<Props> = ({ message = 'Processing...' }) => {
+// Pre-defined log sequences for realistic effect
+const LOG_SEQUENCES: Record<string, string[]> = {
+    'Deposit MNT': [
+        "Initiating deposit sequence...",
+        "Requesting wallet signature...",
+        "Broadcasting transaction to Mantle Network...",
+        "Waiting for block confirmation...",
+        "Indexing new balance...",
+        "Verifying vault state..."
+    ],
+    'Deposit USDT': [
+        "Initiating USDT deposit...",
+        "Checking Token Allowance...",
+        "Requesting Approval signature (if needed)...",
+        "Broadcasting Approval transaction...",
+        "Requesting Deposit signature...",
+        "Broadcasting to Mantle Network...",
+        "Indexing new balance..."
+    ],
+    'Withdraw MNT': [
+        "Verifying Vault Balance...",
+        "Constructing withdraw payload...",
+        "Requesting user signature...",
+        "Broadcasting to network...",
+        "Waiting for confirmation...",
+        "Updating local wallet state..."
+    ],
+    'Withdraw USDT': [
+        "Verifying Vault Balance...",
+        "Constructing withdraw payload...",
+        "Requesting user signature...",
+        "Broadcasting to network...",
+        "Waiting for confirmation...",
+        "Updating local wallet state..."
+    ],
+    'Swap': [
+        "Connecting to SimpleDEX...",
+        "Fetching latest pool reserves...",
+        "Calculating optimal swap path...",
+        "Checking slippage tolerance...",
+        "Requesting signature...",
+        "Executing swap on-chain..."
+    ],
+    'default': [
+        "Initializing secure connection...",
+        "Validating transaction parameters...",
+        "Estimating gas fees (Mantle Network)...",
+        "Preparing payload...",
+        "Awaiting confirmation..."
+    ]
+};
+
+export const LoadingOverlay: React.FC<Props> = ({ message = 'Processing...', action = 'default' }) => {
     const [logLines, setLogLines] = useState<string[]>([]);
 
     useEffect(() => {
         setLogLines([]);
 
-        // Dynamic logs based on the active action (inferred from message or generic)
-        const logs = [
-            "Initializing secure connection...",
-            "Validating transaction parameters...",
-            "Estimating gas fees (Mantle Network)...",
-            "Preparing payload..."
-        ];
+        // Select logs based on action, fallback to default if not found
+        // Use 'default' if action is empty string
+        const sequenceKey = (action && LOG_SEQUENCES[action]) ? action : 'default';
+        const logs = LOG_SEQUENCES[sequenceKey] || LOG_SEQUENCES['default'];
 
         let i = 0;
         const interval = setInterval(() => {
@@ -38,12 +88,13 @@ export const LoadingOverlay: React.FC<Props> = ({ message = 'Processing...' }) =
         }, 800);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [action]);
 
     // Add the specific status message from parent as a new log line when it changes
+    // This allows real-time feedback from the app ("Please sign...", "Updating data...") to interrupt the fake logs
     useEffect(() => {
         if (message) {
-            setLogLines(prev => [...prev.slice(-3), message]);
+            setLogLines(prev => [...prev.slice(-3), `>> ${message}`]); // Add prefix to distinguish real msgs
         }
     }, [message]);
 
@@ -62,7 +113,7 @@ export const LoadingOverlay: React.FC<Props> = ({ message = 'Processing...' }) =
                         </span>
                     </div>
                     <div className="px-2 py-0.5 bg-black text-white text-[10px] font-mono border border-white font-bold">
-                        EXECUTING
+                        EXECUTING: {action || 'TASK'}
                     </div>
                 </div>
 

@@ -66,6 +66,7 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
 
     // UI State
     const [loading, setLoading] = useState(false);
+    const [loadingAction, setLoadingAction] = useState<string>('');
     const [processingStep, setProcessingStep] = useState<string>(''); // To show detailed loading status
     const [error, setError] = useState('');
     const [activeTab, setActiveTab] = useState<'deposit' | 'withdraw' | 'swap'>('deposit');
@@ -158,6 +159,7 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
         actionFn: () => Promise<string> // Returns tx hash
     ) => {
         setLoading(true);
+        setLoadingAction(actionName);
         setProcessingStep('Please sign transaction in wallet...');
         setError('');
 
@@ -345,7 +347,7 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
             <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo overflow-hidden relative min-h-[400px]">
 
                 {/* GLOBAL LOADING OVERLAY */}
-                {loading && <LoadingOverlay message={processingStep} />}
+                {loading && <LoadingOverlay message={processingStep} action={loadingAction} />}
 
                 {/* TABS */}
                 <div className="flex border-b-2 border-black dark:border-white">
