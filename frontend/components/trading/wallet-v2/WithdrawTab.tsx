@@ -19,12 +19,12 @@ export const WithdrawTab: React.FC<Props> = ({
 }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-2">
         <div className="space-y-4">
-            <div className="p-4 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/30">
-                <h4 className="font-bold text-red-800 dark:text-red-300 uppercase text-xs mb-4 flex items-center gap-2">
-                    <ArrowUpCircle className="w-4 h-4" /> Withdraw MNT
+            <div className="p-6 bg-red-100 dark:bg-red-900/20 border-2 border-black dark:border-red-500 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)]">
+                <h4 className="font-black text-black dark:text-red-400 uppercase text-lg mb-6 flex items-center gap-2 border-b-2 border-black dark:border-red-500 pb-2 w-fit">
+                    <ArrowUpCircle className="w-6 h-6" /> Withdraw MNT
                 </h4>
                 <InputField
-                    label="Amount"
+                    label="Amount to Withdraw"
                     value={mntAmount}
                     onChange={setMntAmount}
                     balance={vaultMnt}
@@ -33,20 +33,20 @@ export const WithdrawTab: React.FC<Props> = ({
                 />
                 <button
                     onClick={() => handleWithdraw('MNT', mntAmount, setMntAmount)}
-                    className="w-full mt-4 bg-red-600 text-white font-bold py-3 rounded-lg hover:bg-red-700 transition-colors shadow-lg shadow-red-200 dark:shadow-none"
+                    className="w-full mt-6 bg-red-500 text-white border-2 border-black font-black py-4 text-xl hover:bg-red-600 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
                     disabled={!mntAmount || parseFloat(mntAmount) <= 0}
                 >
-                    WITHDRAW MNT
+                    CONFIRM WITHDRAW
                 </button>
             </div>
         </div>
         <div className="space-y-4">
-            <div className="p-4 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/30">
-                <h4 className="font-bold text-red-800 dark:text-red-300 uppercase text-xs mb-4 flex items-center gap-2">
-                    <ArrowUpCircle className="w-4 h-4" /> Withdraw USDT
+            <div className="p-6 bg-red-100 dark:bg-red-900/20 border-2 border-black dark:border-red-500 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)]">
+                <h4 className="font-black text-black dark:text-red-400 uppercase text-lg mb-6 flex items-center gap-2 border-b-2 border-black dark:border-red-500 pb-2 w-fit">
+                    <ArrowUpCircle className="w-6 h-6" /> Withdraw USDT
                 </h4>
                 <InputField
-                    label="Amount"
+                    label="Amount to Withdraw"
                     value={usdtAmount}
                     onChange={setUsdtAmount}
                     balance={vaultUsdt}
@@ -55,10 +55,10 @@ export const WithdrawTab: React.FC<Props> = ({
                 />
                 <button
                     onClick={() => handleWithdraw('USDT', usdtAmount, setUsdtAmount)}
-                    className="w-full mt-4 bg-red-600 text-white font-bold py-3 rounded-lg hover:bg-red-700 transition-colors shadow-lg shadow-red-200 dark:shadow-none"
+                    className="w-full mt-6 bg-red-500 text-white border-2 border-black font-black py-4 text-xl hover:bg-red-600 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
                     disabled={!usdtAmount || parseFloat(usdtAmount) <= 0}
                 >
-                    WITHDRAW USDT
+                    CONFIRM WITHDRAW
                 </button>
             </div>
         </div>

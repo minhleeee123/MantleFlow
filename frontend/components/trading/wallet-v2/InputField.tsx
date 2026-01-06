@@ -11,10 +11,10 @@ interface InputFieldProps {
 
 export const InputField: React.FC<InputFieldProps> = ({ label, value, onChange, balance, symbol, onMax }) => (
     <div className="space-y-2">
-        <div className="flex justify-between text-xs font-bold uppercase text-gray-500">
-            <label>{label}</label>
-            <span className="cursor-pointer hover:text-black dark:hover:text-white transition-colors" onClick={onMax}>
-                Avail: {parseFloat(balance).toFixed(4)}
+        <div className="flex justify-between text-xs font-black uppercase text-black dark:text-white items-end">
+            <label className="bg-black text-white dark:bg-white dark:text-black px-2 py-1">{label}</label>
+            <span className="cursor-pointer hover:bg-yellow-400 hover:text-black px-2 py-1 font-mono border border-transparent hover:border-black transition-all" onClick={onMax}>
+                AVAIL: {parseFloat(balance).toFixed(4)}
             </span>
         </div>
         <div className="relative">
@@ -23,17 +23,16 @@ export const InputField: React.FC<InputFieldProps> = ({ label, value, onChange, 
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder="0.00"
-                className="w-full bg-gray-50 dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-lg focus:border-black dark:focus:border-white focus:outline-none transition-colors"
-                autoFocus={true}
+                className="w-full bg-white dark:bg-black border-2 border-black dark:border-white p-4 font-mono text-2xl font-bold focus:bg-yellow-50 dark:focus:bg-gray-900 focus:outline-none transition-colors rounded-none placeholder:text-gray-300"
             />
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-3">
                 <button
                     onClick={onMax}
-                    className="text-[10px] font-bold bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 px-2 py-1 rounded transition-colors"
+                    className="text-xs font-black bg-black text-white hover:bg-yellow-400 hover:text-black px-3 py-1 border-2 border-transparent transition-colors uppercase"
                 >
                     MAX
                 </button>
-                <span className="font-bold text-sm text-gray-400">{symbol}</span>
+                <span className="font-black text-lg text-black dark:text-white uppercase">{symbol}</span>
             </div>
         </div>
     </div>

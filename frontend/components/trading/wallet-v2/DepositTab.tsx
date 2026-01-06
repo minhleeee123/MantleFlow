@@ -19,12 +19,12 @@ export const DepositTab: React.FC<Props> = ({
 }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-2">
         <div className="space-y-4">
-            <div className="p-4 bg-green-50 dark:bg-green-900/10 rounded-lg border border-green-100 dark:border-green-900/30">
-                <h4 className="font-bold text-green-800 dark:text-green-300 uppercase text-xs mb-4 flex items-center gap-2">
-                    <ArrowDownCircle className="w-4 h-4" /> Deposit MNT
+            <div className="p-6 bg-green-100 dark:bg-green-900/20 border-2 border-black dark:border-green-500 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)]">
+                <h4 className="font-black text-black dark:text-green-400 uppercase text-lg mb-6 flex items-center gap-2 border-b-2 border-black dark:border-green-500 pb-2 w-fit">
+                    <ArrowDownCircle className="w-6 h-6" /> Deposit MNT
                 </h4>
                 <InputField
-                    label="Amount"
+                    label="Amount to Deposit"
                     value={mntAmount}
                     onChange={setMntAmount}
                     balance={walletMnt}
@@ -33,20 +33,20 @@ export const DepositTab: React.FC<Props> = ({
                 />
                 <button
                     onClick={() => handleDeposit('MNT', mntAmount, setMntAmount)}
-                    className="w-full mt-4 bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition-colors shadow-lg shadow-green-200 dark:shadow-none"
+                    className="w-full mt-6 bg-green-500 text-black border-2 border-black font-black py-4 text-xl hover:bg-green-400 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
                     disabled={!mntAmount || parseFloat(mntAmount) <= 0}
                 >
-                    DEPOSIT MNT
+                    CONFIRM DEPOSIT
                 </button>
             </div>
         </div>
         <div className="space-y-4">
-            <div className="p-4 bg-green-50 dark:bg-green-900/10 rounded-lg border border-green-100 dark:border-green-900/30">
-                <h4 className="font-bold text-green-800 dark:text-green-300 uppercase text-xs mb-4 flex items-center gap-2">
-                    <ArrowDownCircle className="w-4 h-4" /> Deposit USDT
+            <div className="p-6 bg-green-100 dark:bg-green-900/20 border-2 border-black dark:border-green-500 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)]">
+                <h4 className="font-black text-black dark:text-green-400 uppercase text-lg mb-6 flex items-center gap-2 border-b-2 border-black dark:border-green-500 pb-2 w-fit">
+                    <ArrowDownCircle className="w-6 h-6" /> Deposit USDT
                 </h4>
                 <InputField
-                    label="Amount"
+                    label="Amount to Deposit"
                     value={usdtAmount}
                     onChange={setUsdtAmount}
                     balance={walletUsdt}
@@ -55,10 +55,10 @@ export const DepositTab: React.FC<Props> = ({
                 />
                 <button
                     onClick={() => handleDeposit('USDT', usdtAmount, setUsdtAmount)}
-                    className="w-full mt-4 bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition-colors shadow-lg shadow-green-200 dark:shadow-none"
+                    className="w-full mt-6 bg-green-500 text-black border-2 border-black font-black py-4 text-xl hover:bg-green-400 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
                     disabled={!usdtAmount || parseFloat(usdtAmount) <= 0}
                 >
-                    DEPOSIT USDT
+                    CONFIRM DEPOSIT
                 </button>
             </div>
         </div>

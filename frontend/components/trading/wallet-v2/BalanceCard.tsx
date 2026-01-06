@@ -9,25 +9,27 @@ interface BalanceCardProps {
 }
 
 export const BalanceCard: React.FC<BalanceCardProps> = ({ title, balance, symbol, usdValue }) => (
-    <div className="bg-white dark:bg-gray-800 border-2 border-black dark:border-gray-600 p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] rounded-xl transition-all hover:translate-y-[-2px]">
-        <div className="flex justify-between items-start mb-4">
-            <div className="flex items-center gap-2">
-                <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                    <Coins className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+    <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.4)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+        <div className="flex justify-between items-start mb-6">
+            <div className="flex items-center gap-3">
+                <div className="p-2 bg-yellow-400 dark:bg-yellow-600 border-2 border-black">
+                    <Coins className="w-6 h-6 text-black" />
                 </div>
-                <span className="font-bold text-gray-500 dark:text-gray-400 text-sm uppercase tracking-wide">{title}</span>
+                <span className="font-black text-black dark:text-white text-lg uppercase tracking-wide">{title}</span>
             </div>
-            <div className="px-2 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 rounded text-[10px] font-bold uppercase tracking-wider">
+            <div className="px-3 py-1 bg-black text-white dark:bg-white dark:text-black text-xs font-bold uppercase tracking-wider">
                 Vault
             </div>
         </div>
-        <div className="space-y-1">
-            <div className="text-3xl font-black text-black dark:text-white tracking-tight">
+        <div className="space-y-2">
+            <div className="text-4xl font-black text-black dark:text-white tracking-tighter">
                 {parseFloat(balance).toFixed(4)}
-                <span className="ml-2 text-sm font-medium text-gray-400">{symbol}</span>
+                <span className="ml-3 text-lg font-bold text-gray-500">{symbol}</span>
             </div>
-            <div className="text-sm font-mono text-gray-500 dark:text-gray-400">
-                ≈ ${usdValue.toFixed(2)} USD
+            <div className="inline-block bg-gray-100 dark:bg-gray-800 px-2 py-1 border border-black dark:border-gray-500">
+                <div className="text-sm font-mono font-bold text-gray-700 dark:text-gray-300">
+                    ≈ ${usdValue.toFixed(2)} USD
+                </div>
             </div>
         </div>
     </div>

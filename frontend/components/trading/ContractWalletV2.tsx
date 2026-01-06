@@ -293,22 +293,22 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto mb-10">
+        <div className="w-full mb-10">
             {/* Header Area */}
-            <div className="flex justify-between items-end mb-8">
+            <div className="flex justify-between items-end mb-8 border-b-2 border-black dark:border-white pb-4">
                 <div>
-                    <h2 className="text-3xl font-black uppercase text-black dark:text-white mb-2 flex items-center gap-3">
-                        <Wallet className="w-8 h-8" />
+                    <h2 className="text-4xl font-black uppercase text-black dark:text-white mb-2 flex items-center gap-3">
+                        <Wallet className="w-10 h-10" />
                         Vault Wallet
                     </h2>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                        Connected: {userAddress.slice(0, 6)}...{userAddress.slice(-4)}
+                    <div className="flex items-center gap-2 text-sm text-gray-500 font-mono font-bold">
+                        <div className="w-3 h-3 bg-green-500 border border-black"></div>
+                        CONNECTED: {userAddress.slice(0, 6)}...{userAddress.slice(-4)}
                     </div>
                 </div>
                 <div className="text-right">
-                    <div className="text-xs font-bold uppercase text-gray-400 mb-1">MNT Price</div>
-                    <div className="font-mono text-xl font-bold bg-white dark:bg-gray-800 px-3 py-1 rounded border border-gray-200 dark:border-gray-700">
+                    <div className="text-xs font-black uppercase text-black dark:text-white mb-1 bg-yellow-400 dark:bg-yellow-600 px-2 border border-black inline-block">MNT Price</div>
+                    <div className="font-mono text-2xl font-black bg-white dark:bg-black text-black dark:text-white px-4 py-1 border-2 border-black dark:border-white shadow-neo">
                         ${parseFloat(mntPrice).toFixed(2)}
                     </div>
                 </div>
@@ -316,12 +316,12 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
 
             {/* ERROR DISPLAY */}
             {error && (
-                <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-500 text-red-600 dark:text-red-300 p-4 rounded-xl mb-6 font-medium flex items-center justify-between animate-in slide-in-from-top-2">
+                <div className="bg-red-500 border-2 border-black text-white p-4 mb-6 font-bold flex items-center justify-between shadow-neo animate-in slide-in-from-top-2">
                     <div className="flex items-center gap-3">
-                        <span className="text-xl">⚠️</span>
-                        {error}
+                        <span className="text-2xl bg-white text-black w-8 h-8 flex items-center justify-center border-2 border-black">!</span>
+                        <span className="uppercase tracking-wide">{error}</span>
                     </div>
-                    <button onClick={() => setError('')} className="hover:bg-red-100 dark:hover:bg-red-900/40 p-1 rounded">✕</button>
+                    <button onClick={() => setError('')} className="hover:bg-black hover:text-white p-1 border-2 border-transparent hover:border-white transition-colors">✕</button>
                 </div>
             )}
 
@@ -342,28 +342,28 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
             </div>
 
             {/* MAIN ACTION AREA */}
-            <div className="bg-white dark:bg-gray-800 border-2 border-black dark:border-gray-600 rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.2)] overflow-hidden relative min-h-[400px]">
+            <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo overflow-hidden relative min-h-[400px]">
 
                 {/* GLOBAL LOADING OVERLAY */}
                 {loading && <LoadingOverlay message={processingStep} />}
 
                 {/* TABS */}
-                <div className="flex border-b-2 border-gray-100 dark:border-gray-700">
+                <div className="flex border-b-2 border-black dark:border-white">
                     {[
-                        { id: 'deposit', label: 'Deposit', icon: ArrowDownCircle },
+                        { id: 'deposit', label: 'Deposit Funds', icon: ArrowDownCircle },
                         { id: 'withdraw', label: 'Withdraw', icon: ArrowUpCircle },
-                        { id: 'swap', label: 'Swap', icon: ArrowRightLeft },
+                        { id: 'swap', label: 'Instant Swap', icon: ArrowRightLeft },
                     ].map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
-                            className={`flex-1 py-4 flex items-center justify-center gap-2 font-bold uppercase text-sm tracking-wider transition-all
+                            className={`flex-1 py-5 flex items-center justify-center gap-3 font-black uppercase text-lg tracking-wider transition-all
                                 ${activeTab === tab.id
                                     ? 'bg-black text-white dark:bg-white dark:text-black'
-                                    : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-500'
+                                    : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 border-r-2 border-black last:border-r-0'
                                 }`}
                         >
-                            <tab.icon className="w-4 h-4" />
+                            <tab.icon className="w-5 h-5" />
                             {tab.label}
                         </button>
                     ))}

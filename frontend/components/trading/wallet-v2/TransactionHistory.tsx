@@ -15,51 +15,53 @@ interface Props {
 }
 
 export const TransactionHistory: React.FC<Props> = ({ transactions }) => (
-    <div className="mt-10">
-        <div className="flex items-center gap-3 mb-4 opacity-80">
-            <History className="w-5 h-5" />
-            <h3 className="uppercase font-bold text-sm tracking-widest text-gray-500">Recent Activity</h3>
+    <div className="mt-12">
+        <div className="flex items-center gap-3 mb-6">
+            <div className="bg-black text-white p-2">
+                <History className="w-5 h-5" />
+            </div>
+            <h3 className="uppercase font-black text-xl tracking-widest text-black dark:text-white">Recent Activity</h3>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
+        <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.4)]">
             {transactions.length === 0 ? (
-                <div className="p-10 text-center text-gray-400 font-mono text-sm">
-                    NO TRANSACTIONS YET
+                <div className="p-10 text-center text-gray-400 font-mono text-sm font-bold uppercase">
+                    / NO TRANSACTIONS RECORDED /
                 </div>
             ) : (
-                <table className="w-full text-sm text-left">
-                    <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+                <table className="w-full text-sm text-left border-collapse">
+                    <thead className="bg-black text-white dark:bg-white dark:text-black">
                         <tr>
-                            <th className="px-6 py-4 font-bold text-gray-500 uppercase text-xs">Type</th>
-                            <th className="px-6 py-4 font-bold text-gray-500 uppercase text-xs">Amount</th>
-                            <th className="px-6 py-4 font-bold text-gray-500 uppercase text-xs text-right">Time</th>
-                            <th className="px-6 py-4 font-bold text-gray-500 uppercase text-xs text-center">Tx</th>
+                            <th className="px-6 py-4 font-black uppercase text-xs tracking-wider border-r border-white dark:border-black">Type</th>
+                            <th className="px-6 py-4 font-black uppercase text-xs tracking-wider border-r border-white dark:border-black">Amount</th>
+                            <th className="px-6 py-4 font-black uppercase text-xs tracking-wider text-right border-r border-white dark:border-black">Time</th>
+                            <th className="px-6 py-4 font-black uppercase text-xs tracking-wider text-center">Tx</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                    <tbody className="divide-y-2 divide-black dark:divide-white">
                         {transactions.slice(0, 10).map(tx => (
-                            <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
-                                <td className="px-6 py-4">
+                            <tr key={tx.id} className="hover:bg-yellow-50 dark:hover:bg-gray-800 transition-colors">
+                                <td className="px-6 py-4 border-r-2 border-black dark:border-white">
                                     <span className={`
-                                            inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide
-                                            ${tx.type === 'DEPOSIT' && 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'}
-                                            ${tx.type === 'WITHDRAW' && 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}
-                                            ${tx.type.includes('SWAP') && 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'}
+                                            inline-flex items-center gap-2 px-3 py-1 text-xs font-black uppercase border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.5)]
+                                            ${tx.type === 'DEPOSIT' && 'bg-green-400 text-black'}
+                                            ${tx.type === 'WITHDRAW' && 'bg-red-400 text-black'}
+                                            ${tx.type.includes('SWAP') && 'bg-purple-400 text-black'}
                                         `}>
                                         {tx.type.includes('SWAP') ? <ArrowRightLeft className="w-3 h-3" /> : (tx.type === 'DEPOSIT' ? <ArrowDownCircle className="w-3 h-3" /> : <ArrowUpCircle className="w-3 h-3" />)}
                                         {tx.type.replace('SWAP_', '').replace('_', ' ')}
                                     </span>
                                 </td>
-                                <td className="px-6 py-4 font-mono font-medium">
-                                    {tx.amountIn} <span className="text-gray-400 text-xs">{tx.tokenIn}</span>
+                                <td className="px-6 py-4 border-r-2 border-black dark:border-white font-mono font-bold text-lg">
+                                    {tx.amountIn} <span className="text-gray-500 text-xs">{tx.tokenIn}</span>
                                 </td>
-                                <td className="px-6 py-4 text-right text-gray-500 text-xs font-mono">
+                                <td className="px-6 py-4 border-r-2 border-black dark:border-white text-right font-mono font-bold">
                                     {new Date(tx.createdAt).toLocaleTimeString()}
                                 </td>
                                 <td className="px-6 py-4 text-center">
                                     {tx.txHash && (
                                         <a href={`https://sepolia.mantlescan.xyz/tx/${tx.txHash}`} target="_blank" rel="noreferrer"
-                                            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 hover:text-blue-600 transition-colors">
+                                            className="inline-flex items-center justify-center w-8 h-8 bg-white border-2 border-black hover:bg-black hover:text-white transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                                             <ExternalLink className="w-4 h-4" />
                                         </a>
                                     )}

@@ -19,22 +19,24 @@ export const SwapTab: React.FC<Props> = ({
     vaultMnt, vaultUsdt
 }) => (
     <div className="max-w-lg mx-auto animate-in fade-in slide-in-from-bottom-2">
-        <div className="bg-gray-50 dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
-            <div className="flex justify-between items-center mb-6">
-                <h4 className="font-bold text-lg uppercase flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-purple-500" /> Instant Swap
+        <div className="bg-purple-100 dark:bg-purple-900/10 p-8 border-2 border-black dark:border-purple-500 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)]">
+            <div className="flex justify-between items-center mb-8 border-b-2 border-black dark:border-purple-500 pb-4">
+                <h4 className="font-black text-2xl uppercase flex items-center gap-3">
+                    <TrendingUp className="w-8 h-8 text-black dark:text-white" /> Instant Swap
                 </h4>
-                <div className="text-xs font-mono text-gray-400">0.0% protocol fee</div>
+                <div className="text-xs font-black bg-white dark:bg-black text-black dark:text-white px-2 py-1 border border-black dark:border-white">
+                    0.0% FEE
+                </div>
             </div>
 
-            <div className="relative">
+            <div className="relative space-y-2">
                 {/* FROM INPUT */}
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border-2 border-transparent focus-within:border-purple-500 transition-colors">
-                    <div className="flex justify-between mb-2">
-                        <span className="text-xs font-bold text-gray-500 uppercase">You Pay</span>
-                        <span className="text-xs font-mono text-gray-500 cursor-pointer hover:text-purple-500"
+                <div className="bg-white dark:bg-black p-4 border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,0.5)]">
+                    <div className="flex justify-between mb-2 text-xs font-black uppercase tracking-wider text-gray-500">
+                        <span>You Pay</span>
+                        <span className="cursor-pointer hover:bg-black hover:text-white px-1"
                             onClick={() => setSwapFromAmount(swapFromToken === 'MNT' ? vaultMnt : vaultUsdt)}>
-                            Balance: {parseFloat(swapFromToken === 'MNT' ? vaultMnt : vaultUsdt).toFixed(4)}
+                            Avail: {parseFloat(swapFromToken === 'MNT' ? vaultMnt : vaultUsdt).toFixed(4)}
                         </span>
                     </div>
                     <div className="flex gap-4 items-center">
@@ -42,39 +44,37 @@ export const SwapTab: React.FC<Props> = ({
                             type="number"
                             value={swapFromAmount}
                             onChange={(e) => setSwapFromAmount(e.target.value)}
-                            className="w-full text-2xl font-mono font-bold bg-transparent outline-none"
+                            className="w-full text-3xl font-mono font-black bg-transparent outline-none placeholder:text-gray-300"
                             placeholder="0.0"
                         />
-                        <div className="shrink-0 flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full font-bold cursor-pointer hover:bg-gray-200 transition-colors"
-                            onClick={() => setSwapFromToken(swapFromToken === 'MNT' ? 'USDT' : 'MNT')}>
-                            {swapFromToken === 'MNT' ? <Coins className="w-4 h-4 text-blue-500" /> : <Coins className="w-4 h-4 text-green-500" />}
+                        <button
+                            className="shrink-0 flex items-center gap-2 px-4 py-2 bg-black text-white hover:bg-gray-800 transition-colors font-black uppercase text-sm border-2 border-transparent"
+                            onClick={() => setSwapFromToken(swapFromToken === 'MNT' ? 'USDT' : 'MNT')}
+                        >
                             {swapFromToken}
-                            <ArrowDownCircle className="w-3 h-3 text-gray-400" />
-                        </div>
+                            <ArrowDownCircle className="w-4 h-4" />
+                        </button>
                     </div>
                 </div>
 
                 {/* SWAP ICON */}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                    <button
-                        onClick={() => setSwapFromToken(swapFromToken === 'MNT' ? 'USDT' : 'MNT')}
-                        className="p-2 bg-gray-100 dark:bg-gray-700 border-4 border-white dark:border-gray-800 rounded-full hover:rotate-180 transition-transform duration-300 shadow-sm"
-                    >
-                        <ArrowDownCircle className="w-5 h-5 text-gray-500" />
-                    </button>
+                <div className="flex justify-center -my-5 relative z-10 pointer-events-none">
+                    <div className="bg-white dark:bg-black border-2 border-black dark:border-white p-2 pointer-events-auto cursor-pointer hover:rotate-180 transition-transform duration-300 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                        onClick={() => setSwapFromToken(swapFromToken === 'MNT' ? 'USDT' : 'MNT')}>
+                        <ArrowDownCircle className="w-6 h-6 text-black dark:text-white" />
+                    </div>
                 </div>
 
                 {/* TO (ESTIMATED) */}
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border-2 border-transparent mt-2">
-                    <div className="flex justify-between mb-2">
-                        <span className="text-xs font-bold text-gray-500 uppercase">You Receive (Est.)</span>
+                <div className="bg-white dark:bg-black p-4 border-2 border-black dark:border-white opacity-80 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.5)]">
+                    <div className="flex justify-between mb-2 text-xs font-black uppercase tracking-wider text-gray-500">
+                        <span>You Receive (Est.)</span>
                     </div>
                     <div className="flex gap-4 items-center">
-                        <div className="w-full text-2xl font-mono font-bold text-gray-400">
+                        <div className="w-full text-3xl font-mono font-black text-gray-500">
                             {estimatedOutput === '0' ? '0.0' : parseFloat(estimatedOutput).toFixed(4)}
                         </div>
-                        <div className="shrink-0 flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full font-bold opacity-80">
-                            {swapFromToken === 'MNT' ? <Coins className="w-4 h-4 text-green-500" /> : <Coins className="w-4 h-4 text-blue-500" />}
+                        <div className="shrink-0 flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-800 text-black dark:text-white font-black uppercase text-sm">
                             {swapFromToken === 'MNT' ? 'USDT' : 'MNT'}
                         </div>
                     </div>
@@ -83,8 +83,8 @@ export const SwapTab: React.FC<Props> = ({
 
             {/* SLIPPAGE INFO */}
             {estimatedOutput !== '0' && (
-                <div className="mt-4 px-2 flex justify-between text-xs font-mono text-gray-500">
-                    <span>Min. Received (5% slip):</span>
+                <div className="mt-4 p-2 bg-purple-200 dark:bg-purple-900/30 border-2 border-black dark:border-purple-500 flex justify-between text-xs font-mono font-bold text-purple-900 dark:text-purple-200">
+                    <span>MIN RECEIVED (5% SLIP):</span>
                     <span>{(parseFloat(estimatedOutput) * 0.95).toFixed(4)} {swapFromToken === 'MNT' ? 'USDT' : 'MNT'}</span>
                 </div>
             )}
@@ -92,9 +92,9 @@ export const SwapTab: React.FC<Props> = ({
             <button
                 onClick={handleSwap}
                 disabled={!swapFromAmount || parseFloat(swapFromAmount) <= 0}
-                className="w-full mt-6 bg-purple-600 text-white font-bold py-4 rounded-xl hover:bg-purple-700 transition-all shadow-[0px_4px_15px_rgba(124,58,237,0.3)] disabled:opacity-50 disabled:shadow-none translate-y-0 active:translate-y-1"
+                className="w-full mt-6 bg-purple-600 text-white border-2 border-black font-black py-4 text-xl hover:bg-purple-500 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 uppercase"
             >
-                CONFIRM SWAP
+                EXECUTE SWAP
             </button>
         </div>
     </div>
