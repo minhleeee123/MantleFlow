@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PaperWallet as IPaperWallet, TradeTrigger, TradeRecord } from '../../types';
-import { ContractWallet } from './ContractWallet';
+import { ContractWalletV2 } from './ContractWalletV2';
 import TriggerForm from './TriggerForm';
 import SmartTriggerSection from './SmartTriggerSection';
 import ActiveTriggers from './ActiveTriggers';
@@ -59,9 +59,9 @@ const AutoTradingView: React.FC<Props> = ({
                 {/* User Guide Section */}
                 <UserGuide />
 
-                {/* Top Section: Contract Wallet */}
+                {/* Top Section: Contract Wallet V2 */}
                 {userWalletAddress ? (
-                    <ContractWallet userAddress={userWalletAddress} />
+                    <ContractWalletV2 userAddress={userWalletAddress} />
                 ) : (
                     <div className="bg-yellow-100 border-2 border-yellow-500 p-4 font-bold text-center">
                         PLEASE CONNECT WALLET TO ACCESS TRADING
