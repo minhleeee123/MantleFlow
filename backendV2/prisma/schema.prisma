@@ -1,0 +1,91 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  walletAddress String    @unique
+  email         String?
+  createdAt     DateTime  @default(now())
+  
+  triggers      Trigger[]
+  transactions  Transaction[]
+  
+  @@index([walletAddress])
+}
+
+model Trigger {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  symbol          String   // MNT, USDT, BTC, ETH, etc
+  targetPrice     Float    // Target price (can be 0 for smart triggers)
+  condition       String   // ABOVE, BELOW
+  amount          Float    // Amount to trade
+  type            String   // BUY, SELL
+  
+  smartConditions Json?    // AI-generated conditions
+  
+  status          String   @default("ACTIVE") // ACTIVE, EXECUTED, CANCELLED, FAILED
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  executions      Execution[]
+  
+  @@index([userId, status])
+  @@index([status, createdAt])
+}
+
+model Execution {
+  id              String   @id @default(uuid())
+  triggerId       String
+  trigger         Trigger  @relation(fields: [triggerId], references: [id], onDelete: Cascade)
+  
+  symbol          String
+  executionPrice  Float    // Price at execution time
+  amount          Float    // Amount traded
+  type            String   // BUY, SELL
+  
+  // V2: Swap details
+  amountIn        Float    // Input amount
+  amountOut       Float?   // Output amount (nullable for failed txs)
+  tokenIn         String   // MNT or USDT
+  tokenOut        String   // USDT or MNT
+  
+  txHash          String?
+  status          String   // PENDING, SUCCESS, FAILED
+  errorMessage    String?  @db.Text
+  
+  executedAt      DateTime @default(now())
+  
+  @@index([triggerId])
+  @@index([status, executedAt])
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type        String   // DEPOSIT, WITHDRAW, SWAP
+  tokenIn     String   // Token input
+  tokenOut    String?  // Token output (for swaps)
+  amountIn    Float
+  amountOut   Float?   // For swaps
+  
+  txHash      String?
+  status      String   @default("SUCCESS") // SUCCESS, PENDING, FAILED
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([userId, createdAt])
+  @@index([type])
+}
