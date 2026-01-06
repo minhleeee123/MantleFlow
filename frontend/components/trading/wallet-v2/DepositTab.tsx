@@ -30,11 +30,12 @@ export const DepositTab: React.FC<Props> = ({
                     balance={walletMnt}
                     symbol="MNT"
                     onMax={() => setMntAmount(walletMnt)}
+                    error={parseFloat(mntAmount) > parseFloat(walletMnt) ? 'Insufficient MNT' : undefined}
                 />
                 <button
                     onClick={() => handleDeposit('MNT', mntAmount, setMntAmount)}
-                    className="w-full mt-6 bg-green-500 text-black border-2 border-black font-black py-4 text-xl hover:bg-green-400 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
-                    disabled={!mntAmount || parseFloat(mntAmount) <= 0}
+                    className="w-full mt-6 bg-green-500 text-black border-2 border-black font-black py-4 text-xl hover:bg-green-400 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 disabled:cursor-not-allowed"
+                    disabled={!mntAmount || parseFloat(mntAmount) <= 0 || parseFloat(mntAmount) > parseFloat(walletMnt)}
                 >
                     CONFIRM DEPOSIT
                 </button>
@@ -52,11 +53,12 @@ export const DepositTab: React.FC<Props> = ({
                     balance={walletUsdt}
                     symbol="USDT"
                     onMax={() => setUsdtAmount(walletUsdt)}
+                    error={parseFloat(usdtAmount) > parseFloat(walletUsdt) ? 'Insufficient USDT' : undefined}
                 />
                 <button
                     onClick={() => handleDeposit('USDT', usdtAmount, setUsdtAmount)}
-                    className="w-full mt-6 bg-green-500 text-black border-2 border-black font-black py-4 text-xl hover:bg-green-400 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
-                    disabled={!usdtAmount || parseFloat(usdtAmount) <= 0}
+                    className="w-full mt-6 bg-green-500 text-black border-2 border-black font-black py-4 text-xl hover:bg-green-400 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 disabled:cursor-not-allowed"
+                    disabled={!usdtAmount || parseFloat(usdtAmount) <= 0 || parseFloat(usdtAmount) > parseFloat(walletUsdt)}
                 >
                     CONFIRM DEPOSIT
                 </button>

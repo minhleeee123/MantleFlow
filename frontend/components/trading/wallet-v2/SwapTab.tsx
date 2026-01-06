@@ -31,9 +31,12 @@ export const SwapTab: React.FC<Props> = ({
 
             <div className="relative space-y-2">
                 {/* FROM INPUT */}
-                <div className="bg-white dark:bg-black p-4 border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,0.5)]">
+                <div className={`bg-white dark:bg-black p-4 border-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.5)] transition-colors
+                    ${parseFloat(swapFromAmount) > parseFloat(swapFromToken === 'MNT' ? vaultMnt : vaultUsdt) ? 'border-red-500' : 'border-black dark:border-white'}`}>
                     <div className="flex justify-between mb-2 text-xs font-black uppercase tracking-wider text-gray-500">
-                        <span>You Pay</span>
+                        <span className={parseFloat(swapFromAmount) > parseFloat(swapFromToken === 'MNT' ? vaultMnt : vaultUsdt) ? 'text-red-500 bg-red-100 px-1' : ''}>
+                            {parseFloat(swapFromAmount) > parseFloat(swapFromToken === 'MNT' ? vaultMnt : vaultUsdt) ? 'INSUFFICIENT FUNDS' : 'You Pay'}
+                        </span>
                         <span className="cursor-pointer hover:bg-black hover:text-white px-1"
                             onClick={() => setSwapFromAmount(swapFromToken === 'MNT' ? vaultMnt : vaultUsdt)}>
                             Avail: {parseFloat(swapFromToken === 'MNT' ? vaultMnt : vaultUsdt).toFixed(4)}
@@ -44,7 +47,7 @@ export const SwapTab: React.FC<Props> = ({
                             type="number"
                             value={swapFromAmount}
                             onChange={(e) => setSwapFromAmount(e.target.value)}
-                            className="w-full text-3xl font-mono font-black bg-transparent outline-none placeholder:text-gray-300"
+                            className={`w-full text-3xl font-mono font-black bg-transparent outline-none placeholder:text-gray-300 ${parseFloat(swapFromAmount) > parseFloat(swapFromToken === 'MNT' ? vaultMnt : vaultUsdt) ? 'text-red-500' : ''}`}
                             placeholder="0.0"
                         />
                         <button
@@ -91,8 +94,8 @@ export const SwapTab: React.FC<Props> = ({
 
             <button
                 onClick={handleSwap}
-                disabled={!swapFromAmount || parseFloat(swapFromAmount) <= 0}
-                className="w-full mt-6 bg-purple-600 text-white border-2 border-black font-black py-4 text-xl hover:bg-purple-500 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 uppercase"
+                disabled={!swapFromAmount || parseFloat(swapFromAmount) <= 0 || parseFloat(swapFromAmount) > parseFloat(swapFromToken === 'MNT' ? vaultMnt : vaultUsdt)}
+                className="w-full mt-6 bg-purple-600 text-white border-2 border-black font-black py-4 text-xl hover:bg-purple-500 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 disabled:cursor-not-allowed uppercase"
             >
                 EXECUTE SWAP
             </button>

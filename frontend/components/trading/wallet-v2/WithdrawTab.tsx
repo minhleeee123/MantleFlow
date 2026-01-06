@@ -30,11 +30,12 @@ export const WithdrawTab: React.FC<Props> = ({
                     balance={vaultMnt}
                     symbol="MNT"
                     onMax={() => setMntAmount(vaultMnt)}
+                    error={parseFloat(mntAmount) > parseFloat(vaultMnt) ? 'Insufficient MNT' : undefined}
                 />
                 <button
                     onClick={() => handleWithdraw('MNT', mntAmount, setMntAmount)}
-                    className="w-full mt-6 bg-red-500 text-white border-2 border-black font-black py-4 text-xl hover:bg-red-600 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
-                    disabled={!mntAmount || parseFloat(mntAmount) <= 0}
+                    className="w-full mt-6 bg-red-500 text-white border-2 border-black font-black py-4 text-xl hover:bg-red-600 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 disabled:cursor-not-allowed"
+                    disabled={!mntAmount || parseFloat(mntAmount) <= 0 || parseFloat(mntAmount) > parseFloat(vaultMnt)}
                 >
                     CONFIRM WITHDRAW
                 </button>
@@ -52,11 +53,12 @@ export const WithdrawTab: React.FC<Props> = ({
                     balance={vaultUsdt}
                     symbol="USDT"
                     onMax={() => setUsdtAmount(vaultUsdt)}
+                    error={parseFloat(usdtAmount) > parseFloat(vaultUsdt) ? 'Insufficient USDT' : undefined}
                 />
                 <button
                     onClick={() => handleWithdraw('USDT', usdtAmount, setUsdtAmount)}
-                    className="w-full mt-6 bg-red-500 text-white border-2 border-black font-black py-4 text-xl hover:bg-red-600 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
-                    disabled={!usdtAmount || parseFloat(usdtAmount) <= 0}
+                    className="w-full mt-6 bg-red-500 text-white border-2 border-black font-black py-4 text-xl hover:bg-red-600 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 disabled:cursor-not-allowed"
+                    disabled={!usdtAmount || parseFloat(usdtAmount) <= 0 || parseFloat(usdtAmount) > parseFloat(vaultUsdt)}
                 >
                     CONFIRM WITHDRAW
                 </button>
