@@ -45,13 +45,8 @@ export const triggersApi = {
     },
 };
 
-// Execute API
+// Execute API - Updated for V2
 export const executeApi = {
-    check: async (triggerId: string) => {
-        const response = await api.post(`/execute/check/${triggerId}`);
-        return response.data;
-    },
-
     execute: async (triggerId: string) => {
         const response = await api.post(`/execute/${triggerId}`);
         return response.data;
@@ -81,33 +76,15 @@ export const marketApi = {
     },
 };
 
-// Wallet API
-export const walletApi = {
-    getConfig: async () => {
-        const response = await api.get('/wallet/config');
-        return response.data;
-    },
-
-    getAddress: async () => {
-        const response = await api.get('/wallet/address');
-        return response.data.address;
-    },
-
-    getBalance: async () => {
-        const response = await api.get('/wallet/balance');
-        return response.data;
-    }
-};
-
-// Transactions API
+// Transactions API - Updated for V2
 export const transactionsApi = {
-    create: async (data: { type: 'DEPOSIT' | 'WITHDRAW' | 'DEPLOY', token: string, amount: number, txHash?: string }) => {
-        const response = await api.post('/wallet/transactions', data);
+    create: async (data: { type: 'DEPOSIT' | 'WITHDRAW' | 'SWAP', token: string, amount: number, txHash?: string }) => {
+        const response = await api.post('/transactions', data);
         return response.data;
     },
 
     list: async () => {
-        const response = await api.get('/wallet/transactions');
+        const response = await api.get('/transactions');
         return response.data;
     }
 };

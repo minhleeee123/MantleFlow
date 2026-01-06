@@ -8,6 +8,7 @@ dotenv.config();
 import authRoutes from './routes/auth';
 import triggersRoutes from './routes/triggers';
 import executeRoutes from './routes/execute';
+import transactionsRoutes from './routes/transactions';
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -40,6 +41,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/triggers', triggersRoutes);
 app.use('/api/execute', executeRoutes);
+app.use('/api/transactions', transactionsRoutes);
 
 // Error handling
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

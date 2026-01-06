@@ -37,8 +37,8 @@ interface Props {
 interface Transaction {
     id: string;
     type: 'DEPOSIT' | 'WITHDRAW' | 'SWAP_MNT_USDT' | 'SWAP_USDT_MNT';
-    token: string;
-    amount: number;
+    tokenIn: string;  // Backend returns tokenIn
+    amountIn: number; // Backend returns amountIn
     txHash?: string;
     createdAt: string;
 }
@@ -47,22 +47,22 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
     // Vault Balances
     const [vaultMntBalance, setVaultMntBalance] = useState('0');
     const [vaultUsdtBalance, setVaultUsdtBalance] = useState('0');
-    
+
     // Wallet Balances (MetaMask)
     const [walletMnt, setWalletMnt] = useState('0');
     const [walletUsdt, setWalletUsdt] = useState('0');
-    
+
     // DEX Price
     const [mntPrice, setMntPrice] = useState('0');
-    
+
     // Transactions
     const [transactions, setTransactions] = useState<Transaction[]>([]);
-    
+
     // UI State
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [activeTab, setActiveTab] = useState<'deposit' | 'withdraw' | 'swap'>('deposit');
-    
+
     // Input States
     const [depositMntAmount, setDepositMntAmount] = useState('');
     const [depositUsdtAmount, setDepositUsdtAmount] = useState('');
@@ -89,32 +89,32 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
 
     const fetchData = async () => {
         if (!window.ethereum) return;
-        
+
         try {
             setLoading(true);
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
             const signerAddress = await signer.getAddress();
-            
+
             // 1. Vault Balances
             const vault = new ethers.Contract(VAULT_ADDRESS, VAULT_ABI, provider);
             const [vaultMnt, vaultUsdt] = await vault.getUserBalances(signerAddress);
             setVaultMntBalance(ethers.formatEther(vaultMnt));
             setVaultUsdtBalance(ethers.formatUnits(vaultUsdt, 6));
-            
+
             // 2. Wallet Balances
             const walletMntBal = await provider.getBalance(signerAddress);
             setWalletMnt(ethers.formatEther(walletMntBal));
-            
+
             const usdtContract = new ethers.Contract(USDT_ADDRESS, ERC20_ABI, provider);
             const walletUsdtBal = await usdtContract.balanceOf(signerAddress);
             setWalletUsdt(ethers.formatUnits(walletUsdtBal, 6));
-            
+
             // 3. DEX Price
             const dex = new ethers.Contract(DEX_ADDRESS, DEX_ABI, provider);
             const [_, usdtPerMnt] = await dex.getPrice();
             setMntPrice(ethers.formatEther(usdtPerMnt));
-            
+
             // 4. Transaction History
             try {
                 const history = await transactionsApi.list();
@@ -122,7 +122,7 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
             } catch (err) {
                 console.warn('Failed to load history', err);
             }
-            
+
             setError('');
         } catch (error: any) {
             console.error('Error fetching data:', error);
@@ -134,22 +134,22 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
 
     const estimateSwapOutput = async () => {
         if (!window.ethereum || !swapFromAmount) return;
-        
+
         try {
             const provider = new ethers.BrowserProvider(window.ethereum);
             const vault = new ethers.Contract(VAULT_ADDRESS, VAULT_ABI, provider);
-            
+
             const isMntToUsdt = swapFromToken === 'MNT';
-            const amountIn = isMntToUsdt 
+            const amountIn = isMntToUsdt
                 ? ethers.parseEther(swapFromAmount)
                 : ethers.parseUnits(swapFromAmount, 6);
-            
+
             const amountOut = await vault.estimateSwap(isMntToUsdt, amountIn);
-            
+
             const formatted = isMntToUsdt
                 ? ethers.formatUnits(amountOut, 6)
                 : ethers.formatEther(amountOut);
-            
+
             setEstimatedOutput(formatted);
         } catch (error) {
             console.warn('Estimate failed:', error);
@@ -161,16 +161,16 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
         if (!depositMntAmount || !window.ethereum) return;
         const amount = parseFloat(depositMntAmount);
         if (isNaN(amount) || amount <= 0) return;
-        
+
         try {
             setLoading(true);
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
             const vault = new ethers.Contract(VAULT_ADDRESS, VAULT_ABI, signer);
-            
+
             const tx = await vault.depositMnt({ value: ethers.parseEther(amount.toString()) });
             await tx.wait();
-            
+
             await transactionsApi.create({ type: 'DEPOSIT', token: 'MNT', amount, txHash: tx.hash });
             alert(`✅ Deposited ${amount} MNT to Vault!`);
             setDepositMntAmount('');
@@ -187,17 +187,17 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
         if (!depositUsdtAmount || !window.ethereum) return;
         const amount = parseFloat(depositUsdtAmount);
         if (isNaN(amount) || amount <= 0) return;
-        
+
         try {
             setLoading(true);
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
-            
+
             const usdt = new ethers.Contract(USDT_ADDRESS, ERC20_ABI, signer);
             const vault = new ethers.Contract(VAULT_ADDRESS, VAULT_ABI, signer);
-            
+
             const amountWei = ethers.parseUnits(amount.toString(), 6);
-            
+
             // Check allowance
             const allowance = await usdt.allowance(await signer.getAddress(), VAULT_ADDRESS);
             if (allowance < amountWei) {
@@ -205,10 +205,10 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
                 const approveTx = await usdt.approve(VAULT_ADDRESS, amountWei);
                 await approveTx.wait();
             }
-            
+
             const tx = await vault.depositUsdt(amountWei);
             await tx.wait();
-            
+
             await transactionsApi.create({ type: 'DEPOSIT', token: 'USDT', amount, txHash: tx.hash });
             alert(`✅ Deposited ${amount} USDT to Vault!`);
             setDepositUsdtAmount('');
@@ -225,16 +225,16 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
         if (!withdrawMntAmount || !window.ethereum) return;
         const amount = parseFloat(withdrawMntAmount);
         if (isNaN(amount) || amount <= 0) return;
-        
+
         try {
             setLoading(true);
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
             const vault = new ethers.Contract(VAULT_ADDRESS, VAULT_ABI, signer);
-            
+
             const tx = await vault.withdrawMnt(ethers.parseEther(amount.toString()));
             await tx.wait();
-            
+
             await transactionsApi.create({ type: 'WITHDRAW', token: 'MNT', amount, txHash: tx.hash });
             alert(`✅ Withdrew ${amount} MNT from Vault!`);
             setWithdrawMntAmount('');
@@ -251,16 +251,16 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
         if (!withdrawUsdtAmount || !window.ethereum) return;
         const amount = parseFloat(withdrawUsdtAmount);
         if (isNaN(amount) || amount <= 0) return;
-        
+
         try {
             setLoading(true);
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
             const vault = new ethers.Contract(VAULT_ADDRESS, VAULT_ABI, signer);
-            
+
             const tx = await vault.withdrawUsdt(ethers.parseUnits(amount.toString(), 6));
             await tx.wait();
-            
+
             await transactionsApi.create({ type: 'WITHDRAW', token: 'USDT', amount, txHash: tx.hash });
             alert(`✅ Withdrew ${amount} USDT from Vault!`);
             setWithdrawUsdtAmount('');
@@ -277,17 +277,17 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
         if (!swapFromAmount || !window.ethereum) return;
         const amount = parseFloat(swapFromAmount);
         if (isNaN(amount) || amount <= 0) return;
-        
+
         try {
             setLoading(true);
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
             const vault = new ethers.Contract(VAULT_ADDRESS, VAULT_ABI, signer);
-            
+
             // Calculate minOut with 5% slippage
             const estimatedOut = parseFloat(estimatedOutput);
             const minOut = estimatedOut * 0.95;
-            
+
             let tx;
             if (swapFromToken === 'MNT') {
                 const amountIn = ethers.parseEther(amount.toString());
@@ -298,17 +298,17 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
                 const minOutWei = ethers.parseEther(minOut.toFixed(18));
                 tx = await vault.swapUsdtToMnt(amountIn, minOutWei);
             }
-            
+
             await tx.wait();
-            
+
             const swapType = swapFromToken === 'MNT' ? 'SWAP_MNT_USDT' : 'SWAP_USDT_MNT';
-            await transactionsApi.create({ 
-                type: swapType, 
-                token: swapFromToken, 
-                amount, 
-                txHash: tx.hash 
+            await transactionsApi.create({
+                type: swapType as any, // V2 specific swap types
+                token: swapFromToken,
+                amount,
+                txHash: tx.hash
             });
-            
+
             alert(`✅ Swapped ${amount} ${swapFromToken} successfully!`);
             setSwapFromAmount('');
             fetchData();
@@ -386,11 +386,10 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`px-4 py-2 font-bold uppercase text-sm transition-colors ${
-                            activeTab === tab
-                                ? 'bg-black text-white dark:bg-white dark:text-black'
-                                : 'bg-gray-200 dark:bg-gray-700 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
-                        }`}
+                        className={`px-4 py-2 font-bold uppercase text-sm transition-colors ${activeTab === tab
+                            ? 'bg-black text-white dark:bg-white dark:text-black'
+                            : 'bg-gray-200 dark:bg-gray-700 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
+                            }`}
                     >
                         {tab}
                     </button>
@@ -575,22 +574,21 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
                                         <td className="px-4 py-2 text-gray-600 dark:text-gray-400">
                                             {new Date(tx.createdAt).toLocaleTimeString()}
                                         </td>
-                                        <td className={`px-4 py-2 font-bold ${
-                                            tx.type.includes('DEPOSIT') ? 'text-green-600' : 
+                                        <td className={`px-4 py-2 font-bold ${tx.type.includes('DEPOSIT') ? 'text-green-600' :
                                             tx.type.includes('WITHDRAW') ? 'text-red-500' :
-                                            'text-purple-600'
-                                        }`}>
+                                                'text-purple-600'
+                                            }`}>
                                             {tx.type.replace('_', ' ')}
                                         </td>
                                         <td className="px-4 py-2 font-mono text-black dark:text-white">
-                                            {tx.amount} {tx.token}
+                                            {tx.amountIn} {tx.tokenIn}
                                         </td>
                                         <td className="px-4 py-2">
                                             {tx.txHash && (
-                                                <a 
-                                                    href={`https://sepolia.mantlescan.xyz/tx/${tx.txHash}`} 
-                                                    target="_blank" 
-                                                    rel="noopener noreferrer" 
+                                                <a
+                                                    href={`https://sepolia.mantlescan.xyz/tx/${tx.txHash}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
                                                     className="text-blue-500 hover:underline flex items-center gap-1"
                                                 >
                                                     View <ExternalLink className="w-3 h-3" />
