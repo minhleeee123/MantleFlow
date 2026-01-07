@@ -61,6 +61,14 @@ async function checkAndExecuteTrigger(trigger: any, currentPrice: number): Promi
             return;
         }
 
+        // 🛡️ RACE CONDITION CHECK: Re-fetch trigger status before execution
+        // This prevents double execution if multiple bot instances are running
+        const freshTrigger = await prisma.trigger.findUnique({ where: { id: trigger.id } });
+        if (!freshTrigger || freshTrigger.status !== TriggerStatus.ACTIVE) {
+            console.log(`   ⚠️ Trigger ${trigger.id.substring(0, 8)} checks failed or already executed. Skipping.`);
+            return;
+        }
+
         // Check balance
         const hasBalance = await blockchainService.checkVaultBalance(
             trigger.user.walletAddress,
@@ -104,6 +112,20 @@ async function checkAndExecuteTrigger(trigger: any, currentPrice: number): Promi
                         targetPrice: trigger.targetPrice,
                         swapResult
                     })
+                }
+            });
+
+            // ✨ NEW: Create Transaction record so it shows up in history
+            await prisma.transaction.create({
+                data: {
+                    userId: trigger.user.id,
+                    type: trigger.type === 'BUY' ? 'AUTO_SWAP_USDT_MNT' : 'AUTO_SWAP_MNT_USDT',
+                    tokenIn: fromToken,
+                    tokenOut: fromToken === 'MNT' ? 'USDT' : 'MNT',
+                    amountIn: amountToSwap,
+                    amountOut: swapResult.amountOut,
+                    txHash: swapResult.txHash,
+                    status: 'SUCCESS'
                 }
             });
 

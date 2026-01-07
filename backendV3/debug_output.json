@@ -1,0 +1,37 @@
+[
+  {
+    "id": "df0454ce-03de-4611-a136-af420e0ad826",
+    "type": "AUTO_SWAP_USDT_MNT",
+    "amountIn": 5,
+    "txHash": "0x136c0ab404907060ecc48d666cf141b4779fc537093b76d3a37d95fe8a9e235b",
+    "createdAt": "2026-01-07T06:14:29.029Z"
+  },
+  {
+    "id": "eb0eb16d-2852-4734-b47f-1a0373254139",
+    "type": "AUTO_SWAP_USDT_MNT",
+    "amountIn": 5,
+    "txHash": "0xb7d674692ffea48d4da26668e9171f0085dafd93852cb4c7985d830ac270a6c1",
+    "createdAt": "2026-01-07T06:14:20.457Z"
+  },
+  {
+    "id": "3b658d9e-8ae8-4bc9-81b5-125695645158",
+    "type": "SWAP_USDT_MNT",
+    "amountIn": 5,
+    "txHash": "0x7506ac10d0fbb3a06be83abf9ab5e3c0ad80d266f575b13b82195e14fe575f56",
+    "createdAt": "2026-01-07T06:08:25.627Z"
+  },
+  {
+    "id": "3d9c2994-3305-4611-8597-8a2a58de44d2",
+    "type": "SWAP_MNT_USDT",
+    "amountIn": 13,
+    "txHash": "0x24d65cc9cd5a24d86b717e61afe92589d7b057262c7c0ee82f0e45503dfcff79",
+    "createdAt": "2026-01-07T05:14:21.531Z"
+  },
+  {
+    "id": "d4cd42f7-2ec2-461e-9477-784bd518bd94",
+    "type": "SWAP_MNT_USDT",
+    "amountIn": 5,
+    "txHash": "0xfcb909cd711cde9d933b375f5154a3533fae4b01d9815705c331ecf60ff0e5d6",
+    "createdAt": "2026-01-07T05:13:40.001Z"
+  }
+]

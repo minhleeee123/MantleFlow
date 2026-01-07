@@ -51,19 +51,28 @@ export const useBackendTrading = (walletAddress: string | null) => {
         try {
             const data = await transactionsApi.list();
             // Transform backend data to frontend format
-            // Filter for SWAP and TRIGGER types
-            const formattedTrades = data.map((e: any) => ({
-                id: e.id,
-                symbol: e.token ? `${e.token}/USDT` : 'UNKNOWN', // Infer symbol
-                price: 0, // Transaction history might not have price, use 0 or fetch
-                amount: e.amount,
-                totalUsd: 0, // Calc if possible
-                type: e.type,
-                status: 'COMPLETED', // V3 transactions are always completed if recorded
-                errorMessage: '',
-                txHash: e.txHash,
-                timestamp: new Date(e.createdAt).getTime(),
-            }));
+            const formattedTrades = data.map((e: any) => {
+                // Determine symbol from tokenIn/Out or Type
+                let symbol = 'UNKNOWN';
+                if (e.tokenIn) {
+                    symbol = `${e.tokenIn}/${e.tokenOut || 'USDT'}`;
+                } else if (e.type && e.type.includes('MNT') && e.type.includes('USDT')) {
+                    symbol = 'MNT/USDT';
+                }
+
+                return {
+                    id: e.id,
+                    symbol: symbol,
+                    price: 0,
+                    amount: e.amountIn || e.amount || 0,
+                    totalUsd: 0,
+                    type: e.type,
+                    status: e.status || 'COMPLETED',
+                    errorMessage: '',
+                    txHash: e.txHash,
+                    timestamp: new Date(e.createdAt || e.executedAt).getTime(),
+                };
+            });
             setTrades(formattedTrades);
         } catch (error) {
             console.error('Error fetching history:', error);
@@ -124,7 +133,7 @@ export const useBackendTrading = (walletAddress: string | null) => {
         const fetchPrices = async () => {
             if (triggers.length === 0) return;
 
-            const symbols = Array.from(new Set(triggers.map((t: TradeTrigger) => t.symbol)));
+            const symbols = Array.from(new Set(triggers.map((t: TradeTrigger) => t.symbol))) as string[];
             try {
                 const prices = await marketApi.getPrices(symbols);
                 setMarketPrices(prices);
