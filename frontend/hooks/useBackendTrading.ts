@@ -31,7 +31,7 @@ export const useBackendTrading = (walletAddress: string | null) => {
                     type: t.type,
                     status: t.status,
                     createdAt: new Date(t.createdAt).getTime(),
-                    smartConditions: t.smartConditions,
+                    smartConditions: t.smartConditions ? (typeof t.smartConditions === 'string' ? JSON.parse(t.smartConditions) : t.smartConditions) : [],
                 }));
             setTriggers(formattedTriggers);
         } catch (error) {

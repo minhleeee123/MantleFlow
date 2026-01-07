@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { getCurrentPrice, getPricesBatch } from './market.js';
+import { getCurrentPrice, getPricesBatch, getRSI, get24hVolume, getGasPrice, getMovingAverage, getSentimentScore } from './market.js';
 import { blockchainService } from './blockchain.js';
 
 const prisma = new PrismaClient();
@@ -31,17 +31,78 @@ async function checkAndExecuteTrigger(trigger: any, currentPrice: number): Promi
 
         let shouldExecute = false;
 
-        // Advanced trigger logic (Respecting ABOVE/BELOW conditions)
+        // 1. Basic Price Condition Check
         if (trigger.condition === 'ABOVE') {
             shouldExecute = currentPrice >= trigger.targetPrice;
         } else if (trigger.condition === 'BELOW') {
             shouldExecute = currentPrice <= trigger.targetPrice;
         } else {
-            // Fallback legacy logic if condition is missing
+            // Fallback legacy logic
             if (trigger.type === TriggerType.BUY) {
                 shouldExecute = currentPrice <= trigger.targetPrice;
             } else {
                 shouldExecute = currentPrice >= trigger.targetPrice;
+            }
+        }
+
+        console.log(`   Price Check: $${currentPrice} vs Target $${trigger.targetPrice} (${trigger.condition}) => ${shouldExecute}`);
+
+        // 2. ✨ Smart Conditions Check (RSI, Volume, Gas, etc.)
+        if (shouldExecute && trigger.smartConditions) {
+            try {
+                const conditions = JSON.parse(trigger.smartConditions);
+                if (Array.isArray(conditions) && conditions.length > 0) {
+                    console.log(`   🧠 Checking ${conditions.length} smart conditions...`);
+
+                    for (const cond of conditions) {
+                        let realValue = 0;
+                        let metricName = cond.metric;
+
+                        switch (cond.metric) {
+                            case 'PRICE':
+                                realValue = currentPrice;
+                                break;
+                            case 'RSI':
+                                realValue = await getRSI(trigger.symbol);
+                                break;
+                            case 'VOLUME':
+                                realValue = await get24hVolume(trigger.symbol);
+                                // Convert volume to millions for easier comparison if user inputs "100" for "100M"
+                                // But usually AI agent handles raw numbers. Let's assume raw for now or Agent handles it.
+                                // Re-reading agent prompt: Agent outputs raw numbers. CoinGecko returns raw.
+                                // Improvement: specific handling might be needed but raw is safest.
+                                break;
+                            case 'GAS':
+                                realValue = await getGasPrice();
+                                break;
+                            case 'MA':
+                                realValue = await getMovingAverage(trigger.symbol);
+                                break;
+                            case 'SENTIMENT':
+                                realValue = await getSentimentScore() * 100; // Convert 0-1 to 0-100
+                                break;
+                            default:
+                                console.warn(`   ⚠️ Unknown metric: ${cond.metric}`);
+                                continue;
+                        }
+
+                        // Evaluate
+                        const isGT = cond.operator === 'GT';
+                        const isMet = isGT ? (realValue > cond.value) : (realValue < cond.value);
+
+                        console.log(`      [${cond.metric}] Real: ${realValue.toFixed(2)} | Target: ${cond.operator} ${cond.value} => ${isMet ? '✅' : '❌'}`);
+
+                        if (!isMet) {
+                            shouldExecute = false;
+                            break; // Stop checking if one fails
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('   ❌ Error parsing smart conditions:', err);
+                // Don't convert to false, maybe? Or play safe? 
+                // Play safe: if we can't verify, we don't execute.
+                shouldExecute = false;
             }
         }
 

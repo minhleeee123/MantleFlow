@@ -45,9 +45,19 @@ const ActiveTriggers: React.FC<Props> = ({ triggers, onCancel }) => {
 
                             <div className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
                                 <span>Target:</span>
-                                <span className="font-mono bg-yellow-100 dark:bg-yellow-900 px-1">
-                                    {trigger.condition === 'ABOVE' ? '≥' : '≤'} ${trigger.targetPrice}
-                                </span>
+                                {trigger.smartConditions && trigger.smartConditions.length > 0 ? (
+                                    <div className="flex flex-col gap-1">
+                                        {trigger.smartConditions.map((c, i) => (
+                                            <span key={i} className="font-mono bg-blue-100 dark:bg-blue-900 px-1 text-xs">
+                                                {c.metric} {c.operator === 'GT' ? '>' : '<'} {c.value}
+                                            </span>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <span className="font-mono bg-yellow-100 dark:bg-yellow-900 px-1">
+                                        {trigger.condition === 'ABOVE' ? '≥' : '≤'} ${trigger.targetPrice}
+                                    </span>
+                                )}
                             </div>
 
                             <div className="flex items-center gap-2 mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">

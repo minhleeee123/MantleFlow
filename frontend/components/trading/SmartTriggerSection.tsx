@@ -8,7 +8,7 @@ interface Props {
     onSuccess?: () => void;
 }
 
-const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger }) => {
+const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger, onSuccess }) => {
     const [input, setInput] = useState('');
     const [isParsing, setIsParsing] = useState(false);
     const [isDeploying, setIsDeploying] = useState(false); // New state
@@ -33,10 +33,24 @@ const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger }) => {
 
         setIsDeploying(true);
         try {
+            // Find PRICE condition to map to legacy fields
+            const priceCondition = plan.conditions.find(c => c.metric === 'PRICE');
+            let targetPrice = 0;
+            let condition: 'ABOVE' | 'BELOW' = 'ABOVE';
+
+            if (priceCondition) {
+                targetPrice = priceCondition.value;
+                condition = priceCondition.operator === 'GT' ? 'ABOVE' : 'BELOW';
+            } else {
+                // Fallback for non-price strategies (e.g. RSI only)
+                // We set a non-zero price to pass validation, but logic usually needs price
+                targetPrice = 0.000001;
+            }
+
             await onAddTrigger({
                 symbol: plan.symbol,
-                targetPrice: 0,
-                condition: 'ABOVE',
+                targetPrice: targetPrice,
+                condition: condition,
                 amount: plan.amount,
                 type: plan.action,
                 smartConditions: plan.conditions

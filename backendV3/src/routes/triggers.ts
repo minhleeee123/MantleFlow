@@ -39,7 +39,7 @@ router.get('/', async (req: AuthRequest, res) => {
 router.post('/', async (req: AuthRequest, res) => {
     try {
         const userId = req.user!.userId;
-        const { symbol, targetPrice, condition, amount, type, slippage } = req.body;
+        const { symbol, targetPrice, condition, amount, type, slippage, smartConditions } = req.body;
 
         // Validate input
         if (!symbol || !targetPrice || !condition || !amount || !type) {
@@ -67,6 +67,7 @@ router.post('/', async (req: AuthRequest, res) => {
                 amount: parseFloat(amount),
                 type,
                 slippage: slippage ? parseFloat(slippage) : 5,
+                smartConditions: smartConditions ? JSON.stringify(smartConditions) : null,
                 status: 'ACTIVE'
             }
         });
