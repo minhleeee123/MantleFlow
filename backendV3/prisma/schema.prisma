@@ -1,0 +1,84 @@
+// Backend V3 - Prisma Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  walletAddress String    @unique
+  email         String?
+  createdAt     DateTime  @default(now())
+  
+  triggers      Trigger[]
+  transactions  Transaction[]
+}
+
+model Trigger {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  symbol          String
+  targetPrice     Float
+  condition       String
+  amount          Float
+  type            String        // BUY or SELL
+  
+  smartConditions String?       // JSON string
+  slippage        Float?        @default(5)
+  
+  status          String        @default("ACTIVE") // ACTIVE, EXECUTED, CANCELLED, FAILED
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  executions      Execution[]
+}
+
+model Execution {
+  id              String        @id @default(uuid())
+  triggerId       String
+  trigger         Trigger       @relation(fields: [triggerId], references: [id], onDelete: Cascade)
+  userId          String
+  
+  symbol          String
+  amount          Float
+  type            String        // BUY or SELL
+  
+  txHash          String?
+  details         String?       // JSON string
+  
+  executedAt      DateTime      @default(now())
+}
+
+model Transaction {
+  id          String            @id @default(uuid())
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type        String            // DEPOSIT, WITHDRAW, SWAP
+  tokenIn     String
+  tokenOut    String?
+  amountIn    Float
+  amountOut   Float?
+  
+  txHash      String?
+  status      String            @default("SUCCESS") // SUCCESS, PENDING, FAILED
+  
+  createdAt   DateTime          @default(now())
+}
+
+model MarketCache {
+  id          String   @id @default(uuid())
+  cacheKey    String   @unique
+  data        String   // JSON string
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+

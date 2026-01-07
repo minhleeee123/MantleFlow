@@ -9,6 +9,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Enums
+enum TriggerType {
+  BUY
+  SELL
+}
+
+enum TriggerStatus {
+  ACTIVE
+  EXECUTED
+  CANCELLED
+  FAILED
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAW
+  SWAP
+}
+
+enum TransactionStatus {
+  SUCCESS
+  PENDING
+  FAILED
+}
+
 model User {
   id            String    @id @default(uuid())
   walletAddress String    @unique
@@ -22,21 +47,22 @@ model User {
 }
 
 model Trigger {
-  id              String   @id @default(uuid())
+  id              String        @id @default(uuid())
   userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  symbol          String   // MNT, USDT, BTC, ETH, etc
-  targetPrice     Float    // Target price (can be 0 for smart triggers)
-  condition       String   // ABOVE, BELOW
-  amount          Float    // Amount to trade
-  type            String   // BUY, SELL
+  symbol          String        // MNT, USDT, BTC, ETH, etc
+  targetPrice     Float         // Target price (can be 0 for smart triggers)
+  condition       String        // ABOVE, BELOW
+  amount          Float         // Amount to trade
+  type            TriggerType   // BUY, SELL
   
-  smartConditions Json?    // AI-generated conditions
+  smartConditions Json?         // AI-generated conditions
+  slippage        Float?        @default(5) // Slippage tolerance %
   
-  status          String   @default("ACTIVE") // ACTIVE, EXECUTED, CANCELLED, FAILED
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  status          TriggerStatus @default(ACTIVE) // ACTIVE, EXECUTED, CANCELLED, FAILED
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
   
   executions      Execution[]
   
@@ -45,47 +71,52 @@ model Trigger {
 }
 
 model Execution {
-  id              String   @id @default(uuid())
+  id              String        @id @default(uuid())
   triggerId       String
-  trigger         Trigger  @relation(fields: [triggerId], references: [id], onDelete: Cascade)
+  trigger         Trigger       @relation(fields: [triggerId], references: [id], onDelete: Cascade)
+  userId          String        // Add userId for executor service
   
   symbol          String
-  executionPrice  Float    // Price at execution time
-  amount          Float    // Amount traded
-  type            String   // BUY, SELL
-  
-  // V2: Swap details
-  amountIn        Float    // Input amount
-  amountOut       Float?   // Output amount (nullable for failed txs)
-  tokenIn         String   // MNT or USDT
-  tokenOut        String   // USDT or MNT
+  amount          Float         // Amount traded
+  type            TriggerType   // BUY, SELL
   
   txHash          String?
-  status          String   // PENDING, SUCCESS, FAILED
-  errorMessage    String?  @db.Text
+  details         Json?         // Store swap result and conditions
   
-  executedAt      DateTime @default(now())
+  executedAt      DateTime      @default(now())
   
   @@index([triggerId])
-  @@index([status, executedAt])
+  @@index([userId])
+  @@index([executedAt])
 }
 
 model Transaction {
-  id          String   @id @default(uuid())
+  id          String            @id @default(uuid())
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  type        String   // DEPOSIT, WITHDRAW, SWAP
-  tokenIn     String   // Token input
-  tokenOut    String?  // Token output (for swaps)
+  type        TransactionType   // DEPOSIT, WITHDRAW, SWAP
+  tokenIn     String            // Token input
+  tokenOut    String?           // Token output (for swaps)
   amountIn    Float
-  amountOut   Float?   // For swaps
+  amountOut   Float?            // For swaps
   
   txHash      String?
-  status      String   @default("SUCCESS") // SUCCESS, PENDING, FAILED
+  status      TransactionStatus @default(SUCCESS) // SUCCESS, PENDING, FAILED
   
-  createdAt   DateTime @default(now())
+  createdAt   DateTime          @default(now())
   
   @@index([userId, createdAt])
   @@index([type])
+}
+
+model MarketCache {
+  id          String   @id @default(uuid())
+  cacheKey    String   @unique // e.g., "price_BTC", "rsi_ETH_14", "sentiment"
+  data        Json     // Cached data
+  expiresAt   DateTime // Expiration timestamp
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([cacheKey, expiresAt])
 }

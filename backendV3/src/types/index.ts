@@ -1,18 +1,10 @@
 import { Request } from 'express';
 
-export interface JWTPayload {
-    userId: string;
-    walletAddress: string;
-}
-
 export interface AuthRequest extends Request {
-    user?: JWTPayload;
-}
-
-export interface LoginRequest {
-    walletAddress: string;
-    signature: string;
-    message: string;
+    user?: {
+        userId: string;
+        walletAddress: string;
+    };
 }
 
 export interface CreateTriggerRequest {
@@ -21,6 +13,12 @@ export interface CreateTriggerRequest {
     condition: 'ABOVE' | 'BELOW';
     amount: number;
     type: 'BUY' | 'SELL';
-    slippage?: number;
     smartConditions?: any;
+    slippage?: number;
+}
+
+export interface BotSwapRequest {
+    fromToken: 'MNT' | 'USDT';
+    amount: number;
+    slippagePercent?: number;
 }

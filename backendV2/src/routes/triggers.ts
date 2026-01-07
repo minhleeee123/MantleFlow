@@ -7,7 +7,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 // All routes require authentication
-router.use(authMiddleware);
+router.use(authMiddleware as any);
 
 // Get all triggers for current user
 router.get('/', async (req: AuthRequest, res) => {

@@ -9,6 +9,10 @@ import authRoutes from './routes/auth';
 import triggersRoutes from './routes/triggers';
 import executeRoutes from './routes/execute';
 import transactionsRoutes from './routes/transactions';
+import marketRoutes from './routes/market';
+
+// Import services
+import { startAutoExecutor } from './services/autoExecutor';
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -42,6 +46,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/triggers', triggersRoutes);
 app.use('/api/execute', executeRoutes);
 app.use('/api/transactions', transactionsRoutes);
+app.use('/api/market', marketRoutes);
 
 // Error handling
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -59,12 +64,22 @@ app.use((req, res) => {
 
 app.listen(PORT, () => {
     console.log(`
-🚀 Backend V2 Server Running
-━━━━━━━━━━━━━━━━━━━━━━━━
+╔════════════════════════════════════════════════════════════╗
+║       🚀 MANTLEFLOW AUTO-TRADING BACKEND V2               ║
+╚════════════════════════════════════════════════════════════╝
 📍 Port: ${PORT}
 🌐 Frontend: ${process.env.FRONTEND_URL}
 🔗 Vault: ${process.env.VAULT_ADDRESS}
 📊 DEX: ${process.env.DEX_ADDRESS}
-━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🤖 Features:
+   ✅ Auth (Wallet Signature)
+   ✅ Triggers Management
+   ✅ Market Data (6 Metrics)
+   ✅ Auto-Executor (10s interval)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     `);
+
+    // Start auto-executor service
+    startAutoExecutor();
 });

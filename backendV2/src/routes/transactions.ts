@@ -6,7 +6,7 @@ import { AuthRequest } from '../types';
 const router = Router();
 const prisma = new PrismaClient();
 
-router.use(authMiddleware);
+router.use(authMiddleware as any);
 
 // Get user's transaction history
 router.get('/', async (req: AuthRequest, res) => {
