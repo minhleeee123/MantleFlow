@@ -3,11 +3,11 @@ import { History, ExternalLink, ArrowDownCircle, ArrowUpCircle, ArrowRightLeft }
 
 interface Transaction {
     id: string;
-    type: 'DEPOSIT' | 'WITHDRAW' | 'SWAP_MNT_USDT' | 'SWAP_USDT_MNT';
-    tokenIn: string;
-    amountIn: number;
+    type: string;
+    symbol: string;
+    amount: number;
     txHash?: string;
-    createdAt: string;
+    timestamp: number;
 }
 
 interface Props {
@@ -45,19 +45,19 @@ export const TransactionHistory: React.FC<Props> = ({ transactions }) => (
                                     <td className="px-6 py-4 border-r-2 border-black dark:border-white">
                                         <span className={`
                                             inline-flex items-center gap-2 px-3 py-1 text-xs font-black uppercase border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.5)]
-                                            ${tx.type === 'DEPOSIT' && 'bg-green-400 text-black'}
-                                            ${tx.type === 'WITHDRAW' && 'bg-red-400 text-black'}
-                                            ${tx.type.includes('SWAP') && 'bg-purple-400 text-black'}
+                                            ${(tx.type === 'DEPOSIT' || tx.type.includes('BUY')) && 'bg-green-400 text-black'}
+                                            ${(tx.type === 'WITHDRAW' || tx.type.includes('SELL')) && 'bg-red-400 text-black'}
+                                            ${tx.type === 'SWAP' && 'bg-purple-400 text-black'}
                                         `}>
-                                            {tx.type.includes('SWAP') ? <ArrowRightLeft className="w-3 h-3" /> : (tx.type === 'DEPOSIT' ? <ArrowDownCircle className="w-3 h-3" /> : <ArrowUpCircle className="w-3 h-3" />)}
+                                            {(tx.type.includes('SWAP') || tx.type.includes('BUY') || tx.type.includes('SELL')) ? <ArrowRightLeft className="w-3 h-3" /> : (tx.type === 'DEPOSIT' ? <ArrowDownCircle className="w-3 h-3" /> : <ArrowUpCircle className="w-3 h-3" />)}
                                             {tx.type.replace('SWAP_', '').replace('_', ' ')}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 border-r-2 border-black dark:border-white font-mono font-bold text-lg">
-                                        {tx.amountIn} <span className="text-gray-500 text-xs">{tx.tokenIn}</span>
+                                        {tx.amount} <span className="text-gray-500 text-xs">{tx.symbol}</span>
                                     </td>
                                     <td className="px-6 py-4 border-r-2 border-black dark:border-white text-right font-mono font-bold">
-                                        {new Date(tx.createdAt).toLocaleTimeString()}
+                                        {new Date(tx.timestamp).toLocaleTimeString()}
                                     </td>
                                     <td className="px-6 py-4 text-center">
                                         {tx.txHash && (

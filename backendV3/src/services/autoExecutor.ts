@@ -31,11 +31,18 @@ async function checkAndExecuteTrigger(trigger: any, currentPrice: number): Promi
 
         let shouldExecute = false;
 
-        // Simple trigger logic
-        if (trigger.type === TriggerType.BUY) {
+        // Advanced trigger logic (Respecting ABOVE/BELOW conditions)
+        if (trigger.condition === 'ABOVE') {
+            shouldExecute = currentPrice >= trigger.targetPrice;
+        } else if (trigger.condition === 'BELOW') {
             shouldExecute = currentPrice <= trigger.targetPrice;
         } else {
-            shouldExecute = currentPrice >= trigger.targetPrice;
+            // Fallback legacy logic if condition is missing
+            if (trigger.type === TriggerType.BUY) {
+                shouldExecute = currentPrice <= trigger.targetPrice;
+            } else {
+                shouldExecute = currentPrice >= trigger.targetPrice;
+            }
         }
 
         console.log(`   Current: $${currentPrice} | Target: $${trigger.targetPrice} | Execute: ${shouldExecute}`);

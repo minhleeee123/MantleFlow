@@ -145,18 +145,25 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
                 console.log('📜 Raw Transaction History:', history);
 
                 // Transform Backend Data -> Frontend TradeRecord
-                const formattedHistory = history.map((tx: any) => ({
-                    id: tx.id,
-                    // If tokenIn exists, use it. Otherwise default.
-                    symbol: tx.tokenIn ? `${tx.tokenIn}/${tx.tokenOut || 'USDT'}` : 'UNKNOWN',
-                    price: 0,
-                    amount: tx.amountIn || tx.amount || 0,
-                    totalUsd: 0,
-                    type: tx.type === 'SWAP_MNT_USDT' ? 'SELL' : (tx.type === 'SWAP_USDT_MNT' ? 'BUY' : 'SWAP'),
-                    status: tx.status || 'SUCCESS',
-                    txHash: tx.txHash,
-                    timestamp: new Date(tx.createdAt || tx.executedAt).getTime()
-                }));
+                const formattedHistory = history.map((tx: any) => {
+                    let type = tx.type;
+                    if (tx.type === 'SWAP_MNT_USDT') type = 'SELL';
+                    else if (tx.type === 'SWAP_USDT_MNT') type = 'BUY';
+                    else if (tx.type.includes('AUTO_SWAP')) type = tx.type.includes('USDT_MNT') ? 'BUY EXEC' : 'SELL EXEC';
+
+                    return {
+                        id: tx.id,
+                        // If tokenIn exists, use it. Otherwise default.
+                        symbol: tx.tokenIn ? `${tx.tokenIn}/${tx.tokenOut || 'USDT'}` : 'UNKNOWN',
+                        price: 0,
+                        amount: tx.amountIn || tx.amount || 0,
+                        totalUsd: 0,
+                        type: type,
+                        status: tx.status || 'SUCCESS',
+                        txHash: tx.txHash,
+                        timestamp: new Date(tx.createdAt || tx.executedAt).getTime()
+                    };
+                });
                 console.log('✨ Formatted History:', formattedHistory);
                 setTransactions(formattedHistory);
             } catch (err) {
