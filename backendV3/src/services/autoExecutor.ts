@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { getCurrentPrice, getPricesBatch, getRSI, get24hVolume, getGasPrice, getMovingAverage, getSentimentScore } from './market.js';
 import { blockchainService } from './blockchain.js';
+import { sendEmail } from './email.js';
 
 const prisma = new PrismaClient();
 
@@ -198,6 +199,37 @@ async function checkAndExecuteTrigger(trigger: any, currentPrice: number): Promi
             });
 
             console.log(`   ✅ Trigger ${trigger.id.substring(0, 8)} marked as EXECUTED`);
+
+            // 📧 Send email notification
+            if (trigger.user.email) {
+                console.log(`   📧 Sending notification to ${trigger.user.email}...`);
+                try {
+                    const subject = `🚀 Trade Executed: ${trigger.type} ${trigger.symbol}`;
+                    const message = `
+                        <h2>🚀 Auto-Trade Executed Successfully!</h2>
+                        <p>Your smart agent has executed a trade based on your trigger.</p>
+                        <ul>
+                            <li><strong>Type:</strong> ${trigger.type}</li>
+                            <li><strong>Pair:</strong> ${trigger.symbol}</li>
+                            <li><strong>Amount:</strong> ${amountToSwap} ${fromToken}</li>
+                            <li><strong>Execution Price:</strong> $${currentPrice}</li>
+                            <li><strong>Transaction Hash:</strong> <a href="https://sepolia.mantlescan.xyz/tx/${swapResult.txHash}">${swapResult.txHash}</a></li>
+                        </ul>
+                        <p>Login to the platform to see full details.</p>
+                        <br>
+                        <p><em>Auto-Trading Bot @ MantleFlow</em></p>
+                    `;
+
+                    // We use dynamic import for email service to avoid circular dependencies if any, 
+                    // or just import at top. Let's send it in background (no await) to not block loop
+                    // But importing at top is better.
+                    // Assuming sendEmail is imported at the top.
+                    sendEmail(trigger.user.email, subject, message).catch(err => console.error('Failed to send email:', err));
+
+                } catch (emailErr) {
+                    console.error('   ⚠️ Failed to prepare email:', emailErr);
+                }
+            }
 
         } catch (execError: any) {
             console.error(`   ❌ Execution failed:`, execError.message);
