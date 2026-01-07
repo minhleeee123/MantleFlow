@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import swapRoutes from './routes/swap.js';
 import triggerRoutes from './routes/triggers.js';
+import transactionRoutes from './routes/transactions.js';
 import { startAutoExecutor } from './services/autoExecutor.js';
 
 dotenv.config();
@@ -28,6 +29,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/swap', swapRoutes);
 app.use('/api/triggers', triggerRoutes);
+app.use('/api/transactions', transactionRoutes);
 
 // 404 handler
 app.use((req, res) => {

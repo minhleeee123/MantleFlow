@@ -14,6 +14,7 @@ router.use(authMiddleware as any);
  */
 router.post('/bot', async (req: AuthRequest, res) => {
     try {
+        console.log('Bot swap payload:', JSON.stringify(req.body, null, 2));
         const { fromToken, amount, slippagePercent }: BotSwapRequest = req.body;
         const userAddress = req.user!.walletAddress;
 

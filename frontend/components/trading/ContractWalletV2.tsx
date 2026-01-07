@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { Wallet, RefreshCw, ArrowDownCircle, ArrowUpCircle, ArrowRightLeft } from 'lucide-react';
+import { Wallet, RefreshCw, ArrowDownCircle, ArrowUpCircle, ArrowRightLeft, HelpCircle, Bot, Zap } from 'lucide-react';
 import { transactionsApi } from '../../services/backendApi';
 import { LoadingOverlay } from './wallet-v2/LoadingOverlay';
 import { BalanceCard } from './wallet-v2/BalanceCard';
@@ -9,19 +9,29 @@ import { WithdrawTab } from './wallet-v2/WithdrawTab';
 import { SwapTab } from './wallet-v2/SwapTab';
 import { TransactionHistory } from './wallet-v2/TransactionHistory';
 
-// V2 Contract Addresses (Mantle Sepolia)
-const VAULT_ADDRESS = '0x2D85E5E8E9C8A90609f147513B9cCc01F8deAB16';
+// V3 Contract Addresses (Mantle Sepolia) - With Bot Swap
+const VAULT_ADDRESS = '0xa9910f0214173814d1571cC64D45F9681a8500B2';
+const BOT_ADDRESS = '0xE412d04DA2A211F7ADC80311CC0FF9F03440B64E';
 const DEX_ADDRESS = '0x991E5DAB401B44cD5E6C6e5A47F547B17b5bBa5d';
 const USDT_ADDRESS = '0xAcab8129E2cE587fD203FD770ec9ECAFA2C88080';
 
 // ABIs
 const VAULT_ABI = [
+    // Deposit & Withdraw
     'function depositMnt() external payable',
     'function depositUsdt(uint256 amount) external',
     'function withdrawMnt(uint256 amount) external',
     'function withdrawUsdt(uint256 amount) external',
+
+    // Quick Swap (user signs)
     'function swapMntToUsdt(uint256 mntAmount, uint256 minUsdtOut) external',
     'function swapUsdtToMnt(uint256 usdtAmount, uint256 minMntOut) external',
+
+    // Bot Authorization (NEW in V3)
+    'function authorizeBot(address bot, bool status) external',
+    'function isBotAuthorized(address user, address bot) external view returns (bool)',
+
+    // View functions
     'function getUserBalances(address user) external view returns (uint256 mnt, uint256 usdt)',
     'function estimateSwap(bool mntToUsdt, uint256 amountIn) external view returns (uint256)',
 ];
@@ -80,9 +90,17 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
     const [swapFromToken, setSwapFromToken] = useState<'MNT' | 'USDT'>('MNT');
     const [estimatedOutput, setEstimatedOutput] = useState('0');
 
+    // Bot Authorization State (NEW in V3)
+    const [botAuthorized, setBotAuthorized] = useState(false);
+    const [swapMode, setSwapMode] = useState<'quick' | 'bot'>('quick');
+
     useEffect(() => {
         fetchData();
-        const interval = setInterval(fetchData, 10000); // 10s refresh
+        checkBotAuthorization(); // Check bot status on load
+        const interval = setInterval(() => {
+            fetchData();
+            checkBotAuthorization();
+        }, 10000); // 10s refresh
         return () => clearInterval(interval);
     }, [userAddress]);
 
@@ -130,6 +148,23 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
             }
         } catch (error) {
             console.error('Fetch data error:', error);
+        }
+    };
+
+    // Check if user authorized bot (NEW in V3)
+    const checkBotAuthorization = async () => {
+        try {
+            if (!window.ethereum) return;
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner();
+            const signerAddress = await signer.getAddress();
+            const vault = new ethers.Contract(VAULT_ADDRESS, VAULT_ABI, provider);
+
+            const isAuthorized = await vault.isBotAuthorized(signerAddress, BOT_ADDRESS);
+            setBotAuthorized(isAuthorized);
+        } catch (error) {
+            console.error('Failed to check bot authorization:', error);
+            setBotAuthorized(false);
         }
     };
 
@@ -294,18 +329,132 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
         });
     };
 
+    // ===== BOT SWAP FUNCTIONS (NEW in V3) =====
+
+    // Authorize Bot - One-time setup
+    const handleAuthorizeBot = async () => {
+        await executeTransaction('Authorize Bot', async () => {
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner();
+            const vault = new ethers.Contract(VAULT_ADDRESS, VAULT_ABI, signer);
+
+            const tx = await vault.authorizeBot(BOT_ADDRESS, true);
+            await tx.wait();
+
+            setBotAuthorized(true);
+            return tx.hash;
+        });
+    };
+
+    // Bot Swap - No signature needed
+    const handleBotSwap = async () => {
+        if (!swapFromAmount || parseFloat(swapFromAmount) <= 0) return;
+        if (!botAuthorized) {
+            setError('Please authorize bot first');
+            return;
+        }
+
+        setLoading(true);
+        setLoadingAction('Bot Swap');
+        setProcessingStep('Executing swap via bot...');
+        setError('');
+
+        try {
+            const authToken = localStorage.getItem('authToken');
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}/api/swap/bot`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify({
+                    fromToken: swapFromToken,
+                    amount: parseFloat(swapFromAmount),
+                    slippagePercent: 5
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || result.message || 'Bot swap failed');
+            }
+
+            const swapType = swapFromToken === 'MNT' ? 'SWAP_MNT_USDT' : 'SWAP_USDT_MNT';
+            await transactionsApi.create({
+                type: swapType as any,
+                token: swapFromToken,
+                amount: parseFloat(swapFromAmount),
+                txHash: result.txHash
+            });
+
+            setProcessingStep('Updating data...');
+            await fetchData();
+
+            setSwapFromAmount('');
+            setProcessingStep('');
+        } catch (error: any) {
+            console.error('Bot swap error:', error);
+            setError(error.message || 'Bot swap failed');
+        } finally {
+            setLoading(false);
+            setProcessingStep('');
+        }
+    };
+
     return (
         <div className="w-full mb-10">
             {/* Header Area */}
             <div className="flex justify-between items-end mb-8 border-b-2 border-black dark:border-white pb-4">
                 <div>
-                    <h2 className="text-4xl font-black uppercase text-black dark:text-white mb-2 flex items-center gap-3">
-                        <Wallet className="w-10 h-10" />
-                        Vault Wallet
-                    </h2>
+                    <div className="flex items-center gap-4 mb-2">
+                        <h2 className="text-4xl font-black uppercase text-black dark:text-white flex items-center gap-3">
+                            <Wallet className="w-10 h-10" />
+                            Vault Wallet
+                        </h2>
+
+                        {/* SWAP CONTROLS */}
+                        {activeTab === 'swap' && (
+                            <div className="flex items-center gap-2 animate-in fade-in slide-in-from-left-4">
+                                {/* Mode Toggle */}
+                                <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg border border-black dark:border-gray-600">
+                                    <button
+                                        onClick={() => setSwapMode('quick')}
+                                        className={`px-3 py-1 flex items-center gap-2 rounded-md transition-all font-bold text-xs uppercase ${swapMode === 'quick' ? 'bg-white dark:bg-black text-black dark:text-white shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                                    >
+                                        <Zap className="w-3 h-3" /> Quick
+                                    </button>
+                                    <button
+                                        onClick={() => setSwapMode('bot')}
+                                        className={`px-3 py-1 flex items-center gap-2 rounded-md transition-all font-bold text-xs uppercase ${swapMode === 'bot' ? 'bg-purple-600 text-white shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                                    >
+                                        <Bot className="w-3 h-3" /> Bot
+                                    </button>
+                                </div>
+
+                                {/* Authorize Button */}
+                                {!botAuthorized && (
+                                    <div className="relative group">
+                                        <button
+                                            onClick={handleAuthorizeBot}
+                                            className="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1.5 font-bold uppercase text-xs border border-black flex items-center gap-2 transition-transform active:translate-y-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                                        >
+                                            Authorize Bot
+                                            <HelpCircle className="w-3 h-3" />
+                                        </button>
+                                        {/* Tooltip */}
+                                        <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 w-48 bg-black text-white text-xs p-2 rounded invisible group-hover:visible z-50">
+                                            Authorize trading bot once to enable signature-free swaps and auto-trading.
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
                     <div className="flex items-center gap-2 text-sm text-gray-500 font-mono font-bold">
                         <div className="w-3 h-3 bg-green-500 border border-black"></div>
                         CONNECTED: {userAddress.slice(0, 6)}...{userAddress.slice(-4)}
+                        {botAuthorized && <span className="text-purple-600 ml-2 flex items-center gap-1"><Bot className="w-3 h-3" /> Bot Active</span>}
                     </div>
                 </div>
                 <div className="text-right">
@@ -395,6 +544,9 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
                             swapFromAmount={swapFromAmount} setSwapFromAmount={setSwapFromAmount}
                             estimatedOutput={estimatedOutput} handleSwap={handleSwap}
                             vaultMnt={vaultMntBalance} vaultUsdt={vaultUsdtBalance}
+                            swapMode={swapMode}
+                            handleBotSwap={handleBotSwap}
+                            botAuthorized={botAuthorized}
                         />
                     )}
                 </div>
