@@ -136,7 +136,7 @@ const NeoBot: React.FC = () => {
         </div>
 
         {/* --- THE ROBOT SVG --- */}
-        <svg width="120" height="120" viewBox="0 0 120 120" className="overflow-visible drop-shadow-[4px_4px_0px_rgba(0,0,0,0.5)]">
+        <svg width="180" height="180" viewBox="0 0 120 120" className="overflow-visible drop-shadow-[4px_4px_0px_rgba(0,0,0,0.5)]">
             
             {/* Left Arm */}
             <g className={`transition-transform duration-200 origin-top-right`} style={{ transform: `rotate(${isDragging ? 45 : (isHovered ? 15 : 0)}deg)` }}>
