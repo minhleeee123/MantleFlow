@@ -4,8 +4,8 @@ export const WorkflowContent = () => (
     <div className="space-y-10">
         {/* User Registration & Wallet Deployment */}
         <div>
-            <h3 className="text-2xl font-black uppercase mb-3 border-l-4 border-blue-500 pl-3">1. User Registration & Smart Wallet Deployment</h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">How a new user onboards and gets their non-custodial trading wallet.</p>
+            <h3 className="text-2xl font-black uppercase mb-3 border-l-4 border-blue-500 pl-3">1. User Registration & Vault Deposit</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">How a new user onboards and deposits funds into VaultWithSwap.</p>
             <div className="bg-gray-100 dark:bg-gray-900 p-6 border-2 border-black font-mono text-xs md:text-sm overflow-x-auto whitespace-pre leading-relaxed shadow-inner">
                 {`User connects MetaMask
         │
@@ -23,25 +23,18 @@ export const WorkflowContent = () => (
                                             │
                                             ▼
                                    ┌─────────────────────────┐
-                                   │  Frontend: Check if     │
-                                   │  Smart Wallet exists    │
+                                   │  User deposits MNT/USDT │
+                                   │  to VaultWithSwap:      │
+                                   │  depositMnt() or        │
+                                   │  depositUsdt(amount)    │
                                    └────────┬────────────────┘
                                             │
-                         ┌──────────────────┴──────────────────┐
-                         │ Not Exists                   Exists │
-                         ▼                                     ▼
-            ┌──────────────────────────┐         ┌──────────────────────────┐
-            │  Call WalletFactory      │         │  Fetch wallet address    │
-            │  deployWallet(operator)  │         │  Load balances (USDC,MNT)│
-            └──────────┬───────────────┘         └──────────────────────────┘
-                       │ TX Hash
-                       ▼
-            ┌──────────────────────────┐
-            │  TradingWallet Clone     │
-            │  Created on-chain        │
-            │  Owner: User             │
-            │  Operator: Backend       │
-            └──────────────────────────┘`}
+                                            ▼
+                                   ┌─────────────────────────┐
+                                   │  User authorizes bot:   │
+                                   │  authorizeBot(bot, true)│
+                                   │  Now bot can swap funds │
+                                   └─────────────────────────┘`}
             </div>
         </div>
 
@@ -91,7 +84,7 @@ export const WorkflowContent = () => (
         {/* Auto-Executor Workflow */}
         <div>
             <h3 className="text-2xl font-black uppercase mb-3 border-l-4 border-purple-500 pl-3">3. Auto-Executor Background Worker</h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">Continuous monitoring and automated execution every 10 seconds.</p>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">Continuous monitoring and automated execution every 30 seconds.</p>
             <div className="bg-gray-100 dark:bg-gray-900 p-6 border-2 border-black font-mono text-xs md:text-sm overflow-x-auto whitespace-pre leading-relaxed shadow-inner">
                 {`setInterval(() => {
   ┌────────────────────────────────┐
@@ -119,12 +112,11 @@ export const WorkflowContent = () => (
                │ YES
                ▼
   ┌────────────────────────────────┐
-  │ Execute Swap on Blockchain:    │
-  │ 1. Get user's smart wallet     │
-  │ 2. (If selling MNT) Wrap MNT   │
-  │ 3. Approve Router for token    │
-  │ 4. Execute exactInputSingle()  │
-  │ 5. Wait for TX confirmation    │
+  │ Execute Bot Swap:              │
+  │ 1. Check if bot authorized     │
+  │ 2. Check user vault balance    │
+  │ 3. Call executeSwapXForUser()  │
+  │ 4. Wait for TX confirmation    │
   └────────────┬───────────────────┘
                │ Success
                ▼
@@ -135,7 +127,7 @@ export const WorkflowContent = () => (
   │ │    (SUCCESS, txHash, price)  │
   │ └─ Create Transaction record   │
   └────────────────────────────────┘
-}, 10000); // Every 10 seconds`}
+}, 30000); // Every 30 seconds`}
             </div>
             <div className="mt-4 bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 p-4">
                 <strong>Error Handling:</strong> If swap fails (insufficient balance, network error, etc.), Execution record is created with status="FAILED" and errorMessage. Trigger remains ACTIVE for potential retry in next cycle.
@@ -264,7 +256,7 @@ POST /api/wallet/transactions
                 </li>
                 <li className="flex items-start gap-2">
                     <span className="font-black text-lg">•</span>
-                    <span><strong>Operator Pattern:</strong> Backend can execute trades via <code>executeCall()</code> but cannot withdraw user funds.</span>
+                    <span><strong>Bot Authorization Pattern:</strong> Users explicitly authorize bot address via <code>authorizeBot(bot, true)</code>. Bot can only swap user funds within vault, cannot withdraw. Users can revoke authorization anytime.</span>
                 </li>
                 <li className="flex items-start gap-2">
                     <span className="font-black text-lg">•</span>

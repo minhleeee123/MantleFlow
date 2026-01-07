@@ -110,20 +110,20 @@ export const TechStackContent = () => (
             <h3 className="text-xl font-black uppercase mb-4">Deployed Contract Addresses (Mantle Sepolia)</h3>
             <div className="space-y-2 font-mono text-sm">
                 <div className="flex justify-between items-center bg-white dark:bg-black p-3 border border-gray-300">
-                    <span className="font-bold">WalletFactory:</span>
-                    <code className="text-blue-600 dark:text-blue-400">0xYourFactoryAddress</code>
+                    <span className="font-bold">VaultWithSwap:</span>
+                    <code className="text-blue-600 dark:text-blue-400">0x[Check backend .env VAULT_ADDRESS]</code>
                 </div>
                 <div className="flex justify-between items-center bg-white dark:bg-black p-3 border border-gray-300">
-                    <span className="font-bold">FusionX Router:</span>
-                    <code className="text-blue-600 dark:text-blue-400">0xb5Dc27be0a565A4A80440f41c74137001920CB22</code>
+                    <span className="font-bold">SimpleDEXV2:</span>
+                    <code className="text-blue-600 dark:text-blue-400">0x[Deployed with VaultWithSwap]</code>
                 </div>
                 <div className="flex justify-between items-center bg-white dark:bg-black p-3 border border-gray-300">
                     <span className="font-bold">WMNT (Wrapped MNT):</span>
                     <code className="text-blue-600 dark:text-blue-400">0x67A1f4A939b477A6b7c5BF94D97E45dE87E608eF</code>
                 </div>
                 <div className="flex justify-between items-center bg-white dark:bg-black p-3 border border-gray-300">
-                    <span className="font-bold">USDC (Testnet):</span>
-                    <code className="text-blue-600 dark:text-blue-400">0x09Bc4E0D864854c6aFB6eB9A9cdF58ac190D0df9</code>
+                    <span className="font-bold">USDT (Testnet):</span>
+                    <code className="text-blue-600 dark:text-blue-400">0xAcab8129E2cE587fD203FD770ec9ECAFA2C88080</code>
                 </div>
             </div>
         </div>

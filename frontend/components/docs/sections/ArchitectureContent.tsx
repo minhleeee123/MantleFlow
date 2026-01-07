@@ -37,24 +37,19 @@ export const ArchitectureContent = () => (
 │  (Port 3306)    │  │  (Mantle Sepolia - ChainID: 5003)                │
 │                 │  │                                                   │
 │  ├─ Users       │  │  ┌─────────────────┐   ┌─────────────────────┐  │
-│  ├─ Triggers    │  │  │ WalletFactory   │──►│  TradingWallet[]    │  │
-│  ├─ Executions  │  │  │  (EIP-1167)     │   │  (Clones)           │  │
-│  └─ Transactions│  │  └─────────────────┘   └──────┬──────────────┘  │
-│                 │  │                                │                  │
-└─────────────────┘  │                                │ executeCall()    │
-                     │                                ▼                  │
-                     │  ┌──────────────────────────────────────────────┐│
-                     │  │  FusionX Router (Uniswap V3 Fork)            ││
-                     │  │  - WMNT/USDC Pool (0.3% fee)                 ││
-                     │  │  - exactInputSingle() for swaps              ││
-                     │  └──────────────────────────────────────────────┘│
+│  ├─ Triggers    │  │  │  VaultWithSwap  │──►│   SimpleDEXV2       │  │
+│  ├─ Executions  │  │  │  (Shared Vault) │   │   (Internal AMM)    │  │
+│  └─ Transactions│  │  └─────────────────┘   └─────────────────────┘  │
+│                 │  │                                                   │
+└─────────────────┘  │  Bot authorization: authorizeBot(bot, true)       │
+                     │  Bot swap: executeSwapMntToUsdtForUser()          │
                      └──────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                      BACKGROUND WORKER LAYER                             │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│  Auto-Executor (setInterval 10s)                                         │
+│  Auto-Executor (setInterval 30s)                                        │
 │  ├── Fetch ACTIVE triggers from DB                                       │
 │  ├── Evaluate conditions (CoinGecko, Binance, Alternative.me)            │
 │  ├── Execute qualified trades via blockchain service                     │
@@ -188,41 +183,53 @@ export const ArchitectureContent = () => (
             </h3>
             <div className="space-y-4">
                 <div className="border-l-4 border-yellow-500 pl-4">
-                    <h4 className="font-bold">WalletFactory.sol</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Factory pattern using EIP-1167 minimal proxy clones for gas-efficient wallet deployment.</p>
+                    <h4 className="font-bold">VaultWithSwap.sol</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Shared vault managing user deposits and bot-authorized swaps via SimpleDEXV2.</p>
                     <div className="bg-gray-900 text-gray-100 p-3 rounded font-mono text-xs">
-                        <pre>{`function deployWallet(address operator) external returns (address) {
-    require(userWallets[msg.sender] == address(0), "Wallet exists");
-    address clone = Clones.clone(implementation);
-    TradingWallet(payable(clone)).initialize(msg.sender, operator);
-    userWallets[msg.sender] = clone;
-    return clone;
-}`}</pre>
+                        <pre>{`// User deposit/withdraw functions
+function depositMnt() external payable
+function depositUsdt(uint256 amount) external
+function withdrawMnt(uint256 amount) external
+function withdrawUsdt(uint256 amount) external
+
+// Bot authorization
+function authorizeBot(address bot, bool status) external
+function isBotAuthorized(address user, address bot) external view returns (bool)
+
+// Bot swap functions (only authorized bots)
+function executeSwapMntToUsdtForUser(address user, uint256 mntAmount, uint256 minUsdtOut) external
+function executeSwapUsdtToMntForUser(address user, uint256 usdtAmount, uint256 minMntOut) external`}</pre>
                     </div>
                 </div>
 
                 <div className="border-l-4 border-red-500 pl-4">
-                    <h4 className="font-bold">TradingWallet.sol</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Individual user wallet with dual-role access control (Owner + Operator).</p>
+                    <h4 className="font-bold">SimpleDEXV2.sol</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Internal AMM using constant product formula (x * y = k) with 0.3% trading fee.</p>
                     <div className="bg-gray-900 text-gray-100 p-3 rounded font-mono text-xs">
-                        <pre>{`// Generic execution for swaps (called by Operator)
-function executeCall(address target, uint256 value, bytes calldata data) 
-    external onlyOperatorOrOwner returns (bytes memory)
+                        <pre>{`// Liquidity management
+function addLiquidity(uint256 usdtAmount) external payable
+function removeLiquidity(uint256 liquidity) external
 
-// Owner-only fund withdrawal
-function withdraw(address token, uint256 amount) external onlyOwner
+// Swap functions
+function swapMntForUsdt(uint256 minUsdtOut) external payable
+function swapUsdtForMnt(uint256 usdtAmount, uint256 minMntOut) external
 
-// Owner can change operator
-function setOperator(address _operator) external onlyOwner`}</pre>
+// AMM calculation (0.3% fee)
+function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut) 
+    public pure returns (uint256)
+    
+// View reserves
+function mntReserve() external view returns (uint256)
+function usdtReserve() external view returns (uint256)`}</pre>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     <div className="bg-gray-50 dark:bg-gray-900 p-4 border border-gray-300">
-                        <strong>Gas Optimization:</strong> EIP-1167 clones cost ~45% less gas than full contract deployments. Typical wallet deploy: ~150k gas (~$0.05 on Mantle Sepolia).
+                        <strong>Gas Efficiency:</strong> Shared vault eliminates need for per-user wallet deployments. Users pay gas only for deposits/withdrawals. Bot pays gas for all automated swaps.
                     </div>
                     <div className="bg-gray-50 dark:bg-gray-900 p-4 border border-gray-300">
-                        <strong>Upgradeability:</strong> Factory can update implementation address for future wallets. Existing wallets remain on old implementation (immutable).
+                        <strong>Security Model:</strong> Users must explicitly authorize bot address. Bot can only swap user funds within vault, cannot withdraw. Users retain full custody and can revoke bot authorization anytime.
                     </div>
                 </div>
             </div>

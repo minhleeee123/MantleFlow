@@ -20,8 +20,8 @@ export const IntroContent = () => (
 │  ┌──────────────┐  ┌──────────────┐  ┌─────────────────────┐    │
 │  │   Frontend   │  │   Backend    │  │   Smart Contract    │    │
 │  │  (React 19)  │◄─┤  (Node.js)   │◄─┤  (Solidity 0.8.20)  │    │
-│  │   + MantleFlow AI│  │  + Prisma ORM│  │  + Wallet Factory   │    │
-│  │   + Ethers.js│  │  + MySQL DB  │  │  + Agni DEX Router  │    │
+│  │   + MantleFlow AI│  │  + Prisma ORM│  │  + VaultWithSwap    │    │
+│  │   + Ethers.js│  │  + MySQL DB  │  │  + SimpleDEXV2      │    │
 │  └──────────────┘  └──────────────┘  └─────────────────────┘    │
 │         │                 │                      │               │
 │         └─────────────────┴──────────────────────┘               │
@@ -35,7 +35,7 @@ export const IntroContent = () => (
             <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
                     <span className="font-black text-lg">•</span>
-                    <span><strong>Smart Account Abstraction:</strong> Each user deploys their own non-custodial smart wallet via Factory pattern (EIP-1167 Clones)</span>
+                    <span><strong>Shared Vault Architecture:</strong> Users deposit MNT/USDT into VaultWithSwap contract and authorize backend bot to execute trades on their behalf</span>
                 </li>
                 <li className="flex items-start gap-2">
                     <span className="font-black text-lg">•</span>
@@ -43,11 +43,11 @@ export const IntroContent = () => (
                 </li>
                 <li className="flex items-start gap-2">
                     <span className="font-black text-lg">•</span>
-                    <span><strong>Background Automation:</strong> Auto-Executor worker monitors triggers every 10 seconds and executes swaps when conditions are met</span>
+                    <span><strong>Background Automation:</strong> Auto-Executor worker monitors triggers every 30 seconds and executes swaps when conditions are met</span>
                 </li>
                 <li className="flex items-start gap-2">
                     <span className="font-black text-lg">•</span>
-                    <span><strong>Multi-DEX Integration:</strong> Swaps executed on Agni Finance (Uniswap V3 fork) on Mantle Network</span>
+                    <span><strong>Internal DEX Integration:</strong> Swaps executed on SimpleDEXV2 (internal AMM with constant product formula) on Mantle Network</span>
                 </li>
             </ul>
         </div>
@@ -60,7 +60,7 @@ export const IntroContent = () => (
                 Node.js/Express server with Prisma ORM (MySQL). Handles JWT auth, trigger CRUD, and auto-executor worker. Ethers.js for blockchain interactions.
             </InfoCard>
             <InfoCard title="Smart Contracts" icon={Code}>
-                WalletFactory deploys TradingWallet clones (EIP-1167). Each wallet supports deposits, withdrawals, and generic executeCall() for swaps via operator.
+                VaultWithSwap manages user deposits (MNT/USDT) and bot-authorized swaps. SimpleDEXV2 provides internal AMM liquidity pool with 0.3% trading fee.
             </InfoCard>
             <InfoCard title="AI Agents" icon={Cpu}>
                 Advanced AI powers multiple agents: Market Analysis, Portfolio Evaluation, Transaction Parsing, and Smart Trade Strategy Generation.

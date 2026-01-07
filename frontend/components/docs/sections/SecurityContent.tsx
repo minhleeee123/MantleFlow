@@ -10,8 +10,8 @@ export const SecurityContent = () => (
                 desc="Login requires cryptographic signature using personal_sign. Backend verifies with ethers.verifyMessage() comparing recovered address to claimed address. No password storage, only signature verification. JWT tokens expire after 7 days for session management."
             />
             <SecurityItem
-                title="Non-Custodial Smart Wallet Architecture"
-                desc="User is wallet owner with exclusive withdrawal rights via onlyOwner modifier. Backend operator can only execute trades through executeCall() but cannot withdraw funds. Users retain full custody - backend cannot access funds without user's smart wallet permissions."
+                title="Bot Authorization Model"
+                desc="Users deposit funds into shared VaultWithSwap contract and explicitly authorize backend bot via authorizeBot(bot, true). Bot can only execute swaps on user's funds, cannot withdraw. Users retain full custody and can revoke bot authorization anytime via authorizeBot(bot, false)."
             />
             <SecurityItem
                 title="OpenZeppelin Security Standards"
@@ -27,7 +27,7 @@ export const SecurityContent = () => (
             />
             <SecurityItem
                 title="Rate Limiting & CORS"
-                desc="CORS configured to only accept requests from frontend origin. API endpoints use express-rate-limit to prevent abuse. Auto-executor has 10-second intervals to prevent spam execution attempts. Failed transactions logged for forensic analysis."
+                desc="CORS configured to only accept requests from frontend origin. API endpoints use express-rate-limit to prevent abuse. Auto-executor has 30-second intervals to prevent spam execution attempts. Failed transactions logged for forensic analysis."
             />
         </ul>
 
@@ -37,8 +37,9 @@ export const SecurityContent = () => (
             </h4>
             <ul className="text-sm space-y-1 ml-4 list-disc">
                 <li>Enable slippage protection in swap params (currently 0 for demo)</li>
-                <li>Implement multi-sig for operator address changes</li>
-                <li>Add emergency pause function for factory contract</li>
+                <li>Implement multi-sig for bot wallet address</li>
+                <li>Add emergency pause function for VaultWithSwap contract</li>
+                <li>Add max swap amount limits per transaction</li>
                 <li>Enable HTTPS/TLS for all API communications</li>
                 <li>Implement transaction monitoring & anomaly detection</li>
                 <li>Get professional smart contract audit before mainnet deployment</li>
@@ -48,28 +49,26 @@ export const SecurityContent = () => (
         <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white mt-6">
             <h3 className="text-lg font-black uppercase mb-4">Smart Contract Security Code Snippets</h3>
             <div className="bg-gray-900 text-gray-100 p-4 rounded font-mono text-xs overflow-x-auto">
-                <pre>{`// Access Control Modifiers
-modifier onlyOwner() {
-    require(msg.sender == owner, "Not owner");
+                <pre>{`// Bot Authorization Check
+modifier onlyAuthorizedBot(address user) {
+    require(userAuthorizedBots[user][msg.sender], "Bot not authorized");
     _;
 }
 
-modifier onlyOperatorOrOwner() {
-    require(msg.sender == operator || msg.sender == owner, "Not authorized");
-    _;
+// User Withdrawal (only user can withdraw)
+function withdrawMnt(uint256 amount) external nonReentrant {
+    require(mntBalances[msg.sender] >= amount, "Insufficient balance");
+    mntBalances[msg.sender] -= amount;
+    (bool success, ) = msg.sender.call{value: amount}("");
+    require(success, "Transfer failed");
 }
 
-// Safe Token Transfer (OpenZeppelin SafeERC20)
-using SafeERC20 for IERC20;
-IERC20(token).safeTransfer(owner, amount);
-
-// Revert Bubbling for Detailed Errors
-(bool success, bytes memory result) = target.call{value: value}(data);
-if (!success) {
-    assembly {
-        let returndata_size := mload(result)
-        revert(add(32, result), returndata_size)
-    }
+// Bot can swap but not withdraw
+function executeSwapMntToUsdtForUser(address user, uint256 mntAmount, uint256 minUsdtOut) 
+    external nonReentrant {
+    require(userAuthorizedBots[user][msg.sender], "Bot not authorized");
+    require(mntBalances[user] >= mntAmount, "Insufficient balance");
+    // ... swap logic ...
 }`}</pre>
             </div>
         </div>
