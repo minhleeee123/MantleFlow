@@ -57,6 +57,7 @@ router.post('/login', async (req, res) => {
             user: {
                 id: user.id,
                 walletAddress: user.walletAddress,
+                email: user.email,
                 createdAt: user.createdAt
             }
         });
@@ -98,7 +99,9 @@ router.post('/verify', async (req, res) => {
             valid: true,
             user: {
                 id: user.id,
-                walletAddress: user.walletAddress
+                walletAddress: user.walletAddress,
+                email: user.email,
+                createdAt: user.createdAt
             }
         });
 
@@ -107,6 +110,44 @@ router.post('/verify', async (req, res) => {
             valid: false,
             error: 'Invalid or expired token'
         });
+    }
+});
+
+/**
+ * PATCH /api/auth/profile
+ * Update user profile (email)
+ */
+router.patch('/profile', async (req: any, res) => {
+    try {
+        // Extract token manually since we don't have middleware here yet or we can use generic one
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            res.status(401).json({ error: 'No token provided' });
+            return;
+        }
+
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+
+        const { email } = req.body;
+
+        const updatedUser = await prisma.user.update({
+            where: { id: decoded.userId },
+            data: { email }
+        });
+
+        res.json({
+            success: true,
+            user: {
+                id: updatedUser.id,
+                walletAddress: updatedUser.walletAddress,
+                email: updatedUser.email
+            }
+        });
+
+    } catch (error) {
+        console.error('Update profile error:', error);
+        res.status(401).json({ error: 'Unauthorized or failed to update' });
     }
 });
 

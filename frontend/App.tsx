@@ -177,11 +177,20 @@ const App: React.FC = () => {
     }
   }, [messages, isLoading, loadingStatus]);
 
-  const handleUpdateEmail = (newEmail: string) => {
-    setUserProfile(prev => ({
-      ...prev,
-      email: newEmail
-    }));
+  const handleUpdateEmail = async (newEmail: string) => {
+    try {
+      if (userProfile.walletAddress) {
+        await authApi.updateProfile(newEmail);
+        console.log('✅ Email updated in backend');
+      }
+      setUserProfile(prev => ({
+        ...prev,
+        email: newEmail
+      }));
+    } catch (error) {
+      console.error('Failed to update email', error);
+      alert('Failed to save email to server');
+    }
   };
 
   const handleRefreshPortfolio = async () => {
@@ -213,11 +222,18 @@ const App: React.FC = () => {
         // Login to backend
         const { token, user } = await authApi.login(walletData.address, signature, message);
         localStorage.setItem('auth_token', token);
-        console.log('✅ Logged in to backend successfully');
+        console.log('✅ Logged in to backend successfully', user);
 
         // Refresh backend data
         backendTrading.refreshTriggers();
         backendTrading.refreshHistory();
+
+        // Update profile with email from backend if exists
+        setUserProfile(prev => ({
+          ...prev,
+          email: user.email || prev.email
+        }));
+
       } catch (error) {
         console.error('❌ Backend login failed:', error);
         alert('Backend authentication failed. You can still use the app but triggers won\'t be saved.');
@@ -258,7 +274,8 @@ const App: React.FC = () => {
     setUserProfile(prev => ({
       ...prev,
       walletAddress: null,
-      portfolio: prev.portfolio.filter(p => !p.name.includes("(Wallet)"))
+      portfolio: prev.portfolio.filter(p => !p.name.includes("(Wallet)")),
+      email: "trader@mantleflow.ai" // Reset email on disconnect
     }));
   };
 

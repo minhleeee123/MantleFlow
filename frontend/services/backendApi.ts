@@ -15,6 +15,11 @@ export const authApi = {
         const response = await api.post('/auth/verify');
         return response.data;
     },
+
+    updateProfile: async (email: string) => {
+        const response = await api.patch('/auth/profile', { email });
+        return response.data;
+    },
 };
 
 // Triggers API
