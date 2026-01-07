@@ -129,7 +129,7 @@ const NeoBot: React.FC = () => {
             transition-all duration-300 origin-bottom-left z-20 pointer-events-none
             ${(isHovered || isDragging) ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}
         `}>
-          <p className="text-xs font-black uppercase whitespace-nowrap">
+          <p className="text-xs font-black uppercase whitespace-nowrap text-black dark:text-black">
             {isDragging ? "Wheeeeee!" : isClicked ? "Ouch!" : "Drag me!"}
           </p>
           <div className="absolute -bottom-2 left-2 w-3 h-3 bg-white border-b-2 border-r-2 border-black transform rotate-45"></div>
@@ -140,14 +140,14 @@ const NeoBot: React.FC = () => {
             
             {/* Left Arm */}
             <g className={`transition-transform duration-200 origin-top-right`} style={{ transform: `rotate(${isDragging ? 45 : (isHovered ? 15 : 0)}deg)` }}>
-                 <rect x="0" y="55" width="20" height="8" rx="4" fill="black" />
-                 <circle cx="0" cy="59" r="6" fill="#f472b6" stroke="black" strokeWidth="2" />
+                 <rect x="0" y="55" width="20" height="8" rx="4" fill="black" className="dark:fill-white" />
+                 <circle cx="0" cy="59" r="6" fill="#f472b6" stroke="black" strokeWidth="2" className="dark:stroke-white" />
             </g>
 
             {/* Right Arm */}
             <g className={`transition-transform duration-200 origin-top-left`} style={{ transform: `rotate(${isDragging ? -45 : (isHovered ? -15 : 0)}deg)` }}>
-                 <rect x="100" y="55" width="20" height="8" rx="4" fill="black" />
-                 <circle cx="120" cy="59" r="6" fill="#f472b6" stroke="black" strokeWidth="2" />
+                 <rect x="100" y="55" width="20" height="8" rx="4" fill="black" className="dark:fill-white" />
+                 <circle cx="120" cy="59" r="6" fill="#f472b6" stroke="black" strokeWidth="2" className="dark:stroke-white" />
             </g>
 
             {/* Antenna - Fixed to rotate at base instead of bounce */}
@@ -155,13 +155,13 @@ const NeoBot: React.FC = () => {
                 className={isHovered ? 'animate-[antenna-wiggle_0.5s_ease-in-out_infinite]' : ''} 
                 style={{ transformOrigin: '60px 15px' }} // Pivot point where antenna meets head
             >
-                <line x1="60" y1="15" x2="60" y2="0" stroke="black" strokeWidth="3" />
-                <circle cx="60" cy="0" r="5" fill={isDragging ? "#ef4444" : "#f472b6"} stroke="black" strokeWidth="3" />
+                <line x1="60" y1="15" x2="60" y2="0" stroke="black" strokeWidth="3" className="dark:stroke-white" />
+                <circle cx="60" cy="0" r="5" fill={isDragging ? "#ef4444" : "#f472b6"} stroke="black" strokeWidth="3" className="dark:stroke-white" />
                 {/* Antenna Waves */}
                 {isDragging && (
                     <>
-                        <path d="M 50 -5 Q 60 -15 70 -5" fill="none" stroke="black" strokeWidth="2" opacity="0.5" />
-                        <path d="M 45 -10 Q 60 -25 75 -10" fill="none" stroke="black" strokeWidth="2" opacity="0.3" />
+                        <path d="M 50 -5 Q 60 -15 70 -5" fill="none" stroke="black" strokeWidth="2" opacity="0.5" className="dark:stroke-white" />
+                        <path d="M 45 -10 Q 60 -25 75 -10" fill="none" stroke="black" strokeWidth="2" opacity="0.3" className="dark:stroke-white" />
                     </>
                 )}
             </g>
