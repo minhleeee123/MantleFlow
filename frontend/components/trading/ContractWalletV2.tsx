@@ -360,18 +360,27 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
         setError('');
 
         try {
-            const authToken = localStorage.getItem('authToken');
+            const authToken = localStorage.getItem('auth_token');
+
+            // DEBUG LOGS
+            console.log('🔄 Handle Bot Swap Triggered');
+            console.log('   fromToken:', swapFromToken);
+            console.log('   amount:', swapFromAmount);
+
+            const payload = {
+                fromToken: swapFromToken,
+                amount: parseFloat(swapFromAmount),
+                slippagePercent: 5
+            };
+            console.log('   Payload:', JSON.stringify(payload, null, 2));
+
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}/api/swap/bot`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${authToken}`
                 },
-                body: JSON.stringify({
-                    fromToken: swapFromToken,
-                    amount: parseFloat(swapFromAmount),
-                    slippagePercent: 5
-                })
+                body: JSON.stringify(payload)
             });
 
             const result = await response.json();

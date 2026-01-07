@@ -25,7 +25,8 @@ router.post('/bot', async (req: AuthRequest, res) => {
         }
 
         if (fromToken !== 'MNT' && fromToken !== 'USDT') {
-            res.status(400).json({ error: 'Invalid token. Must be MNT or USDT' });
+            console.error(`❌ Invalid token received: ${fromToken}`);
+            res.status(400).json({ error: 'Invalid Asset Token. Must be MNT or USDT' });
             return;
         }
 
