@@ -12,10 +12,10 @@ const FEATURES = [
         borderColor: "border-black"
     },
     {
-        title: "Vision Analysis",
-        subtitle: "Visual Pattern Recognition",
-        desc: "Our agent sees what you see. It captures chart images via screen stream, identifying key support/resistance levels and candlestick patterns instantly.",
-        icon: Eye,
+        title: "Smart AI Triggers",
+        subtitle: "Natural Language Trading",
+        desc: "Describe your strategy in plain English. Gemini AI parses your intent into executable conditions (Price, RSI, Volume, MA, Sentiment) and deploys automated triggers instantly.",
+        icon: Zap,
         color: "bg-neo-primary",
         borderColor: "border-black"
     },
@@ -28,10 +28,10 @@ const FEATURES = [
         borderColor: "border-black"
     },
     {
-        title: "Auto-Trading",
-        subtitle: "Non-Custodial Execution",
-        desc: "Execute strategies with confidence. Set natural language triggers (e.g., 'Sell ETH if price drops below $3k') and let the Smart Wallet handle the execution securely.",
-        icon: Bot,
+        title: "Email Notifications",
+        subtitle: "Real-Time Trade Alerts",
+        desc: "Never miss a trade. Get instant email confirmations when triggers execute, including transaction hash, execution price, and complete trade details delivered to your inbox.",
+        icon: Globe,
         color: "bg-neo-secondary",
         borderColor: "border-black"
     }

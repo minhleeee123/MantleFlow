@@ -4,10 +4,6 @@ import ScrollReveal from './ScrollReveal';
 
 const FAQS = [
     {
-        question: "How does the 'Vision Agent' analysis work?",
-        answer: "Our Vision Agent utilizes advanced multimodal AI capabilities. It doesn't just read price data—it actually 'sees' the chart patterns, wedges, and trends in your uploaded screenshots, effectively combining visual technical analysis with quantitative data."
-    },
-    {
         question: "Is my private key safe?",
         answer: "Absolutely. We are a non-custodial platform. We never ask for your private keys. Instead, you deploy a personal 'Smart Wallet' (Account Abstraction) on Mantle Sepolia. You authorize our AI Bot as a 'Session Key' operator, allowing it to execute trades within strict limits while you retain full ownership of your funds."
     },
@@ -29,7 +25,7 @@ const FAQS = [
     },
     {
         question: "Is the platform free to use?",
-        answer: "Yes, for this Hackathon release, all features including the Vision Agent, Portfolio Guard, and Auto-Trading Bot are completely free to use on the Testnet."
+        answer: "Yes, for this Hackathon release, all features including Smart AI Triggers, Email Notifications, Portfolio Analysis, and Auto-Trading Bot are completely free to use on the Testnet."
     }
 ];
 
