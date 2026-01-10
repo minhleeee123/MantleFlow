@@ -92,8 +92,8 @@ const Documentation: React.FC = () => {
             {/* LEFT SIDEBAR */}
             <div className="w-64 flex-shrink-0 border-r-2 border-black dark:border-white bg-neo-yellow dark:bg-[#111] overflow-y-auto custom-scrollbar">
                 <div className="p-4">
-                    <h2 className="text-xl font-black uppercase mb-6 flex items-center gap-2 px-2 mt-4">
-                        <BookOpen className="w-6 h-6 text-black" /> Docs
+                    <h2 className="text-xl font-black uppercase mb-6 flex items-center gap-2 px-2 mt-4 text-black dark:text-white">
+                        <BookOpen className="w-6 h-6 text-black dark:text-white" /> Docs
                     </h2>
 
                     <div className="space-y-8">
@@ -114,7 +114,7 @@ const Documentation: React.FC = () => {
                                                     w-full text-left px-3 py-2 text-sm font-bold border-2 transition-all flex items-center gap-3
                                                     ${isActive
                                                         ? 'bg-neo-primary border-black dark:border-white text-white shadow-neo-sm'
-                                                        : 'bg-white border-transparent hover:border-black text-black'
+                                                        : 'bg-white dark:bg-black border-transparent hover:border-black dark:hover:border-white text-black dark:text-white'
                                                     }
                                                 `}
                                             >

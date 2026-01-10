@@ -123,7 +123,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose, onConnect })
                         ))}
                     </div>
 
-                    <div className="mt-8 flex items-center justify-center gap-2 text-xs font-bold text-gray-500 uppercase">
+                    <div className="mt-8 flex items-center justify-center gap-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">
                         <Shield className="w-4 h-4" />
                         <span>Encrypted & Secure Connection</span>
                     </div>
