@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Menu, Sun, Moon, Home, MessageSquare, User, Bot, Wallet, LogOut, ChevronDown, HelpCircle, Snowflake, Book } from 'lucide-react';
 import { formatAddress } from '../../services/web3Service';
 import WalletModal from '../modals/WalletModal';
@@ -36,6 +36,45 @@ const Header: React.FC<HeaderProps> = ({
     const [isWalletMenuOpen, setIsWalletMenuOpen] = useState(false);
     const navRef = React.useRef<HTMLDivElement>(null);
     const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+
+    // Christmas music state
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+
+    // Initialize audio on mount
+    useEffect(() => {
+        // Using local Last Christmas music file
+        audioRef.current = new Audio('/music/Wham! - Last Christmas  Piano Cover with Strings (with Lyrics & PIANO SHEET).mp3');
+        audioRef.current.loop = true;
+        audioRef.current.volume = 0.3; // Set volume to 30%
+
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current = null;
+            }
+        };
+    }, []);
+
+    // Handle snow toggle with music
+    const handleSnowToggle = () => {
+        if (toggleSnow) {
+            toggleSnow();
+        }
+
+        // Toggle music
+        if (audioRef.current) {
+            if (isMusicPlaying) {
+                audioRef.current.pause();
+                setIsMusicPlaying(false);
+            } else {
+                audioRef.current.play().catch(err => {
+                    console.error('Error playing audio:', err);
+                });
+                setIsMusicPlaying(true);
+            }
+        }
+    };
 
     const navItems: { id: ViewType; label: string; icon: any }[] = [
         { id: 'landing', label: 'Intro', icon: Home },
@@ -108,16 +147,22 @@ const Header: React.FC<HeaderProps> = ({
                         {toggleSnow && (
                             <div className="relative group">
                                 <button
-                                    onClick={toggleSnow}
-                                    className={`p-1.5 border-2 border-black dark:border-white shadow-neo-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex items-start gap-0.5 ${isSnowing ? 'bg-neo-primary text-white' : 'bg-white dark:bg-black text-black dark:text-white'}`}
+                                    onClick={handleSnowToggle}
+                                    className={`p-1.5 border-2 border-black dark:border-white shadow-neo-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex items-start gap-0.5 relative ${isSnowing || isMusicPlaying ? 'bg-neo-primary text-white' : 'bg-white dark:bg-black text-black dark:text-white'}`}
                                 >
                                     <Snowflake className="w-4 h-4" strokeWidth={2.5} />
+                                    {isMusicPlaying && (
+                                        <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                        </span>
+                                    )}
                                     <HelpCircle className="w-2 h-2 mt-0.5 opacity-70" strokeWidth={3} />
                                 </button>
                                 {/* Tooltip */}
                                 <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 hidden group-hover:flex items-center whitespace-nowrap bg-black text-white text-xs font-bold uppercase px-2 py-1 border-2 border-white shadow-lg z-50">
                                     <div className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[6px] border-r-black"></div>
-                                    Christmas Snow Mode! Click to toggle.
+                                    Christmas Snow Mode! Click to toggle snow + music.
                                 </div>
                             </div>
                         )}
