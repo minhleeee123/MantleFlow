@@ -47,7 +47,7 @@ export const WorkflowContent = () => (
             │
             ▼
 ┌─────────────────────────────────┐
-│  MantleFlow AI:              │
+│  MantleFlow AI:                 │
 │  smartTradeAgent.parseStrategy()│
 └──────────────┬──────────────────┘
                │ Structured JSON
@@ -200,8 +200,8 @@ POST /api/wallet/transactions
         │
         ▼
 ┌────────────────────────────────────┐
-│ MantleFlow AI: classifyIntent()       │
-│ Result: "ANALYZE"                  │
+│ MantleFlow AI: classifyIntent()   │
+│ Result: "ANALYZE"                 │
 └────────────┬───────────────────────┘
              │
              ▼

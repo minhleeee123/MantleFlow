@@ -8,53 +8,53 @@ export const ArchitectureContent = () => (
             <h3 className="text-xl font-black uppercase mb-4">System Architecture Overview</h3>
             <div className="bg-gray-100 dark:bg-black p-4 border border-black font-mono text-xs overflow-x-auto whitespace-pre leading-relaxed">
                 {`┌─────────────────────────────────────────────────────────────────────────┐
-│                         USER INTERACTION LAYER                           │
+│                         USER INTERACTION LAYER                         │
 ├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  MetaMask Extension  ◄──► Browser (React App) ◄──► MantleFlow AI        │
-│      (Web3 Provider)           (Port 5173)           (Generative AI)    │
-│                                                                          │
+│                                                                        │
+│  MetaMask Extension  ◄──► Browser (React App) ◄──► MantleFlow AI       │
+│      (Web3 Provider)           (Port 5173)           (Generative AI)   │
+│                                                                        │
 └────────────┬────────────────────────────────────────────────────────────┘
              │ HTTP/WebSocket
              ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                         BACKEND API LAYER                                │
+│                         BACKEND API LAYER                              │
 ├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Express Server (Port 3001)                                              │
-│  ├── /api/auth          (JWT Authentication)                             │
-│  ├── /api/triggers      (CRUD Operations)                                │
-│  ├── /api/execute       (Trade Execution)                                │
-│  ├── /api/market        (Price & Metrics)                                │
-│  └── /api/wallet        (Balance & Transactions)                         │
-│                                                                          │
-└────┬────────────────────┬────────────────────────────────────────────────┘
+│                                                                        │
+│  Express Server (Port 3001)                                            │
+│  ├── /api/auth          (JWT Authentication)                           │
+│  ├── /api/triggers      (CRUD Operations)                              │
+│  ├── /api/execute       (Trade Execution)                              │
+│  ├── /api/market        (Price & Metrics)                              │
+│  └── /api/wallet        (Balance & Transactions)                       │
+│                                                                        │
+└────┬────────────────────┬───────────────────────────────────────────────┘
      │                    │
      │ Prisma ORM         │ Ethers.js
      ▼                    ▼
 ┌─────────────────┐  ┌──────────────────────────────────────────────────┐
-│   MySQL DB      │  │           BLOCKCHAIN LAYER                        │
-│  (Port 3306)    │  │  (Mantle Sepolia - ChainID: 5003)                │
-│                 │  │                                                   │
-│  ├─ Users       │  │  ┌─────────────────┐   ┌─────────────────────┐  │
+│   MySQL DB      │  │           BLOCKCHAIN LAYER                      │
+│  (Port 3306)    │  │  (Mantle Sepolia - ChainID: 5003)               │
+│                 │  │                                                 │
+│  ├─ Users       │  │  ┌─────────────────┐   ┌─────────────────────┐   │
 │  ├─ Triggers    │  │  │  VaultWithSwap  │──►│   SimpleDEXV2       │  │
 │  ├─ Executions  │  │  │  (Shared Vault) │   │   (Internal AMM)    │  │
-│  └─ Transactions│  │  └─────────────────┘   └─────────────────────┘  │
-│                 │  │                                                   │
-└─────────────────┘  │  Bot authorization: authorizeBot(bot, true)       │
-                     │  Bot swap: executeSwapMntToUsdtForUser()          │
+│  └─ Transactions│  │  └─────────────────┘   └─────────────────────┘   │
+│                 │  │                                                 │
+└─────────────────┘  │  Bot authorization: authorizeBot(bot, true)     │
+                     │  Bot swap: executeSwapMntToUsdtForUser()        │
                      └──────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                      BACKGROUND WORKER LAYER                             │
+│                      BACKGROUND WORKER LAYER                           │
 ├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  Auto-Executor (setInterval 30s)                                        │
-│  ├── Fetch ACTIVE triggers from DB                                       │
-│  ├── Evaluate conditions (CoinGecko, Binance, Alternative.me)            │
-│  ├── Execute qualified trades via blockchain service                     │
-│  └── Update trigger status & create execution records                    │
-│                                                                          │
+│                                                                        │
+│  Auto-Executor (setInterval 30s)                                       │
+│  ├── Fetch ACTIVE triggers from DB                                     │
+│  ├── Evaluate conditions (CoinGecko, Binance, Alternative.me)          │
+│  ├── Execute qualified trades via blockchain service                   │
+│  └── Update trigger status & create execution records                  │
+│                                                                        │
 └─────────────────────────────────────────────────────────────────────────┘`}
             </div>
         </div>

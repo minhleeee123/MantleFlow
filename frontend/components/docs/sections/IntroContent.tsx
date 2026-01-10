@@ -14,19 +14,19 @@ export const IntroContent = () => (
             <h3 className="text-xl font-black uppercase mb-4">System Overview</h3>
             <div className="bg-gray-100 dark:bg-black p-4 border border-black font-mono text-xs md:text-sm overflow-x-auto whitespace-pre leading-relaxed">
                 {`┌─────────────────────────────────────────────────────────────────┐
-│                     MantleFlow Platform                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌──────────────┐  ┌──────────────┐  ┌─────────────────────┐    │
-│  │   Frontend   │  │   Backend    │  │   Smart Contract    │    │
-│  │  (React 19)  │◄─┤  (Node.js)   │◄─┤  (Solidity 0.8.20)  │    │
-│  │   + MantleFlow AI│  │  + Prisma ORM│  │  + VaultWithSwap    │    │
-│  │   + Ethers.js│  │  + MySQL DB  │  │  + SimpleDEXV2      │    │
-│  └──────────────┘  └──────────────┘  └─────────────────────┘    │
-│         │                 │                      │               │
+│                     MantleFlow Platform                        │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌──────────────┐    ┌──────────────┐  ┌─────────────────────┐   │
+│  │   Frontend   │    │   Backend    │  │   Smart Contract   │   │
+│  │  (React 19)  │  ◄─┤  (Node.js)   │◄─┤  (Solidity 0.8.20) │   │
+│  │   + MantleFlow AI││  + Prisma ORM│  │  + VaultWithSwap   │   │
+│  │   + Ethers.js│    │  + MySQL DB  │  │  + SimpleDEXV2     │   │
+│  └──────────────┘    └──────────────┘  └─────────────────────┘   │
+│         │                 │                      │              │
 │         └─────────────────┴──────────────────────┘               │
-│                    Mantle Sepolia Testnet                        │
-└─────────────────────────────────────────────────────────────────┘`}
+│                    Mantle Sepolia Testnet                       │
+└──────────────────────────────────────────────────────────────────┘`}
             </div>
         </div>
 
