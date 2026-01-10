@@ -63,7 +63,7 @@ const AutoTradingView: React.FC<Props> = ({
                 {userWalletAddress ? (
                     <ContractWalletV2 userAddress={userWalletAddress} />
                 ) : (
-                    <div className="bg-yellow-100 border-2 border-yellow-500 p-4 font-bold text-center">
+                    <div className="bg-yellow-100 dark:bg-yellow-500 border-2 border-yellow-500 dark:border-yellow-600 p-4 font-bold text-center text-black">
                         PLEASE CONNECT WALLET TO ACCESS TRADING
                     </div>
                 )}
