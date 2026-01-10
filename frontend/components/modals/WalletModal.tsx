@@ -28,7 +28,7 @@ const WALLETS: WalletOption[] = [
     {
         id: 'phantom',
         name: 'Phantom',
-        icon: 'https://upload.wikimedia.org/wikipedia/en/thumb/5/52/Phantom_Icon_Transparent_Purple.png/230px-Phantom_Icon_Transparent_Purple.png',
+        icon: 'https://cryptologos.cc/logos/phantom-phantom-logo.png',
         downloadUrl: 'https://phantom.app/download',
         description: 'Best for Solana & Multichain.'
     },
@@ -54,7 +54,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose, onConnect })
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
             <div className="bg-white dark:bg-[#1a1a1a] w-full max-w-lg border-4 border-black dark:border-white shadow-neo-lg relative flex flex-col max-h-[90vh]">
-                
+
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b-4 border-black dark:border-white bg-neo-primary">
                     <div className="flex items-center gap-3">
@@ -63,7 +63,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose, onConnect })
                         </div>
                         <h2 className="text-2xl font-black text-white uppercase tracking-tight">Connect Wallet</h2>
                     </div>
-                    <button 
+                    <button
                         onClick={onClose}
                         className="p-2 bg-white border-2 border-black hover:bg-black hover:text-white transition-colors shadow-neo-sm"
                     >
@@ -82,7 +82,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose, onConnect })
                             <div key={wallet.id} className="relative group">
                                 <div className="absolute inset-0 bg-black translate-x-1 translate-y-1 transition-transform group-hover:translate-x-2 group-hover:translate-y-2"></div>
                                 <div className="relative bg-white dark:bg-[#262626] border-2 border-black dark:border-white p-4 flex items-center gap-4 transition-transform group-hover:-translate-y-0.5 group-hover:-translate-x-0.5">
-                                    
+
                                     {/* Icon */}
                                     <div className="w-12 h-12 shrink-0 border-2 border-black dark:border-white bg-white flex items-center justify-center p-2">
                                         <img src={wallet.icon} alt={wallet.name} className="w-full h-full object-contain" />
@@ -101,9 +101,9 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose, onConnect })
 
                                     {/* Actions */}
                                     <div className="flex items-center gap-2">
-                                        <a 
-                                            href={wallet.downloadUrl} 
-                                            target="_blank" 
+                                        <a
+                                            href={wallet.downloadUrl}
+                                            target="_blank"
                                             rel="noreferrer"
                                             className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 border-2 border-transparent hover:border-blue-200 transition-all rounded-none"
                                             title={`Download ${wallet.name}`}
@@ -111,7 +111,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose, onConnect })
                                         >
                                             <Download className="w-5 h-5" />
                                         </a>
-                                        <button 
+                                        <button
                                             onClick={() => onConnect(wallet.id)}
                                             className="bg-neo-accent hover:bg-neo-primary text-black hover:text-white border-2 border-black px-3 py-2 font-black uppercase text-sm flex items-center gap-1 transition-colors"
                                         >
