@@ -31,6 +31,7 @@ export const WithdrawTab: React.FC<Props> = ({
                     symbol="MNT"
                     onMax={() => setMntAmount(vaultMnt)}
                     error={parseFloat(mntAmount) > parseFloat(vaultMnt) ? 'Insufficient MNT' : undefined}
+                    balanceLabel="VAULT BALANCE"
                 />
                 <button
                     onClick={() => handleWithdraw('MNT', mntAmount, setMntAmount)}
@@ -54,6 +55,7 @@ export const WithdrawTab: React.FC<Props> = ({
                     symbol="USDT"
                     onMax={() => setUsdtAmount(vaultUsdt)}
                     error={parseFloat(usdtAmount) > parseFloat(vaultUsdt) ? 'Insufficient USDT' : undefined}
+                    balanceLabel="VAULT BALANCE"
                 />
                 <button
                     onClick={() => handleWithdraw('USDT', usdtAmount, setUsdtAmount)}

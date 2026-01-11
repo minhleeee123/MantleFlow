@@ -56,7 +56,7 @@ export const SwapTab: React.FC<Props> = ({
                             </span>
                             <span className="cursor-pointer hover:bg-black hover:text-white px-1"
                                 onClick={() => setSwapFromAmount(swapFromToken === 'MNT' ? vaultMnt : vaultUsdt)}>
-                                Avail: {parseFloat(swapFromToken === 'MNT' ? vaultMnt : vaultUsdt).toFixed(4)}
+                                VAULT BALANCE: {parseFloat(swapFromToken === 'MNT' ? vaultMnt : vaultUsdt).toFixed(4)}
                             </span>
                         </div>
                         <div className="flex gap-4 items-center">

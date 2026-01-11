@@ -31,6 +31,7 @@ export const DepositTab: React.FC<Props> = ({
                     symbol="MNT"
                     onMax={() => setMntAmount(walletMnt)}
                     error={parseFloat(mntAmount) > parseFloat(walletMnt) ? 'Insufficient MNT' : undefined}
+                    balanceLabel="WALLET BALANCE"
                 />
                 <button
                     onClick={() => handleDeposit('MNT', mntAmount, setMntAmount)}
@@ -54,6 +55,7 @@ export const DepositTab: React.FC<Props> = ({
                     symbol="USDT"
                     onMax={() => setUsdtAmount(walletUsdt)}
                     error={parseFloat(usdtAmount) > parseFloat(walletUsdt) ? 'Insufficient USDT' : undefined}
+                    balanceLabel="WALLET BALANCE"
                 />
                 <button
                     onClick={() => handleDeposit('USDT', usdtAmount, setUsdtAmount)}
