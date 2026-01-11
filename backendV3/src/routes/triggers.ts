@@ -93,7 +93,7 @@ router.get('/:id', async (req: AuthRequest, res) => {
 
         const trigger = await prisma.trigger.findFirst({
             where: {
-                id,
+                id: id as string,
                 userId
             },
             include: {
@@ -130,7 +130,7 @@ router.patch('/:id', async (req: AuthRequest, res) => {
 
         // Verify ownership
         const trigger = await prisma.trigger.findFirst({
-            where: { id, userId }
+            where: { id: id as string, userId }
         });
 
         if (!trigger) {
@@ -140,7 +140,7 @@ router.patch('/:id', async (req: AuthRequest, res) => {
 
         // Update
         const updated = await prisma.trigger.update({
-            where: { id },
+            where: { id: id as string },
             data: { status }
         });
 
@@ -165,7 +165,7 @@ router.delete('/:id', async (req: AuthRequest, res) => {
 
         // Verify ownership
         const trigger = await prisma.trigger.findFirst({
-            where: { id, userId }
+            where: { id: id as string, userId }
         });
 
         if (!trigger) {
@@ -174,7 +174,7 @@ router.delete('/:id', async (req: AuthRequest, res) => {
         }
 
         // Delete
-        await prisma.trigger.delete({ where: { id } });
+        await prisma.trigger.delete({ where: { id: id as string } });
 
         res.json({
             success: true,

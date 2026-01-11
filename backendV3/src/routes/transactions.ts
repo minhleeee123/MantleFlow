@@ -98,7 +98,7 @@ router.get('/:id', async (req: AuthRequest, res) => {
 
         const transaction = await prisma.transaction.findFirst({
             where: {
-                id,
+                id: id as string,
                 userId
             }
         });
