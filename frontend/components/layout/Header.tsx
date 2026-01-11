@@ -114,10 +114,11 @@ const Header: React.FC<HeaderProps> = ({
                 {/* LEFT: Logo & System Toggles */}
                 <div className="flex items-center gap-4 flex-1">
                     {/* Mobile Toggle Button */}
+                    {/* Mobile Toggle Button - HIDDEN as we now scale the nav */}
                     {isSidebarVisible && (
                         <button
                             onClick={toggleSidebar}
-                            className="p-2 border-2 border-black dark:border-white bg-neo-yellow hover:translate-x-[2px] hover:translate-y-[2px] transition-all md:hidden shrink-0"
+                            className="hidden p-2 border-2 border-black dark:border-white bg-neo-yellow hover:translate-x-[2px] hover:translate-y-[2px] transition-all shrink-0"
                             title="Open Menu"
                         >
                             <Menu className="w-5 h-5 text-black" strokeWidth={3} />
@@ -169,10 +170,10 @@ const Header: React.FC<HeaderProps> = ({
                     </div>
                 </div>
 
-                {/* RIGHT: Navigation & Wallet */}
-                <div className="flex items-center gap-4 flex-shrink-0">
+                {/* RIGHT: Navigation & Wallet - Scaled for responsiveness */}
+                <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0 origin-right scale-[0.65] sm:scale-90 lg:scale-100 transition-transform duration-200">
                     {/* Nav Tabs with Sliding Indicator */}
-                    <div ref={navRef} className="hidden lg:flex items-center bg-gray-100 dark:bg-black p-1 border-2 border-black dark:border-white shadow-neo-sm relative">
+                    <div ref={navRef} className="flex items-center bg-gray-100 dark:bg-black p-1 border-2 border-black dark:border-white shadow-neo-sm relative">
                         {/* Animated Sliding Background */}
                         <div
                             className="absolute bg-neo-primary border-2 border-black dark:border-white transition-all duration-300 ease-out"
