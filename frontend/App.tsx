@@ -472,7 +472,7 @@ const App: React.FC = () => {
           <div className="flex-1 relative w-full h-full overflow-hidden flex flex-col">
 
             {currentView === 'landing' && (
-              <LandingPage onStart={() => setCurrentView('chat')} />
+              <LandingPage onStart={() => setCurrentView('auto-trade')} />
             )}
 
             {currentView === 'profile' && (
