@@ -41,7 +41,7 @@ const FAQSection: React.FC = () => {
             <div className="max-w-4xl mx-auto">
                 <ScrollReveal variant="fade-up">
                     <div className="mb-12 text-center relative">
-                        <div className="inline-flex items-center gap-2 bg-neo-accent border-2 border-black px-3 py-1 mb-4 shadow-neo-sm transform -rotate-2">
+                        <div className="inline-flex items-center gap-2 bg-neo-accent border-2 border-black px-3 py-1 mb-4 shadow-neo-sm transform -rotate-2 rounded-md">
                             <HelpCircle className="w-5 h-5 text-black" strokeWidth={2.5} />
                             <span className="text-sm font-black uppercase text-black">Support Center</span>
                         </div>
@@ -70,7 +70,7 @@ const FAQSection: React.FC = () => {
                                 delay={index * 80}
                             >
                                 <div
-                                    className={`border-2 border-black dark:border-white transition-all duration-300 ${isOpen ? 'bg-neo-yellow shadow-neo' : 'bg-white dark:bg-[#1a1a1a] hover:shadow-neo-sm'}`}
+                                    className={`border-2 border-black dark:border-white transition-all duration-300 rounded-xl overflow-hidden ${isOpen ? 'bg-neo-yellow shadow-neo' : 'bg-white dark:bg-[#1a1a1a] hover:shadow-neo-sm'}`}
                                 >
                                     <button
                                         onClick={() => toggleFAQ(index)}
@@ -79,7 +79,7 @@ const FAQSection: React.FC = () => {
                                         <span className={`text-lg md:text-xl font-black uppercase ${isOpen ? 'text-black' : 'text-black dark:text-white'}`}>
                                             {faq.question}
                                         </span>
-                                        <div className={`p-1 border-2 border-black shrink-0 ml-4 transition-transform duration-300 ${isOpen ? 'bg-black text-white rotate-180' : 'bg-white text-black'}`}>
+                                        <div className={`p-1 border-2 border-black shrink-0 ml-4 transition-transform duration-300 rounded-lg ${isOpen ? 'bg-black text-white rotate-180' : 'bg-white text-black'}`}>
                                             {isOpen ? <Minus className="w-5 h-5" strokeWidth={3} /> : <Plus className="w-5 h-5" strokeWidth={3} />}
                                         </div>
                                     </button>

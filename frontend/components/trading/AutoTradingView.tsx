@@ -63,7 +63,7 @@ const AutoTradingView: React.FC<Props> = ({
                 {userWalletAddress ? (
                     <ContractWalletV2 userAddress={userWalletAddress} />
                 ) : (
-                    <div className="bg-yellow-100 dark:bg-yellow-500 border-2 border-yellow-500 dark:border-yellow-600 p-4 font-bold text-center text-black">
+                    <div className="bg-yellow-100 dark:bg-yellow-500 border-2 border-yellow-500 dark:border-yellow-600 p-4 font-bold text-center text-black rounded-xl">
                         PLEASE CONNECT WALLET TO ACCESS TRADING
                     </div>
                 )}
@@ -88,12 +88,12 @@ const AutoTradingView: React.FC<Props> = ({
                     <div className="flex flex-col gap-6">
 
                         {/* Notification Settings Card */}
-                        <div className="bg-white dark:bg-[#1e1f20] border-2 border-black dark:border-white shadow-neo p-6">
+                        <div className="bg-white dark:bg-[#1e1f20] border-2 border-black dark:border-white shadow-neo p-6 rounded-xl">
                             <div className="flex items-center gap-2 mb-4 border-b-2 border-black dark:border-white pb-2">
                                 <Bell className="w-5 h-5 text-neo-primary" strokeWidth={3} />
                                 <h3 className="font-black text-lg uppercase text-black dark:text-white">Alert Settings</h3>
                             </div>
-                            <div className="bg-gray-100 dark:bg-black/50 p-4 border border-black dark:border-white/20">
+                            <div className="bg-gray-100 dark:bg-black/50 p-4 border border-black dark:border-white/20 rounded-xl">
                                 <label className="text-xs font-bold uppercase text-gray-500 mb-2 block">
                                     Send Execution Reports To:
                                 </label>
@@ -105,12 +105,12 @@ const AutoTradingView: React.FC<Props> = ({
                                             value={emailInput}
                                             onChange={(e) => setEmailInput(e.target.value)}
                                             placeholder="Enter email address"
-                                            className="w-full pl-9 pr-3 py-2 border-2 border-black dark:border-white font-mono text-sm font-bold bg-white dark:bg-black outline-none"
+                                            className="w-full pl-9 pr-3 py-2 border-2 border-black dark:border-white font-mono text-sm font-bold bg-white dark:bg-black outline-none rounded-xl"
                                         />
                                     </div>
                                     <button
                                         onClick={handleSaveEmail}
-                                        className={`px-4 py-2 border-2 border-black dark:border-white font-black uppercase text-xs shadow-neo-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex items-center gap-1 ${isSaved ? 'bg-green-500 text-white' : 'bg-neo-accent text-black'}`}
+                                        className={`px-4 py-2 border-2 border-black dark:border-white font-black uppercase text-xs shadow-neo-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex items-center gap-1 rounded-xl ${isSaved ? 'bg-green-500 text-white' : 'bg-neo-accent text-black'}`}
                                     >
                                         {isSaved ? <Check className="w-4 h-4" /> : 'Save'}
                                     </button>
@@ -134,7 +134,7 @@ const AutoTradingView: React.FC<Props> = ({
                                     <Bot className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-xl font-black uppercase text-black dark:text-white">Live Bot Operations</h3>
-                                <span className="ml-auto text-xs font-bold bg-green-500 text-white px-2 py-0.5 border border-black animate-pulse">SYSTEM ACTIVE</span>
+                                <span className="ml-auto text-xs font-bold bg-green-500 text-white px-2 py-0.5 border border-black animate-pulse rounded-md">SYSTEM ACTIVE</span>
                             </div>
 
                             <div className="grid grid-cols-1 gap-6">

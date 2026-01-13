@@ -5,7 +5,7 @@ export const UserGuide: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="bg-white dark:bg-[#1e1f20] border-2 border-black dark:border-white shadow-neo mb-6 overflow-hidden">
+        <div className="bg-white dark:bg-[#1e1f20] border-2 border-black dark:border-white shadow-neo mb-6 overflow-hidden rounded-xl">
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="w-full flex items-center justify-between p-4 bg-neo-accent hover:opacity-90 transition-opacity"
@@ -30,7 +30,7 @@ export const UserGuide: React.FC = () => {
                             <p className="leading-relaxed text-gray-600 dark:text-gray-400">
                                 Before connecting your wallet, ensure you are on the <strong>Mantle Sepolia Testnet</strong>.
                             </p>
-                            <div className="bg-gray-100 dark:bg-black/50 p-3 border border-dashed border-gray-400 font-mono text-xs space-y-1">
+                            <div className="bg-gray-100 dark:bg-black/50 p-3 border border-dashed border-gray-400 font-mono text-xs space-y-1 rounded-lg">
                                 <div><strong>Network Name:</strong> Mantle Sepolia Testnet</div>
                                 <div><strong>RPC URL:</strong> https://rpc.sepolia.mantle.xyz</div>
                                 <div><strong>Chain ID:</strong> 5003</div>
@@ -41,7 +41,7 @@ export const UserGuide: React.FC = () => {
                                     href="https://faucet.testnet.mantle.xyz/"
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="bg-black text-white px-3 py-1 text-xs font-bold uppercase inline-flex items-center gap-1 hover:bg-neo-primary hover:text-black transition-colors"
+                                    className="bg-black text-white px-3 py-1 text-xs font-bold uppercase inline-flex items-center gap-1 hover:bg-neo-primary hover:text-black transition-colors rounded-md"
                                 >
                                     Get Testnet MNT (Faucet) <ChevronDown className="w-3 h-3 -rotate-90" />
                                 </a>
@@ -88,7 +88,7 @@ export const UserGuide: React.FC = () => {
                                     <strong>⚙️ Manual Trigger:</strong> Use the form to set simple Price Limit orders (Buy/Sell).
                                 </li>
                             </ul>
-                            <div className="bg-yellow-100 dark:bg-yellow-900/30 p-2 border-l-4 border-yellow-500 text-xs text-yellow-800 dark:text-yellow-200 font-bold mt-2">
+                            <div className="bg-yellow-100 dark:bg-yellow-900/30 p-2 border-l-4 border-yellow-500 text-xs text-yellow-800 dark:text-yellow-200 font-bold mt-2 rounded-r-lg">
                                 Your active strategies will appear in "Live Bot Operations". Our backend monitors the market 24/7 and executes automatically via your Smart Wallet.
                             </div>
                         </div>

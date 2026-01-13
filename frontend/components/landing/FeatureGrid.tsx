@@ -69,14 +69,14 @@ const FeatureGrid: React.FC = () => {
                             delay={idx * 150}
                         >
                             <div className="group perspective-1000">
-                                <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo p-8 relative overflow-hidden h-full transition-all duration-300 transform group-hover:rotate-x-2 group-hover:scale-[1.02] group-hover:shadow-neo-lg z-10">
+                                <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo p-8 relative overflow-hidden h-full transition-all duration-300 transform group-hover:rotate-x-2 group-hover:scale-[1.02] group-hover:shadow-neo-lg z-10 rounded-xl">
 
                                     {/* Hover Background Reveal */}
                                     <div className={`absolute inset-0 ${feat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
 
                                     <div className="relative z-10 flex flex-col h-full">
                                         <div className="flex justify-between items-start mb-6">
-                                            <div className={`w-16 h-16 ${feat.color} border-2 ${feat.borderColor} dark:border-white flex items-center justify-center shadow-neo-sm transform transition-transform duration-300 group-hover:rotate-12`}>
+                                            <div className={`w-16 h-16 ${feat.color} border-2 ${feat.borderColor} dark:border-white flex items-center justify-center shadow-neo-sm transform transition-transform duration-300 group-hover:rotate-12 rounded-xl`}>
                                                 <feat.icon className="w-8 h-8 text-black" strokeWidth={2.5} />
                                             </div>
                                             <ArrowUpRight className="w-8 h-8 text-black dark:text-white opacity-20 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
@@ -94,10 +94,10 @@ const FeatureGrid: React.FC = () => {
                                         </p>
 
                                         <div className="flex gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
-                                            <span className="bg-gray-100 dark:bg-white/10 px-2 py-1 text-xs font-bold uppercase border border-gray-300 dark:border-gray-600">
+                                            <span className="bg-gray-100 dark:bg-white/10 px-2 py-1 text-xs font-bold uppercase border border-gray-300 dark:border-gray-600 rounded-md">
                                                 Secure
                                             </span>
-                                            <span className="bg-gray-100 dark:bg-white/10 px-2 py-1 text-xs font-bold uppercase border border-gray-300 dark:border-gray-600">
+                                            <span className="bg-gray-100 dark:bg-white/10 px-2 py-1 text-xs font-bold uppercase border border-gray-300 dark:border-gray-600 rounded-md">
                                                 Fast
                                             </span>
                                         </div>

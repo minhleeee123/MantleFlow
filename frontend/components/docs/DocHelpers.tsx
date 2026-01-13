@@ -4,7 +4,7 @@ import { Box, Server, Code, Cpu, CheckCircle, Shield } from 'lucide-react';
 // --- HELPER COMPONENTS ---
 
 export const InfoCard = ({ title, icon: Icon, children }: any) => (
-    <div className="bg-white dark:bg-gray-800 p-4 border-2 border-black dark:border-white hover:bg-neo-bg transition-colors">
+    <div className="bg-white dark:bg-gray-800 p-4 border-2 border-black dark:border-white hover:bg-neo-bg transition-colors rounded-xl">
         <div className="flex items-center gap-2 mb-2 font-black uppercase text-sm">
             <Icon className="w-4 h-4" /> {title}
         </div>
@@ -33,20 +33,20 @@ export const StepBlock = ({ step, title, children }: any) => (
 );
 
 export const CodeBlock = ({ code }: { code: string }) => (
-    <div className="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm border-2 border-black shadow-neo-sm overflow-x-auto">
+    <div className="bg-gray-900 text-gray-100 p-4 rounded-xl font-mono text-sm border-2 border-black shadow-neo-sm overflow-x-auto">
         <pre>{code}</pre>
     </div>
 );
 
 export const FeatureBlock = ({ title, children }: any) => (
-    <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white shadow-neo-sm">
+    <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white shadow-neo-sm rounded-xl">
         <h3 className="text-lg font-black mb-3 text-neo-secondary uppercase">{title}</h3>
         <div className="text-sm leading-relaxed">{children}</div>
     </div>
 );
 
 export const SecurityItem = ({ title, desc }: any) => (
-    <div className="bg-white dark:bg-gray-800 p-4 border-l-4 border-green-500 shadow-sm">
+    <div className="bg-white dark:bg-gray-800 p-4 border-l-4 border-green-500 shadow-sm rounded-r-xl">
         <h4 className="font-bold uppercase flex items-center gap-2">
             <Shield className="w-4 h-4 text-green-500" /> {title}
         </h4>
@@ -57,8 +57,8 @@ export const SecurityItem = ({ title, desc }: any) => (
 export const Endpoint = ({ method, path, desc }: any) => {
     const colors: any = { GET: 'bg-blue-500', POST: 'bg-green-500', DELETE: 'bg-red-500', PATCH: 'bg-yellow-500' };
     return (
-        <div className="flex items-center gap-4 p-3 bg-white dark:bg-gray-800 border-2 border-black dark:border-white font-mono text-sm">
-            <span className={`px-2 py-1 text-white font-bold text-xs w-16 text-center ${colors[method] || 'bg-gray-500'}`}>
+        <div className="flex items-center gap-4 p-3 bg-white dark:bg-gray-800 border-2 border-black dark:border-white font-mono text-sm rounded-lg">
+            <span className={`px-2 py-1 text-white font-bold text-xs w-16 text-center rounded-sm ${colors[method] || 'bg-gray-500'}`}>
                 {method}
             </span>
             <span className="font-bold">{path}</span>

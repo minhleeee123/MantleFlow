@@ -449,7 +449,7 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
                         {activeTab === 'swap' && (
                             <div className="flex items-center gap-2 animate-in fade-in slide-in-from-left-4">
                                 {/* Mode Toggle */}
-                                <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg border border-black dark:border-gray-600">
+                                <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg border border-black dark:border-gray-600 rounded-lg">
                                     <button
                                         onClick={() => setSwapMode('quick')}
                                         className={`px-3 py-1 flex items-center gap-2 rounded-md transition-all font-bold text-xs uppercase ${swapMode === 'quick' ? 'bg-white dark:bg-black text-black dark:text-white shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
@@ -469,7 +469,7 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
                                     <div className="relative group">
                                         <button
                                             onClick={handleAuthorizeBot}
-                                            className="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1.5 font-bold uppercase text-xs border border-black flex items-center gap-2 transition-transform active:translate-y-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                                            className="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1.5 font-bold uppercase text-xs border border-black flex items-center gap-2 transition-transform active:translate-y-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded-lg"
                                         >
                                             Authorize Bot
                                             <HelpCircle className="w-3 h-3" />
@@ -491,7 +491,7 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
                 </div>
                 <div className="text-right">
                     <div className="text-xs font-black uppercase text-black dark:text-white mb-1 bg-yellow-400 dark:bg-yellow-600 px-2 border border-black inline-block">MNT Price</div>
-                    <div className="font-mono text-2xl font-black bg-white dark:bg-black text-black dark:text-white px-4 py-1 border-2 border-black dark:border-white shadow-neo">
+                    <div className="font-mono text-2xl font-black bg-white dark:bg-black text-black dark:text-white px-4 py-1 border-2 border-black dark:border-white shadow-neo rounded-xl">
                         ${parseFloat(mntPrice).toFixed(2)}
                     </div>
                 </div>
@@ -499,7 +499,7 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
 
             {/* ERROR DISPLAY */}
             {error && (
-                <div className="bg-red-500 border-2 border-black text-white p-4 mb-6 font-bold flex items-center justify-between shadow-neo animate-in slide-in-from-top-2">
+                <div className="bg-red-500 border-2 border-black text-white p-4 mb-6 font-bold flex items-center justify-between shadow-neo animate-in slide-in-from-top-2 rounded-xl">
                     <div className="flex items-center gap-3">
                         <span className="text-2xl bg-white text-black w-8 h-8 flex items-center justify-center border-2 border-black">!</span>
                         <span className="uppercase tracking-wide">{error}</span>
@@ -525,7 +525,7 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
             </div>
 
             {/* MAIN ACTION AREA */}
-            <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo overflow-hidden relative min-h-[400px]">
+            <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo overflow-hidden relative min-h-[400px] rounded-xl">
 
                 {/* GLOBAL LOADING OVERLAY */}
                 {loading && <LoadingOverlay message={processingStep} action={loadingAction} />}

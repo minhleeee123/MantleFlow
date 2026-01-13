@@ -10,7 +10,7 @@ interface HoldingsChartProps {
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white dark:bg-black border-2 border-black dark:border-white p-2 shadow-neo-sm">
+      <div className="bg-white dark:bg-black border-2 border-black dark:border-white p-2 shadow-neo-sm rounded-lg">
         <p className="font-black text-sm uppercase mb-1 text-black dark:text-white">{payload[0].payload.name}</p>
         <p className="font-mono text-sm text-black dark:text-white">
           ${payload[0].value.toLocaleString(undefined, { maximumFractionDigits: 2 })}
@@ -23,7 +23,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 const HoldingsChart: React.FC<HoldingsChartProps> = ({ data, colors }) => {
   return (
-    <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo p-5 flex flex-col h-[350px]">
+    <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo p-5 flex flex-col h-[350px] rounded-xl">
       <div className="flex items-center justify-between mb-4 border-b-2 border-black dark:border-white pb-2">
         <div className="flex items-center gap-2">
           <BarChart3 className="w-5 h-5 text-black dark:text-white" />
@@ -34,16 +34,16 @@ const HoldingsChart: React.FC<HoldingsChartProps> = ({ data, colors }) => {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#555" vertical={false} opacity={0.3} />
-            <XAxis 
-              dataKey="name" 
-              tick={{ fill: '#888', fontSize: 12, fontWeight: 'bold' }} 
+            <XAxis
+              dataKey="name"
+              tick={{ fill: '#888', fontSize: 12, fontWeight: 'bold' }}
               axisLine={{ stroke: '#000' }}
               tickLine={false}
             />
             <YAxis hide />
-            <Tooltip 
-                content={<CustomTooltip />} 
-                cursor={{fill: 'rgba(128,128,128,0.1)'}} 
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ fill: 'rgba(128,128,128,0.1)' }}
             />
             <Bar dataKey="value" fill="#8b5cf6" stroke="black" strokeWidth={2}>
               {data.map((entry, index) => (

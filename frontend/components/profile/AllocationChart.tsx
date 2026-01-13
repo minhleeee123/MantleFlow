@@ -11,7 +11,7 @@ interface AllocationChartProps {
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white dark:bg-black border-2 border-black dark:border-white p-2 shadow-neo-sm">
+      <div className="bg-white dark:bg-black border-2 border-black dark:border-white p-2 shadow-neo-sm rounded-lg">
         <p className="font-black text-sm uppercase mb-1 text-black dark:text-white">{payload[0].name}</p>
         <p className="font-mono text-sm text-black dark:text-white">
           ${payload[0].value.toLocaleString(undefined, { maximumFractionDigits: 2 })}
@@ -24,7 +24,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 const AllocationChart: React.FC<AllocationChartProps> = ({ data, colors, totalBalance }) => {
   return (
-    <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo p-5 flex flex-col h-[350px]">
+    <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo p-5 flex flex-col h-[350px] rounded-xl">
       <div className="flex items-center justify-between mb-4 border-b-2 border-black dark:border-white pb-2">
         <div className="flex items-center gap-2">
           <PieIcon className="w-5 h-5 text-black dark:text-white" />

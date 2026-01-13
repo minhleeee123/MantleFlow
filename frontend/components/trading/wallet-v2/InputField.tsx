@@ -27,12 +27,12 @@ export const InputField: React.FC<InputFieldProps> = ({ label, value, onChange, 
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder="0.00"
-                className={`w-full bg-white dark:bg-black border-2 p-4 font-mono text-2xl font-bold focus:outline-none transition-colors rounded-none placeholder:text-gray-300 ${error ? 'border-red-500 text-red-500 focus:bg-red-50 dark:focus:bg-red-900/10' : 'border-black dark:border-white focus:bg-yellow-50 dark:focus:bg-gray-900'}`}
+                className={`w-full bg-white dark:bg-black border-2 p-4 font-mono text-2xl font-bold focus:outline-none transition-colors rounded-xl placeholder:text-gray-300 ${error ? 'border-red-500 text-red-500 focus:bg-red-50 dark:focus:bg-red-900/10' : 'border-black dark:border-white focus:bg-yellow-50 dark:focus:bg-gray-900'}`}
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-3">
                 <button
                     onClick={onMax}
-                    className="text-xs font-black bg-black text-white hover:bg-yellow-400 hover:text-black px-3 py-1 border-2 border-transparent transition-colors uppercase"
+                    className="text-xs font-black bg-black text-white hover:bg-yellow-400 hover:text-black px-3 py-1 border-2 border-transparent transition-colors uppercase rounded-md"
                 >
                     MAX
                 </button>

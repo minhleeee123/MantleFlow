@@ -111,7 +111,7 @@ const Documentation: React.FC = () => {
                                                 key={itemId}
                                                 onClick={() => setActiveSection(itemId)}
                                                 className={`
-                                                    w-full text-left px-3 py-2 text-sm font-bold border-2 transition-all flex items-center gap-3
+                                                    w-full text-left px-3 py-2 text-sm font-bold border-2 transition-all flex items-center gap-3 rounded-lg
                                                     ${isActive
                                                         ? 'bg-neo-primary border-black dark:border-white text-white shadow-neo-sm'
                                                         : 'bg-white dark:bg-black border-transparent hover:border-black dark:hover:border-white text-black dark:text-white'
@@ -136,7 +136,7 @@ const Documentation: React.FC = () => {
                 <div className="max-w-4xl mx-auto min-h-full pb-20">
                     <div className="mb-8 border-b-4 border-black dark:border-white pb-4">
                         <div className="flex items-center gap-3 mb-2">
-                            <span className="p-2 bg-yellow-400 border-2 border-black shadow-neo-sm">
+                            <span className="p-2 bg-yellow-400 border-2 border-black shadow-neo-sm rounded-lg">
                                 {React.createElement(sections[activeSection].icon, { className: "w-6 h-6 text-black" })}
                             </span>
                             <h1 className="text-4xl font-black uppercase tracking-tight">{sections[activeSection].title}</h1>

@@ -118,7 +118,7 @@ const Header: React.FC<HeaderProps> = ({
                     {isSidebarVisible && (
                         <button
                             onClick={toggleSidebar}
-                            className="hidden p-2 border-2 border-black dark:border-white bg-neo-yellow hover:translate-x-[2px] hover:translate-y-[2px] transition-all shrink-0"
+                            className="hidden p-2 border-2 border-black dark:border-white bg-neo-yellow hover:translate-x-[2px] hover:translate-y-[2px] transition-all shrink-0 rounded-lg"
                             title="Open Menu"
                         >
                             <Menu className="w-5 h-5 text-black" strokeWidth={3} />
@@ -138,7 +138,7 @@ const Header: React.FC<HeaderProps> = ({
                     <div className="hidden sm:flex items-center gap-2">
                         <button
                             onClick={toggleTheme}
-                            className="p-1.5 border-2 border-black dark:border-white shadow-neo-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all bg-white dark:bg-black text-black dark:text-white"
+                            className="p-1.5 border-2 border-black dark:border-white shadow-neo-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all bg-white dark:bg-black text-black dark:text-white rounded-lg"
                             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
                         >
                             {theme === 'dark' ? <Sun className="w-4 h-4" strokeWidth={2.5} /> : <Moon className="w-4 h-4" strokeWidth={2.5} />}
@@ -149,7 +149,7 @@ const Header: React.FC<HeaderProps> = ({
                             <div className="relative group">
                                 <button
                                     onClick={handleSnowToggle}
-                                    className={`p-1.5 border-2 border-black dark:border-white shadow-neo-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex items-start gap-0.5 relative ${isSnowing || isMusicPlaying ? 'bg-neo-primary text-white' : 'bg-white dark:bg-black text-black dark:text-white'}`}
+                                    className={`p-1.5 border-2 border-black dark:border-white shadow-neo-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all flex items-start gap-0.5 relative rounded-lg ${isSnowing || isMusicPlaying ? 'bg-neo-primary text-white' : 'bg-white dark:bg-black text-black dark:text-white'}`}
                                 >
                                     <Snowflake className="w-4 h-4" strokeWidth={2.5} />
                                     {isMusicPlaying && (
@@ -173,10 +173,10 @@ const Header: React.FC<HeaderProps> = ({
                 {/* RIGHT: Navigation & Wallet - Scaled for responsiveness */}
                 <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0 origin-right scale-[0.65] sm:scale-90 lg:scale-100 transition-transform duration-200">
                     {/* Nav Tabs with Sliding Indicator */}
-                    <div ref={navRef} className="flex items-center bg-gray-100 dark:bg-black p-1 border-2 border-black dark:border-white shadow-neo-sm relative">
+                    <div ref={navRef} className="flex items-center bg-gray-100 dark:bg-black p-1 border-2 border-black dark:border-white shadow-neo-sm relative rounded-xl">
                         {/* Animated Sliding Background */}
                         <div
-                            className="absolute bg-neo-primary border-2 border-black dark:border-white transition-all duration-300 ease-out"
+                            className="absolute bg-neo-primary border-2 border-black dark:border-white transition-all duration-300 ease-out rounded-lg"
                             style={{
                                 left: `${indicatorStyle.left}px`,
                                 width: `${indicatorStyle.width}px`,
@@ -213,7 +213,7 @@ const Header: React.FC<HeaderProps> = ({
                             <div className="relative">
                                 <button
                                     onClick={() => setIsWalletMenuOpen(!isWalletMenuOpen)}
-                                    className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 border-2 border-transparent hover:bg-gray-800 dark:hover:bg-gray-200 font-bold uppercase text-sm shadow-neo-sm"
+                                    className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 border-2 border-transparent hover:bg-gray-800 dark:hover:bg-gray-200 font-bold uppercase text-sm shadow-neo-sm rounded-xl"
                                 >
                                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                                     {formatAddress(walletAddress)}
@@ -222,7 +222,7 @@ const Header: React.FC<HeaderProps> = ({
 
                                 {/* Dropdown Menu */}
                                 {isWalletMenuOpen && (
-                                    <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo z-50 animate-in fade-in slide-in-from-top-2">
+                                    <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo z-50 animate-in fade-in slide-in-from-top-2 rounded-xl overflow-hidden">
                                         <div className="p-2 border-b-2 border-black dark:border-white">
                                             <div className="text-[10px] uppercase font-bold text-gray-500">Connected as</div>
                                             <div className="font-mono font-bold truncate text-xs">{walletAddress}</div>
@@ -242,7 +242,7 @@ const Header: React.FC<HeaderProps> = ({
                         ) : (
                             <button
                                 onClick={() => setIsWalletModalOpen(true)}
-                                className="flex items-center gap-2 bg-neo-accent px-4 py-2 border-2 border-black font-black uppercase text-sm shadow-neo hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                                className="flex items-center gap-2 bg-neo-accent px-4 py-2 border-2 border-black font-black uppercase text-sm shadow-neo hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all rounded-xl"
                             >
                                 <Wallet className="w-4 h-4" strokeWidth={2.5} />
                                 <span className="hidden sm:inline">Connect Wallet</span>

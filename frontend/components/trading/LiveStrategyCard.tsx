@@ -114,7 +114,7 @@ const LiveStrategyCard: React.FC<Props> = ({ trigger, currentPrice, onExecute })
     }, [trigger, currentPrice, onExecute]);
 
     return (
-        <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo p-0 overflow-hidden flex flex-col md:flex-row h-auto md:h-64 animate-in fade-in slide-in-from-bottom-4">
+        <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo p-0 overflow-hidden flex flex-col md:flex-row h-auto md:h-64 animate-in fade-in slide-in-from-bottom-4 rounded-xl">
             <LeftPanel trigger={trigger} status={status} />
             <MonitorPanel
                 trigger={trigger}

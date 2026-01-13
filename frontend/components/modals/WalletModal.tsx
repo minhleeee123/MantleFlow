@@ -53,19 +53,19 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose, onConnect })
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-white dark:bg-[#1a1a1a] w-full max-w-lg border-4 border-black dark:border-white shadow-neo-lg relative flex flex-col max-h-[90vh]">
+            <div className="bg-white dark:bg-[#1a1a1a] w-full max-w-lg border-4 border-black dark:border-white shadow-neo-lg relative flex flex-col max-h-[90vh] rounded-xl overflow-hidden">
 
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b-4 border-black dark:border-white bg-neo-primary">
                     <div className="flex items-center gap-3">
-                        <div className="bg-black text-white p-2 border-2 border-white">
+                        <div className="bg-black text-white p-2 border-2 border-white rounded-lg">
                             <Wallet className="w-6 h-6" />
                         </div>
                         <h2 className="text-2xl font-black text-white uppercase tracking-tight">Connect Wallet</h2>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 bg-white border-2 border-black hover:bg-black hover:text-white transition-colors shadow-neo-sm"
+                        className="p-2 bg-white border-2 border-black hover:bg-black hover:text-white transition-colors shadow-neo-sm rounded-lg"
                     >
                         <X className="w-6 h-6" strokeWidth={3} />
                     </button>
@@ -73,18 +73,18 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose, onConnect })
 
                 {/* Body */}
                 <div className="p-6 overflow-y-auto custom-scrollbar bg-checkered">
-                    <p className="text-sm font-bold text-gray-600 dark:text-gray-300 mb-6 bg-white dark:bg-black w-fit px-2 border border-black dark:border-gray-500">
+                    <p className="text-sm font-bold text-gray-600 dark:text-gray-300 mb-6 bg-white dark:bg-black w-fit px-2 border border-black dark:border-gray-500 rounded-md">
                         Select a provider to access decentralized features.
                     </p>
 
                     <div className="space-y-4">
                         {WALLETS.map((wallet) => (
                             <div key={wallet.id} className="relative group">
-                                <div className="absolute inset-0 bg-black translate-x-1 translate-y-1 transition-transform group-hover:translate-x-2 group-hover:translate-y-2"></div>
-                                <div className="relative bg-white dark:bg-[#262626] border-2 border-black dark:border-white p-4 flex items-center gap-4 transition-transform group-hover:-translate-y-0.5 group-hover:-translate-x-0.5">
+                                <div className="absolute inset-0 bg-black translate-x-1 translate-y-1 transition-transform group-hover:translate-x-2 group-hover:translate-y-2 rounded-xl"></div>
+                                <div className="relative bg-white dark:bg-[#262626] border-2 border-black dark:border-white p-4 flex items-center gap-4 transition-transform group-hover:-translate-y-0.5 group-hover:-translate-x-0.5 rounded-xl">
 
                                     {/* Icon */}
-                                    <div className="w-12 h-12 shrink-0 border-2 border-black dark:border-white bg-white flex items-center justify-center p-2">
+                                    <div className="w-12 h-12 shrink-0 border-2 border-black dark:border-white bg-white flex items-center justify-center p-2 rounded-lg">
                                         <img src={wallet.icon} alt={wallet.name} className="w-full h-full object-contain" />
                                     </div>
 
@@ -93,7 +93,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose, onConnect })
                                         <div className="flex items-center gap-2">
                                             <h3 className="font-black text-lg uppercase text-black dark:text-white truncate">{wallet.name}</h3>
                                             {wallet.isPopular && (
-                                                <span className="text-[10px] bg-neo-yellow border border-black px-1 font-bold uppercase">Popular</span>
+                                                <span className="text-[10px] bg-neo-yellow border border-black px-1 font-bold uppercase rounded-sm">Popular</span>
                                             )}
                                         </div>
                                         <p className="text-xs font-medium text-gray-500 dark:text-gray-400 truncate">{wallet.description}</p>
@@ -105,7 +105,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose, onConnect })
                                             href={wallet.downloadUrl}
                                             target="_blank"
                                             rel="noreferrer"
-                                            className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 border-2 border-transparent hover:border-blue-200 transition-all rounded-none"
+                                            className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 border-2 border-transparent hover:border-blue-200 transition-all rounded-md"
                                             title={`Download ${wallet.name}`}
                                             onClick={(e) => e.stopPropagation()}
                                         >
@@ -113,7 +113,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose, onConnect })
                                         </a>
                                         <button
                                             onClick={() => onConnect(wallet.id)}
-                                            className="bg-neo-accent hover:bg-neo-primary text-black hover:text-white border-2 border-black px-3 py-2 font-black uppercase text-sm flex items-center gap-1 transition-colors"
+                                            className="bg-neo-accent hover:bg-neo-primary text-black hover:text-white border-2 border-black px-3 py-2 font-black uppercase text-sm flex items-center gap-1 transition-colors rounded-lg"
                                         >
                                             Connect <ArrowRight className="w-4 h-4" />
                                         </button>

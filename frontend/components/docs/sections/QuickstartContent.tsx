@@ -36,7 +36,7 @@ npm install
 npm run dev`} />
         </StepBlock>
 
-        <div className="bg-neo-accent p-4 border-2 border-black font-bold text-center flex items-center justify-center gap-2">
+        <div className="bg-neo-accent p-4 border-2 border-black font-bold text-center flex items-center justify-center gap-2 rounded-xl">
             <Rocket className="w-5 h-5" /> Open <a href="http://localhost:5173" target="_blank" rel="noreferrer" className="underline">http://localhost:5173</a> to verify installation
         </div>
     </div>

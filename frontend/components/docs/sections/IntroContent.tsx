@@ -10,9 +10,9 @@ export const IntroContent = () => (
             and an automated background execution system to solve the complexity of crypto trading through natural language commands.
         </p>
 
-        <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white shadow-neo">
+        <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white shadow-neo rounded-xl">
             <h3 className="text-xl font-black uppercase mb-4">System Overview</h3>
-            <div className="bg-gray-100 dark:bg-black p-4 border border-black font-mono text-xs md:text-sm overflow-x-auto whitespace-pre leading-relaxed">
+            <div className="bg-gray-100 dark:bg-black p-4 border border-black font-mono text-xs md:text-sm overflow-x-auto whitespace-pre leading-relaxed rounded-lg">
                 {`┌─────────────────────────────────────────────────────────────────┐
 │                     MantleFlow Platform                        │
 ├──────────────────────────────────────────────────────────────────┤
@@ -30,7 +30,7 @@ export const IntroContent = () => (
             </div>
         </div>
 
-        <div className="bg-neo-accent p-5 border-2 border-black shadow-neo">
+        <div className="bg-neo-accent p-5 border-2 border-black shadow-neo rounded-xl">
             <h3 className="text-lg font-black uppercase mb-3 flex items-center gap-2"><Target className="w-5 h-5" /> What Makes This Unique?</h3>
             <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
@@ -67,7 +67,7 @@ export const IntroContent = () => (
             </InfoCard>
         </div>
 
-        <div className="bg-gray-100 dark:bg-gray-900 p-4 border-l-4 border-blue-500">
+        <div className="bg-gray-100 dark:bg-gray-900 p-4 border-l-4 border-blue-500 rounded-r-xl">
             <p className="text-sm">
                 <strong>Network:</strong> Mantle Sepolia (Chain ID: 5003) •
                 <strong className="ml-2">RPC:</strong> https://rpc.sepolia.mantle.xyz •

@@ -42,7 +42,7 @@ const HowItWorks: React.FC = () => {
                         </div>
 
                         <div className="text-center md:text-left">
-                            <span className="bg-black text-white px-3 py-1 text-sm font-black uppercase">Workflow</span>
+                            <span className="bg-black text-white px-3 py-1 text-sm font-black uppercase rounded-md">Workflow</span>
                             <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white uppercase mt-4 mb-4">
                                 From Strategy to Profit
                             </h2>
@@ -67,8 +67,8 @@ const HowItWorks: React.FC = () => {
                                     <div className="hidden md:block absolute top-12 -right-4 w-8 h-1 bg-black dark:bg-white z-0"></div>
                                 )}
 
-                                <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white p-8 relative z-10 shadow-neo group-hover:-translate-y-2 group-hover:shadow-neo-lg transition-all duration-300 h-full flex flex-col hover:border-l-4 hover:border-b-4">
-                                    <div className={`w-16 h-16 ${step.color} border-2 border-black flex items-center justify-center mb-6 shadow-neo-sm transform group-hover:rotate-12 transition-transform shrink-0`}>
+                                <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white p-8 relative z-10 shadow-neo group-hover:-translate-y-2 group-hover:shadow-neo-lg transition-all duration-300 h-full flex flex-col hover:border-l-4 hover:border-b-4 rounded-xl overflow-hidden">
+                                    <div className={`w-16 h-16 ${step.color} border-2 border-black flex items-center justify-center mb-6 shadow-neo-sm transform group-hover:rotate-12 transition-transform shrink-0 rounded-xl`}>
                                         <step.icon className="w-8 h-8 text-black" strokeWidth={2.5} />
                                     </div>
 
@@ -135,8 +135,8 @@ const HowItWorks: React.FC = () => {
                                     <div className="hidden md:block absolute top-12 -right-4 w-8 h-1 bg-black dark:bg-white z-0"></div>
                                 )}
 
-                                <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white p-8 relative z-10 shadow-neo group-hover:-translate-y-2 group-hover:shadow-neo-lg transition-all duration-300 h-full flex flex-col hover:border-l-4 hover:border-b-4">
-                                    <div className={`w-16 h-16 ${step.color} border-2 border-black flex items-center justify-center mb-6 shadow-neo-sm transform group-hover:rotate-12 transition-transform shrink-0`}>
+                                <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white p-8 relative z-10 shadow-neo group-hover:-translate-y-2 group-hover:shadow-neo-lg transition-all duration-300 h-full flex flex-col hover:border-l-4 hover:border-b-4 rounded-xl overflow-hidden">
+                                    <div className={`w-16 h-16 ${step.color} border-2 border-black flex items-center justify-center mb-6 shadow-neo-sm transform group-hover:rotate-12 transition-transform shrink-0 rounded-xl`}>
                                         <step.icon className="w-8 h-8 text-black" strokeWidth={2.5} />
                                     </div>
 

@@ -70,7 +70,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onStart }) => {
 
         {/* Live Ticker Badge */}
         <div className="mb-8 flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-700">
-          <div className="inline-flex items-center gap-2 bg-neo-accent text-black px-4 py-2 border-2 border-black transform -rotate-1 shadow-neo-sm hover:rotate-0 transition-transform cursor-default">
+          <div className="inline-flex items-center gap-2 bg-neo-accent text-black px-4 py-2 border-2 border-black transform -rotate-1 shadow-neo-sm hover:rotate-0 transition-transform cursor-default rounded-xl">
             <Sparkles className="w-4 h-4" />
             <span className="text-xs md:text-sm font-black uppercase tracking-widest">Auto-Trade Live</span>
           </div>
@@ -125,13 +125,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onStart }) => {
         <div className={`flex flex-col md:flex-row gap-6 w-full md:w-auto transition-opacity duration-700 ${descLine1Done ? 'opacity-100' : 'opacity-0'}`}>
           <button
             onClick={onStart}
-            className="group relative px-8 py-5 bg-neo-primary text-white border-2 border-black dark:border-white font-black text-xl uppercase shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all flex items-center justify-center gap-3 overflow-hidden animate-pulse-slow"
+            className="group relative px-8 py-5 bg-neo-primary text-white border-2 border-black dark:border-white font-black text-xl uppercase shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all flex items-center justify-center gap-3 overflow-hidden animate-pulse-slow rounded-xl"
           >
             <span className="relative z-10 flex items-center gap-2">Launch App <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" strokeWidth={3} /></span>
             <div className="absolute inset-0 bg-black transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-0"></div>
           </button>
 
-          <button className="px-8 py-5 bg-white dark:bg-[#1a1a1a] text-black dark:text-white border-2 border-black dark:border-white font-black text-xl uppercase shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all hover:bg-neo-yellow/20">
+          <button
+            onClick={onStart}
+            className="px-8 py-5 bg-white dark:bg-[#1a1a1a] text-black dark:text-white border-2 border-black dark:border-white font-black text-xl uppercase shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all hover:bg-neo-yellow/20 rounded-xl">
             View Live Demo
           </button>
         </div>

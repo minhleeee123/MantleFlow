@@ -68,7 +68,7 @@ const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger, onSuccess }) => {
     };
 
     return (
-        <div className="bg-white dark:bg-[#1e1f20] border-2 border-black dark:border-white shadow-neo p-6 flex flex-col">
+        <div className="bg-white dark:bg-[#1e1f20] border-2 border-black dark:border-white shadow-neo p-6 flex flex-col rounded-xl">
             <div className="flex items-center gap-2 mb-4 border-b-2 border-black dark:border-white pb-2">
                 <BrainCircuit className="w-6 h-6 text-neo-primary" />
                 <h3 className="font-black text-xl uppercase text-black dark:text-white">Smart Trade AI</h3>
@@ -82,12 +82,12 @@ const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger, onSuccess }) => {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder="e.g. Buy BTC if price is below 62000 and RSI is under 30..."
-                        className="w-full h-24 p-3 border-2 border-black dark:border-white bg-gray-50 dark:bg-black text-black dark:text-white font-medium text-sm outline-none resize-none"
+                        className="w-full h-24 p-3 border-2 border-black dark:border-white bg-gray-50 dark:bg-black text-black dark:text-white font-medium text-sm outline-none resize-none rounded-xl"
                     />
                     <button
                         onClick={handleAnalyze}
                         disabled={isParsing || !input.trim()}
-                        className="absolute bottom-2 right-2 bg-neo-primary text-white px-3 py-1 text-xs font-black uppercase border-2 border-black shadow-neo-sm hover:translate-y-0.5 hover:translate-x-0.5 hover:shadow-none transition-all disabled:opacity-50 flex items-center gap-1"
+                        className="absolute bottom-2 right-2 bg-neo-primary text-white px-3 py-1 text-xs font-black uppercase border-2 border-black shadow-neo-sm hover:translate-y-0.5 hover:translate-x-0.5 hover:shadow-none transition-all disabled:opacity-50 flex items-center gap-1 rounded-lg"
                     >
                         {isParsing && <Loader2 className="w-3 h-3 animate-spin" />}
                         {isParsing ? 'Processing...' : 'Analyze Strategy'}
@@ -98,20 +98,20 @@ const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger, onSuccess }) => {
             {/* Plan Visualization & Deploy */}
             {plan && (
                 <div className="animate-in fade-in slide-in-from-top-2">
-                    <div className="bg-neo-yellow/20 border-2 border-black dark:border-white p-4">
+                    <div className="bg-neo-yellow/20 border-2 border-black dark:border-white p-4 rounded-xl">
                         <div className="flex justify-between items-start mb-3">
                             <div>
                                 <span className="block text-xs font-black uppercase text-gray-500">Strategy Detected</span>
                                 <div className="font-black text-lg text-black dark:text-white uppercase flex items-center gap-2">
                                     <span className={plan.action === 'BUY' ? 'text-green-600' : 'text-red-600'}>{plan.action}</span>
                                     <span>{plan.symbol}</span>
-                                    <span className="text-sm bg-black text-white px-2 py-0.5">${plan.amount}</span>
+                                    <span className="text-sm bg-black text-white px-2 py-0.5 rounded-sm">${plan.amount}</span>
                                 </div>
                             </div>
                             <button
                                 onClick={handleDeploy}
                                 disabled={isDeploying}
-                                className="flex items-center gap-2 bg-black text-white px-4 py-2 font-black uppercase text-sm border-2 border-transparent hover:bg-green-600 transition-colors shadow-neo-sm disabled:opacity-70 disabled:cursor-wait"
+                                className="flex items-center gap-2 bg-black text-white px-4 py-2 font-black uppercase text-sm border-2 border-transparent hover:bg-green-600 transition-colors shadow-neo-sm disabled:opacity-70 disabled:cursor-wait rounded-lg"
                             >
                                 {isDeploying ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />}
                                 {isDeploying ? 'Deploying...' : 'Deploy Agent'}
@@ -120,14 +120,14 @@ const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger, onSuccess }) => {
 
                         <div className="grid grid-cols-1 gap-2">
                             {plan.conditions.map((cond, idx) => (
-                                <div key={idx} className="flex items-center justify-between bg-white dark:bg-black border border-black dark:border-gray-700 p-2 text-sm">
+                                <div key={idx} className="flex items-center justify-between bg-white dark:bg-black border border-black dark:border-gray-700 p-2 text-sm rounded-lg">
                                     <div className="flex items-center gap-2">
                                         <div className="w-2 h-2 bg-neo-accent rounded-full"></div>
                                         <span className="font-bold text-gray-700 dark:text-gray-300 uppercase text-xs">{cond.metric}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <span className="font-mono font-bold text-gray-500">{cond.operator === 'GT' ? '>' : '<'}</span>
-                                        <span className="font-mono font-bold bg-gray-100 dark:bg-white/10 px-2">{cond.value}</span>
+                                        <span className="font-mono font-bold bg-gray-100 dark:bg-white/10 px-2 rounded-sm">{cond.value}</span>
                                     </div>
                                 </div>
                             ))}

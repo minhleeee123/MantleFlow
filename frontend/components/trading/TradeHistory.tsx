@@ -11,7 +11,7 @@ const TradeHistory: React.FC<Props> = ({ trades }) => {
     const autoTrades = trades.filter(t => t.type.includes('AUTO_SWAP') || t.type.includes('TRIGGER'));
 
     return (
-        <div className="bg-white dark:bg-[#1e1f20] border-2 border-black dark:border-white shadow-neo p-6 mt-6 h-full flex flex-col">
+        <div className="bg-white dark:bg-[#1e1f20] border-2 border-black dark:border-white shadow-neo p-6 mt-6 h-full flex flex-col rounded-xl">
             <div className="flex items-center gap-2 mb-4 border-b-2 border-black dark:border-white pb-2">
                 <History className="w-5 h-5 text-gray-600 dark:text-gray-400" strokeWidth={3} />
                 <h3 className="font-black text-lg uppercase text-black dark:text-white">Execution Log ({autoTrades.length})</h3>
@@ -24,10 +24,10 @@ const TradeHistory: React.FC<Props> = ({ trades }) => {
                     </div>
                 ) : (
                     autoTrades.map(trade => (
-                        <div key={trade.id} className="relative group bg-gray-50 dark:bg-black border-2 border-black dark:border-gray-700 p-3 transition-all hover:bg-white dark:hover:bg-[#111] hover:shadow-neo-sm">
+                        <div key={trade.id} className="relative group bg-gray-50 dark:bg-black border-2 border-black dark:border-gray-700 p-3 transition-all hover:bg-white dark:hover:bg-[#111] hover:shadow-neo-sm rounded-lg">
                             <div className="flex justify-between items-start mb-2">
                                 <div className="flex items-center gap-2">
-                                    <span className={`text-[10px] font-black px-1.5 py-0.5 uppercase border border-black ${trade.type.includes('BUY') || trade.type.includes('USDT_MNT') ? 'bg-neo-secondary text-black' : 'bg-neo-accent text-black'}`}>
+                                    <span className={`text-[10px] font-black px-1.5 py-0.5 uppercase border border-black rounded-md ${trade.type.includes('BUY') || trade.type.includes('USDT_MNT') ? 'bg-neo-secondary text-black' : 'bg-neo-accent text-black'}`}>
                                         {trade.type.includes('BUY') || trade.type.includes('USDT_MNT') ? 'BUY EXEC' : 'SELL EXEC'}
                                     </span>
                                     <span className="font-black uppercase text-lg">{trade.symbol}</span>
@@ -46,7 +46,7 @@ const TradeHistory: React.FC<Props> = ({ trades }) => {
 
                             <div className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
                                 <span>Executed:</span>
-                                <span className="font-mono bg-green-100 dark:bg-green-900 px-1 text-green-800 dark:text-green-300">
+                                <span className="font-mono bg-green-100 dark:bg-green-900 px-1 text-green-800 dark:text-green-300 rounded-sm">
                                     {trade.amount.toLocaleString()} {trade.symbol.split('/')[0]}
                                 </span>
                             </div>

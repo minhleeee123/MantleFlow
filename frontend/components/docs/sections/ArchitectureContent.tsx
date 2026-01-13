@@ -4,9 +4,9 @@ import { Box, Cpu, Database, GitBranch } from 'lucide-react';
 export const ArchitectureContent = () => (
     <div className="space-y-8">
         {/* High-Level Architecture Diagram */}
-        <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white">
+        <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white rounded-xl">
             <h3 className="text-xl font-black uppercase mb-4">System Architecture Overview</h3>
-            <div className="bg-gray-100 dark:bg-black p-4 border border-black font-mono text-xs overflow-x-auto whitespace-pre leading-relaxed">
+            <div className="bg-gray-100 dark:bg-black p-4 border border-black font-mono text-xs overflow-x-auto whitespace-pre leading-relaxed rounded-lg">
                 {`┌─────────────────────────────────────────────────────────────────────────┐
 │                         USER INTERACTION LAYER                         │
 ├─────────────────────────────────────────────────────────────────────────┤
@@ -60,12 +60,12 @@ export const ArchitectureContent = () => (
         </div>
 
         {/* Frontend Architecture */}
-        <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white">
+        <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white rounded-xl">
             <h3 className="font-black text-xl mb-4 flex items-center gap-2 border-b-2 border-black dark:border-white pb-2">
                 <Box className="w-5 h-5" /> Frontend Architecture (React 19 + Vite)
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="border-l-4 border-blue-500 pl-4">
+                <div className="border-l-4 border-blue-500 pl-4 rounded-r-xl">
                     <h4 className="font-bold mb-2">/components</h4>
                     <ul className="font-mono text-sm space-y-1 text-gray-600 dark:text-gray-300">
                         <li>├─ chat/ <span className="text-xs text-gray-400">AI interface, message bubble, input</span></li>
@@ -75,7 +75,7 @@ export const ArchitectureContent = () => (
                         <li>└─ docs/ <span className="text-xs text-gray-400">Documentation sections (modular)</span></li>
                     </ul>
                 </div>
-                <div className="border-l-4 border-green-500 pl-4">
+                <div className="border-l-4 border-green-500 pl-4 rounded-r-xl">
                     <h4 className="font-bold mb-2">/services</h4>
                     <ul className="font-mono text-sm space-y-1 text-gray-600 dark:text-gray-300">
                         <li>├─ agents/ <span className="text-xs text-gray-400">AI logic (4 specialized agents)</span></li>
@@ -86,18 +86,18 @@ export const ArchitectureContent = () => (
                     </ul>
                 </div>
             </div>
-            <div className="mt-4 bg-gray-50 dark:bg-gray-900 p-4 border border-gray-300">
+            <div className="mt-4 bg-gray-50 dark:bg-gray-900 p-4 border border-gray-300 rounded-lg">
                 <strong>State Management:</strong> React useState & useEffect hooks. localStorage for auth tokens and wallet cache. No Redux/Zustand needed for this scope.
             </div>
         </div>
 
         {/* Backend Architecture */}
-        <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white">
+        <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white rounded-xl">
             <h3 className="font-black text-xl mb-4 flex items-center gap-2 border-b-2 border-black dark:border-white pb-2">
                 <Cpu className="w-5 h-5" /> Backend Architecture (Node.js + Express)
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="border-l-4 border-purple-500 pl-4">
+                <div className="border-l-4 border-purple-500 pl-4 rounded-r-xl">
                     <h4 className="font-bold mb-2">/src/routes</h4>
                     <ul className="font-mono text-sm space-y-1 text-gray-600 dark:text-gray-300">
                         <li>├─ auth.ts <span className="text-xs text-gray-400">POST /login, /verify</span></li>
@@ -107,7 +107,7 @@ export const ArchitectureContent = () => (
                         <li>└─ wallet.ts <span className="text-xs text-gray-400">Balance, config, transactions</span></li>
                     </ul>
                 </div>
-                <div className="border-l-4 border-orange-500 pl-4">
+                <div className="border-l-4 border-orange-500 pl-4 rounded-r-xl">
                     <h4 className="font-bold mb-2">/src/services</h4>
                     <ul className="font-mono text-sm space-y-1 text-gray-600 dark:text-gray-300">
                         <li>├─ blockchain.ts <span className="text-xs text-gray-400">Swap execution, balance queries</span></li>
@@ -117,17 +117,17 @@ export const ArchitectureContent = () => (
                     </ul>
                 </div>
             </div>
-            <div className="mt-4 bg-gray-50 dark:bg-gray-900 p-4 border border-gray-300">
+            <div className="mt-4 bg-gray-50 dark:bg-gray-900 p-4 border border-gray-300 rounded-lg">
                 <strong>Middleware Stack:</strong> authMiddleware (JWT verification) → Route Handler → Prisma DB queries → External API calls (CoinGecko, Binance) → Response with error handling
             </div>
         </div>
 
         {/* Database Schema */}
-        <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white">
+        <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white rounded-xl">
             <h3 className="font-black text-xl mb-4 flex items-center gap-2 border-b-2 border-black dark:border-white pb-2">
                 <Database className="w-5 h-5" /> Database Schema (MySQL + Prisma)
             </h3>
-            <div className="bg-gray-900 text-gray-100 p-4 rounded font-mono text-xs overflow-x-auto">
+            <div className="bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-xs overflow-x-auto">
                 <pre>{`┌─────────────────────┐
 │ User                │
 ├─────────────────────┤
@@ -177,15 +177,15 @@ export const ArchitectureContent = () => (
         </div>
 
         {/* Smart Contract Layer */}
-        <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white">
+        <div className="bg-white dark:bg-gray-800 p-6 border-2 border-black dark:border-white rounded-xl">
             <h3 className="font-black text-xl mb-4 flex items-center gap-2 border-b-2 border-black dark:border-white pb-2">
                 <GitBranch className="w-5 h-5" /> Smart Contract Layer (Solidity 0.8.20)
             </h3>
             <div className="space-y-4">
-                <div className="border-l-4 border-yellow-500 pl-4">
+                <div className="border-l-4 border-yellow-500 pl-4 rounded-r-xl">
                     <h4 className="font-bold">VaultWithSwap.sol</h4>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Shared vault managing user deposits and bot-authorized swaps via SimpleDEXV2.</p>
-                    <div className="bg-gray-900 text-gray-100 p-3 rounded font-mono text-xs">
+                    <div className="bg-gray-900 text-gray-100 p-3 rounded-lg font-mono text-xs">
                         <pre>{`// User deposit/withdraw functions
 function depositMnt() external payable
 function depositUsdt(uint256 amount) external
@@ -202,10 +202,10 @@ function executeSwapUsdtToMntForUser(address user, uint256 usdtAmount, uint256 m
                     </div>
                 </div>
 
-                <div className="border-l-4 border-red-500 pl-4">
+                <div className="border-l-4 border-red-500 pl-4 rounded-r-xl">
                     <h4 className="font-bold">SimpleDEXV2.sol</h4>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Internal AMM using constant product formula (x * y = k) with 0.3% trading fee.</p>
-                    <div className="bg-gray-900 text-gray-100 p-3 rounded font-mono text-xs">
+                    <div className="bg-gray-900 text-gray-100 p-3 rounded-lg font-mono text-xs">
                         <pre>{`// Liquidity management
 function addLiquidity(uint256 usdtAmount) external payable
 function removeLiquidity(uint256 liquidity) external
@@ -225,10 +225,10 @@ function usdtReserve() external view returns (uint256)`}</pre>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    <div className="bg-gray-50 dark:bg-gray-900 p-4 border border-gray-300">
+                    <div className="bg-gray-50 dark:bg-gray-900 p-4 border border-gray-300 rounded-lg">
                         <strong>Gas Efficiency:</strong> Shared vault eliminates need for per-user wallet deployments. Users pay gas only for deposits/withdrawals. Bot pays gas for all automated swaps.
                     </div>
-                    <div className="bg-gray-50 dark:bg-gray-900 p-4 border border-gray-300">
+                    <div className="bg-gray-50 dark:bg-gray-900 p-4 border border-gray-300 rounded-lg">
                         <strong>Security Model:</strong> Users must explicitly authorize bot address. Bot can only swap user funds within vault, cannot withdraw. Users retain full custody and can revoke bot authorization anytime.
                     </div>
                 </div>

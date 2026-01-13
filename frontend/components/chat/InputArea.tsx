@@ -40,7 +40,7 @@ const InputArea: React.FC<InputAreaProps> = ({
 
         {/* Suggested Prompts as Vertical List */}
         {showSuggestions && !isLoading && (
-          <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-xl overflow-hidden">
             {suggestedPrompts.map((item, idx) => (
               <button
                 key={idx}
@@ -63,7 +63,7 @@ const InputArea: React.FC<InputAreaProps> = ({
         )}
 
         {/* Input Box */}
-        <div className="w-full bg-white dark:bg-[#1a1a1a] flex items-center p-2 border-2 border-black dark:border-white shadow-neo transition-all">
+        <div className="w-full bg-white dark:bg-[#1a1a1a] flex items-center p-2 border-2 border-black dark:border-white shadow-neo transition-all rounded-xl">
           <input
             type="text"
             value={input}
@@ -75,13 +75,13 @@ const InputArea: React.FC<InputAreaProps> = ({
           />
 
           <div className="flex items-center gap-2 px-2">
-            <button className="p-3 bg-gray-200 dark:bg-gray-800 border-2 border-black dark:border-white hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all shadow-neo-sm">
+            <button className="p-3 bg-gray-200 dark:bg-gray-800 border-2 border-black dark:border-white hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all shadow-neo-sm rounded-xl">
               <Mic className="w-5 h-5 text-black dark:text-white" strokeWidth={2.5} />
             </button>
             {input.trim() && (
               <button
                 onClick={handleSend}
-                className="p-3 bg-neo-primary border-2 border-black dark:border-white hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all shadow-neo-sm"
+                className="p-3 bg-neo-primary border-2 border-black dark:border-white hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none transition-all shadow-neo-sm rounded-xl"
               >
                 <Send className="w-5 h-5 text-white" strokeWidth={2.5} />
               </button>
@@ -90,7 +90,7 @@ const InputArea: React.FC<InputAreaProps> = ({
         </div>
       </div>
 
-      <div className="mt-4 text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 bg-white dark:bg-black px-2 py-1 border-2 border-black dark:border-gray-600 pointer-events-none">
+      <div className="mt-4 text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 bg-white dark:bg-black px-2 py-1 border-2 border-black dark:border-gray-600 pointer-events-none rounded-lg">
         AI can make mistakes. DYOR.
       </div>
     </div>

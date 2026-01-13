@@ -94,14 +94,14 @@ const TerminalPreview: React.FC = () => {
               />
             </div>
 
-            <div className="inline-block bg-neo-accent text-black px-2 py-1 text-xs font-black uppercase mb-2 border border-black transform -rotate-2 relative z-30">
+            <div className="inline-block bg-neo-accent text-black px-2 py-1 text-xs font-black uppercase mb-2 border border-black transform -rotate-2 relative z-30 rounded-md">
               Interactive Demo
             </div>
           </div>
         </ScrollReveal>
 
         <ScrollReveal variant="zoom-in" delay={200}>
-          <div className="w-full max-w-4xl bg-black text-green-500 font-mono text-sm md:text-base border-2 border-black dark:border-white shadow-neo-lg rounded-none transform transition-transform hover:scale-[1.01] duration-300">
+          <div className="w-full max-w-4xl bg-black text-green-500 font-mono text-sm md:text-base border-2 border-black dark:border-white shadow-neo-lg rounded-xl overflow-hidden transform transition-transform hover:scale-[1.01] duration-300">
             {/* Terminal Header */}
             <div className="bg-gray-800 border-b border-gray-700 p-3 flex items-center justify-between">
               <div className="flex gap-2">

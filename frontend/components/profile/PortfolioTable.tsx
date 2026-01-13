@@ -9,19 +9,19 @@ interface PortfolioTableProps {
 
 const PortfolioTable: React.FC<PortfolioTableProps> = ({ portfolio, walletAddress }) => {
   return (
-    <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo overflow-hidden">
+    <div className="bg-white dark:bg-[#1a1a1a] border-2 border-black dark:border-white shadow-neo overflow-hidden rounded-xl">
       <div className="p-4 bg-neo-bg dark:bg-[#2d2e2f] border-b-2 border-black dark:border-white flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Wallet className="w-5 h-5 text-black dark:text-white" strokeWidth={2.5} />
           <h3 className="text-lg font-black text-black dark:text-white uppercase">Assets Breakdown</h3>
         </div>
         {walletAddress && (
-          <span className="text-[10px] font-black uppercase bg-orange-100 text-orange-800 px-2 py-1 border border-orange-800">
+          <span className="text-[10px] font-black uppercase bg-orange-100 text-orange-800 px-2 py-1 border border-orange-800 rounded-md">
             Web3 Connected
           </span>
         )}
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -44,7 +44,7 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({ portfolio, walletAddres
                 <tr key={idx} className="hover:bg-yellow-50 dark:hover:bg-white/5 transition-colors group">
                   <td className="p-4 border-r-2 border-transparent group-hover:border-black dark:group-hover:border-white/20 transition-all">
                     <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 border-2 border-black flex items-center justify-center text-sm font-black text-black ${isWeb3 ? 'bg-orange-400' : 'bg-gray-200'}`}>
+                      <div className={`w-10 h-10 border-2 border-black flex items-center justify-center text-sm font-black text-black rounded-lg ${isWeb3 ? 'bg-orange-400' : 'bg-gray-200'}`}>
                         {coin.symbol[0]}
                       </div>
                       <div>
@@ -67,7 +67,7 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({ portfolio, walletAddres
                   </td>
                   <td className="p-4 text-right">
                     {coin.avgPrice > 0 ? (
-                      <div className={`inline-flex items-center gap-1 px-2 py-1 border-2 border-black shadow-neo-sm font-black text-xs uppercase ${isProfit ? 'bg-neo-secondary text-black' : 'bg-neo-accent text-black'}`}>
+                      <div className={`inline-flex items-center gap-1 px-2 py-1 border-2 border-black shadow-neo-sm font-black text-xs uppercase rounded-md ${isProfit ? 'bg-neo-secondary text-black' : 'bg-neo-accent text-black'}`}>
                         {isProfit ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                         {pnlPercent > 0 ? '+' : ''}{pnlPercent.toFixed(2)}%
                       </div>

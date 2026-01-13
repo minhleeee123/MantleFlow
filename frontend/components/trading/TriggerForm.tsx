@@ -32,20 +32,20 @@ const TriggerForm: React.FC<Props> = ({ onAddTrigger }) => {
     };
 
     return (
-        <div className="bg-white dark:bg-[#1e1f20] border-2 border-black dark:border-white shadow-neo p-6">
+        <div className="bg-white dark:bg-[#1e1f20] border-2 border-black dark:border-white shadow-neo p-6 rounded-xl">
             <div className="flex items-center gap-2 mb-6 border-b-2 border-black dark:border-white pb-2">
                 <Target className="w-5 h-5 text-neo-primary" strokeWidth={3} />
                 <h3 className="font-black text-lg uppercase text-black dark:text-white">Set Auto-Trigger</h3>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-                
+
                 {/* Symbol Input */}
                 <div className="space-y-1">
                     <label className="text-xs font-bold uppercase text-gray-500">Token Pair</label>
-                    <div className="flex items-center bg-gray-50 dark:bg-black border-2 border-black dark:border-white p-1">
-                         <input 
-                            type="text" 
+                    <div className="flex items-center bg-gray-50 dark:bg-black border-2 border-black dark:border-white p-1 rounded-xl">
+                        <input
+                            type="text"
                             value={symbol}
                             onChange={(e) => setSymbol(e.target.value)}
                             placeholder="e.g. bitcoin, ethereum"
@@ -59,7 +59,7 @@ const TriggerForm: React.FC<Props> = ({ onAddTrigger }) => {
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1">
                         <label className="text-xs font-bold uppercase text-gray-500">Action</label>
-                        <div className="flex border-2 border-black dark:border-white">
+                        <div className="flex border-2 border-black dark:border-white rounded-xl overflow-hidden">
                             <button
                                 type="button"
                                 onClick={() => setType('BUY')}
@@ -80,10 +80,10 @@ const TriggerForm: React.FC<Props> = ({ onAddTrigger }) => {
 
                     <div className="space-y-1">
                         <label className="text-xs font-bold uppercase text-gray-500">Condition</label>
-                        <select 
+                        <select
                             value={condition}
                             onChange={(e) => setCondition(e.target.value as TradeCondition)}
-                            className="w-full bg-white dark:bg-black border-2 border-black dark:border-white p-2.5 font-bold outline-none text-sm text-black dark:text-white"
+                            className="w-full bg-white dark:bg-black border-2 border-black dark:border-white p-2.5 font-bold outline-none text-sm text-black dark:text-white rounded-xl"
                         >
                             <option value="ABOVE">Price ≥ Target</option>
                             <option value="BELOW">Price ≤ Target</option>
@@ -95,8 +95,8 @@ const TriggerForm: React.FC<Props> = ({ onAddTrigger }) => {
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1">
                         <label className="text-xs font-bold uppercase text-gray-500">Target Price ($)</label>
-                        <input 
-                            type="number" 
+                        <input
+                            type="number"
                             step="any"
                             value={targetPrice}
                             onChange={(e) => setTargetPrice(e.target.value)}
@@ -108,8 +108,8 @@ const TriggerForm: React.FC<Props> = ({ onAddTrigger }) => {
                         <label className="text-xs font-bold uppercase text-gray-500">
                             {type === 'BUY' ? 'Amount (USDT)' : `Amount (${symbol || 'Token'})`}
                         </label>
-                        <input 
-                            type="number" 
+                        <input
+                            type="number"
                             step="any"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
@@ -119,9 +119,9 @@ const TriggerForm: React.FC<Props> = ({ onAddTrigger }) => {
                     </div>
                 </div>
 
-                <button 
+                <button
                     type="submit"
-                    className="w-full mt-4 bg-black text-white dark:bg-white dark:text-black py-3 font-black uppercase border-2 border-transparent hover:border-black dark:hover:border-white hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white transition-all shadow-neo-sm flex items-center justify-center gap-2"
+                    className="w-full mt-4 bg-black text-white dark:bg-white dark:text-black py-3 font-black uppercase border-2 border-transparent hover:border-black dark:hover:border-white hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white transition-all shadow-neo-sm flex items-center justify-center gap-2 rounded-xl"
                 >
                     <Plus className="w-5 h-5" /> Create Trigger
                 </button>

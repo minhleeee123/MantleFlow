@@ -19,7 +19,7 @@ export const WithdrawTab: React.FC<Props> = ({
 }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-2">
         <div className="space-y-4">
-            <div className="p-6 bg-red-100 dark:bg-red-900/20 border-2 border-black dark:border-red-500 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)]">
+            <div className="p-6 bg-red-100 dark:bg-red-900/20 border-2 border-black dark:border-red-500 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)] rounded-xl">
                 <h4 className="font-black text-black dark:text-red-400 uppercase text-lg mb-6 flex items-center gap-2 border-b-2 border-black dark:border-red-500 pb-2 w-fit">
                     <ArrowUpCircle className="w-6 h-6" /> Withdraw MNT
                 </h4>
@@ -35,7 +35,7 @@ export const WithdrawTab: React.FC<Props> = ({
                 />
                 <button
                     onClick={() => handleWithdraw('MNT', mntAmount, setMntAmount)}
-                    className="w-full mt-6 bg-red-500 text-white border-2 border-black font-black py-4 text-xl hover:bg-red-600 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 disabled:cursor-not-allowed"
+                    className="w-full mt-6 bg-red-500 text-white border-2 border-black font-black py-4 text-xl hover:bg-red-600 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 disabled:cursor-not-allowed rounded-xl"
                     disabled={!mntAmount || parseFloat(mntAmount) <= 0 || parseFloat(mntAmount) > parseFloat(vaultMnt)}
                 >
                     CONFIRM WITHDRAW
@@ -43,7 +43,7 @@ export const WithdrawTab: React.FC<Props> = ({
             </div>
         </div>
         <div className="space-y-4">
-            <div className="p-6 bg-red-100 dark:bg-red-900/20 border-2 border-black dark:border-red-500 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)]">
+            <div className="p-6 bg-red-100 dark:bg-red-900/20 border-2 border-black dark:border-red-500 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)] rounded-xl">
                 <h4 className="font-black text-black dark:text-red-400 uppercase text-lg mb-6 flex items-center gap-2 border-b-2 border-black dark:border-red-500 pb-2 w-fit">
                     <ArrowUpCircle className="w-6 h-6" /> Withdraw USDT
                 </h4>
@@ -59,7 +59,7 @@ export const WithdrawTab: React.FC<Props> = ({
                 />
                 <button
                     onClick={() => handleWithdraw('USDT', usdtAmount, setUsdtAmount)}
-                    className="w-full mt-6 bg-red-500 text-white border-2 border-black font-black py-4 text-xl hover:bg-red-600 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 disabled:cursor-not-allowed"
+                    className="w-full mt-6 bg-red-500 text-white border-2 border-black font-black py-4 text-xl hover:bg-red-600 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 disabled:cursor-not-allowed rounded-xl"
                     disabled={!usdtAmount || parseFloat(usdtAmount) <= 0 || parseFloat(usdtAmount) > parseFloat(vaultUsdt)}
                 >
                     CONFIRM WITHDRAW

@@ -66,6 +66,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             className={`
                 flex items-center gap-3 bg-white dark:bg-black text-black dark:text-white transition-all 
                 border-2 border-black dark:border-white shadow-neo hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]
+                rounded-xl
                 ${isOpen ? 'px-4 py-3 w-full' : 'w-12 h-12 justify-center p-0'}
              `}
             title="New Chat"
@@ -85,7 +86,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <div
               key={session.id}
               onClick={() => onLoadSession(session.id)}
-              className={`group flex items-center justify-between px-3 py-2 text-sm cursor-pointer border-2 transition-all
+              className={`group flex items-center justify-between px-3 py-2 text-sm cursor-pointer border-2 transition-all rounded-xl
                 ${activeSessionId === session.id && currentView === 'chat'
                   ? 'bg-neo-primary border-black dark:border-white text-white font-bold shadow-neo-sm'
                   : 'bg-white dark:bg-transparent border-transparent hover:border-black dark:hover:border-white text-black dark:text-gray-300'
