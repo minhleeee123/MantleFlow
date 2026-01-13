@@ -17,8 +17,8 @@ export const QuickstartContent = () => (
         </div>
 
         <StepBlock step="1" title="Clone the Repository">
-            <CodeBlock code={`git clone https://github.com/your-username/hackathon15-1.git
-cd hackathon15-1`} />
+            <CodeBlock code={`git clone https://github.com/minhleeee123/MantleFlow.git
+cd MantleFlow`} />
         </StepBlock>
 
         <StepBlock step="2" title="Setup Backend">
@@ -37,7 +37,7 @@ npm run dev`} />
         </StepBlock>
 
         <div className="bg-neo-accent p-4 border-2 border-black font-bold text-center flex items-center justify-center gap-2 rounded-xl">
-            <Rocket className="w-5 h-5" /> Open <a href="http://localhost:5173" target="_blank" rel="noreferrer" className="underline">http://localhost:5173</a> to verify installation
+            <Rocket className="w-5 h-5" /> Open <a href="http://localhost:3000" target="_blank" rel="noreferrer" className="underline">http://localhost:3000</a> to verify installation
         </div>
     </div>
 );
