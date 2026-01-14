@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { HelpCircle, ChevronDown, ChevronUp, Wallet, Zap, ShieldCheck, Mail } from 'lucide-react';
+import { HelpCircle, ChevronDown, ChevronUp, Wallet, Zap, ShieldCheck, Mail, Bot } from 'lucide-react';
 
 export const UserGuide: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -72,9 +72,41 @@ export const UserGuide: React.FC = () => {
 
                     <div className="w-full h-px bg-gray-200 dark:bg-gray-700" />
 
-                    {/* Step 2: Create Triggers */}
+                    {/* Step 3: Authorize Trading Bot */}
                     <div className="flex gap-4">
                         <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold rounded-full">3</div>
+                        <div className="space-y-2">
+                            <h4 className="font-bold text-lg flex items-center gap-2 text-purple-600">
+                                <Bot className="w-4 h-4" /> Authorize Trading Bot
+                            </h4>
+                            <p className="leading-relaxed">
+                                To enable <strong>Auto-Trading</strong>, you must authorize the MantleFlow trading bot to execute swaps on your behalf.
+                            </p>
+                            <div className="bg-purple-50 dark:bg-purple-900/20 p-3 border border-purple-300 dark:border-purple-700 rounded-lg space-y-2">
+                                <p className="text-sm">
+                                    <strong>Why authorize?</strong> The bot monitors market 24/7 and executes your triggers automatically without requiring you to sign each transaction.
+                                </p>
+                                <p className="text-sm">
+                                    <strong>Security:</strong> Bot can ONLY swap your funds (MNT ↔ USDT) within the vault. It CANNOT withdraw your funds. You retain full custody and can revoke authorization anytime.
+                                </p>
+                            </div>
+                            <div className="flex items-center gap-2 mt-3">
+                                <div className="bg-yellow-400 text-black px-3 py-1.5 font-bold uppercase text-xs border border-black rounded-lg inline-block">
+                                    Authorize Bot
+                                </div>
+                                <span className="text-xs text-gray-500">← Click this button in the Swap section</span>
+                            </div>
+                            <div className="bg-red-50 dark:bg-red-900/20 p-2 border-l-4 border-red-500 text-xs text-red-800 dark:text-red-200 font-bold mt-2 rounded-r-lg">
+                                ⚠️ Without bot authorization, auto-trading will NOT work. Your triggers will remain active but won't execute.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="w-full h-px bg-gray-200 dark:bg-gray-700" />
+
+                    {/* Step 4: Create Triggers */}
+                    <div className="flex gap-4">
+                        <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold rounded-full">4</div>
                         <div className="space-y-2">
                             <h4 className="font-bold text-lg flex items-center gap-2">
                                 <ShieldCheck className="w-4 h-4" /> Create & Monitor Strategies
@@ -88,8 +120,8 @@ export const UserGuide: React.FC = () => {
                                     <strong>⚙️ Manual Trigger:</strong> Use the form to set simple Price Limit orders (Buy/Sell).
                                 </li>
                             </ul>
-                            <div className="bg-yellow-100 dark:bg-yellow-900/30 p-2 border-l-4 border-yellow-500 text-xs text-yellow-800 dark:text-yellow-200 font-bold mt-2 rounded-r-lg">
-                                Your active strategies will appear in "Live Bot Operations". Our backend monitors the market 24/7 and executes automatically via your Smart Wallet.
+                            <div className="bg-green-100 dark:bg-green-900/30 p-2 border-l-4 border-green-500 text-xs text-green-800 dark:text-green-200 font-bold mt-2 rounded-r-lg">
+                                ✓ Your active strategies will appear in "Live Bot Operations". Our backend monitors the market every 30 seconds and executes automatically when conditions are met.
                             </div>
                         </div>
                     </div>

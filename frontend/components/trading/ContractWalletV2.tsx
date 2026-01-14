@@ -354,17 +354,24 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
 
     // ===== BOT SWAP FUNCTIONS (NEW in V3) =====
 
-    // Authorize Bot - One-time setup
+    // Authorize/Revoke Bot
     const handleAuthorizeBot = async () => {
-        await executeTransaction('Authorize Bot', async () => {
+        const action = botAuthorized ? 'Revoke Bot' : 'Authorize Bot';
+        await executeTransaction(action, async () => {
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
             const vault = new ethers.Contract(VAULT_ADDRESS, VAULT_ABI, signer);
 
-            const tx = await vault.authorizeBot(BOT_ADDRESS, true);
+            // Toggle authorization: true to authorize, false to revoke
+            const tx = await vault.authorizeBot(BOT_ADDRESS, !botAuthorized);
             await tx.wait();
 
-            setBotAuthorized(true);
+            // Update state after transaction confirms
+            setBotAuthorized(!botAuthorized);
+            
+            // Re-check authorization status from contract
+            await checkBotAuthorization();
+            
             return tx.hash;
         });
     };
@@ -466,21 +473,25 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
                                 </div>
 
                                 {/* Authorize Button */}
-                                {!botAuthorized && (
-                                    <div className="relative group">
-                                        <button
-                                            onClick={handleAuthorizeBot}
-                                            className="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1.5 font-bold uppercase text-xs border border-black flex items-center gap-2 transition-transform active:translate-y-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded-lg"
-                                        >
-                                            Authorize Bot
-                                            <HelpCircle className="w-3 h-3" />
-                                        </button>
-                                        {/* Tooltip */}
-                                        <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 w-48 bg-black text-white text-xs p-2 rounded invisible group-hover:visible z-50">
-                                            Authorize trading bot once to enable signature-free swaps and auto-trading.
-                                        </div>
+                                <div className="relative group">
+                                    <button
+                                        onClick={handleAuthorizeBot}
+                                        className={`px-3 py-1.5 font-bold uppercase text-xs border border-black flex items-center gap-2 transition-transform active:translate-y-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded-lg ${
+                                            botAuthorized 
+                                                ? 'bg-green-400 hover:bg-green-500 text-black' 
+                                                : 'bg-yellow-400 hover:bg-yellow-500 text-black'
+                                        }`}
+                                    >
+                                        {botAuthorized ? '✓ Bot Authorized' : 'Authorize Bot'}
+                                        <HelpCircle className="w-3 h-3" />
+                                    </button>
+                                    {/* Tooltip */}
+                                    <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 w-48 bg-black text-white text-xs p-2 rounded invisible group-hover:visible z-50">
+                                        {botAuthorized 
+                                            ? 'Bot is authorized. Click to revoke authorization.' 
+                                            : 'Authorize trading bot once to enable signature-free swaps and auto-trading.'}
                                     </div>
-                                )}
+                                </div>
                             </div>
                         )}
                     </div>
