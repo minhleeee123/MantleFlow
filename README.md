@@ -53,123 +53,6 @@ The platform allows users to deposit funds into a smart contract vault, define t
 
 ---
 
-## Architecture
-
-MantleFlow follows a three-tier architecture:
-
-```mermaid
-graph TB
-    subgraph "Frontend Layer"
-        A[React 19 + Vite]
-        B[Gemini AI SDK]
-        C[ethers.js]
-        D[Recharts Visualizations]
-    end
-    
-    subgraph "Backend Layer"
-        E[Express API Server]
-        F[Prisma ORM]
-        G[PostgreSQL Database]
-        H[Auto-Executor Worker]
-    end
-    
-    subgraph "Blockchain Layer"
-        I[VaultWithSwap Contract]
-        J[SimpleDEXV2]
-        K[Mantle Sepolia Network]
-    end
-    
-    A --> E
-    B --> A
-    C --> A
-    C --> I
-    E --> F
-    F --> G
-    E --> I
-    H --> E
-    H --> I
-    I --> J
-    I --> K
-    J --> K
-```
-
-### Component Flow
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant AI
-    participant Contract
-    
-    User->>Frontend: "Buy ETH if RSI < 30"
-    Frontend->>AI: Parse Strategy
-    AI->>Frontend: Structured Conditions
-    Frontend->>Backend: Create Trigger
-    Backend->>Backend: Store in Database
-    
-    loop Every 30 seconds
-        Backend->>Backend: Fetch Active Triggers
-        Backend->>Backend: Check Conditions (APIs)
-        alt Conditions Met
-            Backend->>Contract: executeSwap()
-            Contract->>Contract: Update Balances
-            Contract->>Backend: Emit Event
-            Backend->>Backend: Update Trigger Status
-        end
-    end
-```
-
----
-
-## Tech Stack
-
-### Frontend
-
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| React | 19.2.0 | UI Framework |
-| Vite | 6.2.0 | Build Tool & Dev Server |
-| TypeScript | 5.8.2 | Type Safety |
-| @google/genai | 1.30.0 | Gemini AI Integration |
-| ethers.js | 6.13.2 | Web3 Library |
-| Recharts | 3.4.1 | Data Visualization |
-| Framer Motion | 12.24.8 | Animations |
-| Tailwind CSS | CDN | Styling (Neo-brutalist design) |
-
-### Backend
-
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| Node.js | 20+ | Runtime Environment |
-| Express | 4.21.2 | API Framework |
-| Prisma | 5.22.0 | Database ORM |
-| PostgreSQL | - | Primary Database |
-| ethers.js | 6.13.4 | Smart Contract Interaction |
-| jsonwebtoken | 9.0.2 | Authentication |
-| Axios | 1.7.9 | HTTP Client |
-
-### Smart Contracts
-
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| Solidity | 0.8.20 | Smart Contract Language |
-| Hardhat | - | Development Environment |
-| OpenZeppelin | 5.0.0 | Security Libraries |
-| Mantle Sepolia | - | Testnet Deployment |
-
-### External APIs
-
-| Service | Purpose |
-|---------|---------|
-| CoinGecko | Price data, historical charts, market metrics |
-| Alternative.me | Fear & Greed Index (sentiment analysis) |
-| Binance Futures | Long/Short ratio data |
-| Etherscan/Mantle Explorer | Gas price tracking |
-
----
-
 ## Getting Started
 
 ### Prerequisites
@@ -293,6 +176,123 @@ cd backendV3
 npm run build
 npm start
 ```
+
+---
+
+## Architecture
+
+MantleFlow follows a three-tier architecture:
+
+```mermaid
+graph TB
+    subgraph "Frontend Layer"
+        A[React 19 + Vite]
+        B[Gemini AI SDK]
+        C[ethers.js]
+        D[Recharts Visualizations]
+    end
+    
+    subgraph "Backend Layer"
+        E[Express API Server]
+        F[Prisma ORM]
+        G[PostgreSQL Database]
+        H[Auto-Executor Worker]
+    end
+    
+    subgraph "Blockchain Layer"
+        I[VaultWithSwap Contract]
+        J[SimpleDEXV2]
+        K[Mantle Sepolia Network]
+    end
+    
+    A --> E
+    B --> A
+    C --> A
+    C --> I
+    E --> F
+    F --> G
+    E --> I
+    H --> E
+    H --> I
+    I --> J
+    I --> K
+    J --> K
+```
+
+### Component Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant Backend
+    participant AI
+    participant Contract
+    
+    User->>Frontend: "Buy ETH if RSI < 30"
+    Frontend->>AI: Parse Strategy
+    AI->>Frontend: Structured Conditions
+    Frontend->>Backend: Create Trigger
+    Backend->>Backend: Store in Database
+    
+    loop Every 30 seconds
+        Backend->>Backend: Fetch Active Triggers
+        Backend->>Backend: Check Conditions (APIs)
+        alt Conditions Met
+            Backend->>Contract: executeSwap()
+            Contract->>Contract: Update Balances
+            Contract->>Backend: Emit Event
+            Backend->>Backend: Update Trigger Status
+        end
+    end
+```
+
+---
+
+## Tech Stack
+
+### Frontend
+
+| Technology | Version | Purpose |
+|-----------|---------|---------|
+| React | 19.2.0 | UI Framework |
+| Vite | 6.2.0 | Build Tool & Dev Server |
+| TypeScript | 5.8.2 | Type Safety |
+| @google/genai | 1.30.0 | Gemini AI Integration |
+| ethers.js | 6.13.2 | Web3 Library |
+| Recharts | 3.4.1 | Data Visualization |
+| Framer Motion | 12.24.8 | Animations |
+| Tailwind CSS | CDN | Styling (Neo-brutalist design) |
+
+### Backend
+
+| Technology | Version | Purpose |
+|-----------|---------|---------|
+| Node.js | 20+ | Runtime Environment |
+| Express | 4.21.2 | API Framework |
+| Prisma | 5.22.0 | Database ORM |
+| PostgreSQL | - | Primary Database |
+| ethers.js | 6.13.4 | Smart Contract Interaction |
+| jsonwebtoken | 9.0.2 | Authentication |
+| Axios | 1.7.9 | HTTP Client |
+
+### Smart Contracts
+
+| Technology | Version | Purpose |
+|-----------|---------|---------|
+| Solidity | 0.8.20 | Smart Contract Language |
+| Hardhat | - | Development Environment |
+| OpenZeppelin | 5.0.0 | Security Libraries |
+| Mantle Sepolia | - | Testnet Deployment |
+
+### External APIs
+
+| Service | Purpose |
+|---------|---------|
+| CoinGecko | Price data, historical charts, market metrics |
+| Alternative.me | Fear & Greed Index (sentiment analysis) |
+| Binance Futures | Long/Short ratio data |
+| Etherscan/Mantle Explorer | Gas price tracking |
 
 ---
 
