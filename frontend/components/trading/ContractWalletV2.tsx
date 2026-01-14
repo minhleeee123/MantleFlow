@@ -397,7 +397,8 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
             };
             console.log('   Payload:', JSON.stringify(payload, null, 2));
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}/api/swap/bot`, {
+            const backendUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000';
+            const response = await fetch(`${backendUrl}/api/swap/bot`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
