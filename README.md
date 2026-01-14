@@ -184,67 +184,103 @@ npm start
 MantleFlow follows a three-tier architecture:
 
 ```mermaid
-graph TB
-    subgraph "Frontend Layer"
-        A[React 19 + Vite]
-        B[Gemini AI SDK]
-        C[ethers.js]
-        D[Recharts Visualizations]
+graph LR
+    subgraph Frontend["🎨 Frontend Layer"]
+        direction TB
+        UI["React 19 + Vite<br/>User Interface"]
+        AI["Gemini AI SDK<br/>Natural Language Processing"]
+        WEB3["ethers.js<br/>Web3 Integration"]
+        CHARTS["Recharts<br/>Data Visualization"]
+        
+        UI --> AI
+        UI --> WEB3
+        UI --> CHARTS
     end
     
-    subgraph "Backend Layer"
-        E[Express API Server]
-        F[Prisma ORM]
-        G[PostgreSQL Database]
-        H[Auto-Executor Worker]
+    subgraph Backend["⚙️ Backend Layer"]
+        direction TB
+        API["Express API Server<br/>RESTful Endpoints"]
+        EXECUTOR["Auto-Executor Worker<br/>30s Trigger Checks"]
+        ORM["Prisma ORM"]
+        DB[("PostgreSQL<br/>Database")]
+        
+        API --> ORM
+        ORM --> DB
+        EXECUTOR --> ORM
+        EXECUTOR --> API
     end
     
-    subgraph "Blockchain Layer"
-        I[VaultWithSwap Contract]
-        J[SimpleDEXV2]
-        K[Mantle Sepolia Network]
+    subgraph Blockchain["⛓️ Blockchain Layer"]
+        direction TB
+        VAULT["VaultWithSwap Contract<br/>Non-Custodial Vault"]
+        DEX["SimpleDEXV2<br/>AMM Swaps"]
+        MANTLE["Mantle Sepolia Network"]
+        
+        VAULT --> DEX
+        VAULT -.deployed on.-> MANTLE
+        DEX -.deployed on.-> MANTLE
     end
     
-    A --> E
-    B --> A
-    C --> A
-    C --> I
-    E --> F
-    F --> G
-    E --> I
-    H --> E
-    H --> I
-    I --> J
-    I --> K
-    J --> K
+    Frontend -->|"API Calls"| Backend
+    Frontend -->|"Sign Transactions"| Blockchain
+    Backend -->|"Bot Swaps"| Blockchain
+    
+    style Frontend fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    style Backend fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
+    style Blockchain fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
+    style UI fill:#bbdefb,stroke:#1976d2,stroke-width:2px
+    style AI fill:#bbdefb,stroke:#1976d2,stroke-width:2px
+    style WEB3 fill:#bbdefb,stroke:#1976d2,stroke-width:2px
+    style CHARTS fill:#bbdefb,stroke:#1976d2,stroke-width:2px
+    style API fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
+    style EXECUTOR fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
+    style ORM fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
+    style VAULT fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    style DEX fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    style MANTLE fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
 ```
 
 ### Component Flow
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant Frontend
-    participant Backend
-    participant AI
-    participant Contract
+    autonumber
+    participant 👤 User
+    participant 🎨 Frontend
+    participant 🤖 AI Agent
+    participant ⚙️ Backend
+    participant ⛓️ Smart Contract
     
-    User->>Frontend: "Buy ETH if RSI < 30"
-    Frontend->>AI: Parse Strategy
-    AI->>Frontend: Structured Conditions
-    Frontend->>Backend: Create Trigger
-    Backend->>Backend: Store in Database
+    Note over 👤 User,⛓️ Smart Contract: User Creates Trading Strategy
+    
+    👤 User->>🎨 Frontend: "Buy ETH if RSI < 30 and sentiment is fearful"
+    🎨 Frontend->>🤖 AI Agent: Parse Natural Language
+    🤖 AI Agent-->>🎨 Frontend: Structured Conditions JSON
+    🎨 Frontend->>⚙️ Backend: POST /api/triggers
+    ⚙️ Backend->>⚙️ Backend: Store in PostgreSQL (Status: ACTIVE)
+    ⚙️ Backend-->>🎨 Frontend: Trigger Created ✅
+    
+    Note over ⚙️ Backend,⛓️ Smart Contract: Auto-Execution Cycle (Every 30s)
     
     loop Every 30 seconds
-        Backend->>Backend: Fetch Active Triggers
-        Backend->>Backend: Check Conditions (APIs)
-        alt Conditions Met
-            Backend->>Contract: executeSwap()
-            Contract->>Contract: Update Balances
-            Contract->>Backend: Emit Event
-            Backend->>Backend: Update Trigger Status
+        ⚙️ Backend->>⚙️ Backend: Fetch Active Triggers
+        ⚙️ Backend->>⚙️ Backend: Batch Fetch Market Data
+        ⚙️ Backend->>⚙️ Backend: Evaluate Conditions (Price, RSI, Sentiment...)
+        
+        alt ✅ All Conditions Met
+            ⚙️ Backend->>⛓️ Smart Contract: Check Bot Authorization
+            ⛓️ Smart Contract-->>⚙️ Backend: Authorized ✅
+            ⚙️ Backend->>⛓️ Smart Contract: executeSwapForUser()
+            ⛓️ Smart Contract->>⛓️ Smart Contract: Verify Balance & Execute Swap
+            ⛓️ Smart Contract-->>⚙️ Backend: Transaction Hash + Events
+            ⚙️ Backend->>⚙️ Backend: Update Status → EXECUTED
+            ⚙️ Backend->>👤 User: 📧 Email Notification
+        else ❌ Conditions Not Met
+            ⚙️ Backend->>⚙️ Backend: Keep ACTIVE, Check Next Cycle
         end
     end
+    
+    Note over 👤 User,⛓️ Smart Contract: Trade Executed Successfully! 🎉
 ```
 
 ---
