@@ -21,6 +21,7 @@ interface Props {
     executeTrigger?: (id: string, price: number) => void; // Added prop type
     onUpdateEmail: (email: string) => void;
     userWalletAddress?: string; // Add prop for contract wallet
+    botAuthorized?: boolean; // Add prop for bot authorization status
 }
 
 const AutoTradingView: React.FC<Props> = ({
@@ -34,10 +35,12 @@ const AutoTradingView: React.FC<Props> = ({
     onCancelTrigger,
     executeTrigger,
     onUpdateEmail,
-    userWalletAddress
+    userWalletAddress,
+    botAuthorized = true
 }) => {
     const [emailInput, setEmailInput] = useState(notificationEmail);
     const [isSaved, setIsSaved] = useState(false);
+    const [contractBotAuthorized, setContractBotAuthorized] = useState(true); // Track bot auth from contract
     const liveBotRef = React.useRef<HTMLDivElement>(null); // Ref for scrolling
 
     const handleSaveEmail = () => {
@@ -61,7 +64,10 @@ const AutoTradingView: React.FC<Props> = ({
 
                 {/* Top Section: Contract Wallet V2 */}
                 {userWalletAddress ? (
-                    <ContractWalletV2 userAddress={userWalletAddress} />
+                    <ContractWalletV2 
+                        userAddress={userWalletAddress} 
+                        onBotAuthChange={setContractBotAuthorized}
+                    />
                 ) : (
                     <div className="bg-yellow-100 dark:bg-yellow-500 border-2 border-yellow-500 dark:border-yellow-600 p-4 font-bold text-center text-black rounded-xl">
                         PLEASE CONNECT WALLET TO ACCESS TRADING
@@ -78,10 +84,11 @@ const AutoTradingView: React.FC<Props> = ({
                         <SmartTriggerSection
                             onAddTrigger={onAddTrigger}
                             onSuccess={handleSmartTriggerSuccess} // Pass callback
+                            botAuthorized={contractBotAuthorized}
                         />
 
                         {/* Legacy Manual Trigger */}
-                        <TriggerForm onAddTrigger={onAddTrigger} />
+                        <TriggerForm onAddTrigger={onAddTrigger} botAuthorized={contractBotAuthorized} />
                     </div>
 
                     {/* Right Column: Active Monitoring & Notifications */}

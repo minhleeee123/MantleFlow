@@ -48,6 +48,7 @@ const DEX_ABI = [
 
 interface Props {
     userAddress: string;
+    onBotAuthChange?: (authorized: boolean) => void;
 }
 
 interface Transaction {
@@ -59,7 +60,7 @@ interface Transaction {
     createdAt: string;
 }
 
-export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
+export const ContractWalletV2: React.FC<Props> = ({ userAddress, onBotAuthChange }) => {
     // Vault Balances
     const [vaultMntBalance, setVaultMntBalance] = useState('0');
     const [vaultUsdtBalance, setVaultUsdtBalance] = useState('0');
@@ -185,9 +186,11 @@ export const ContractWalletV2: React.FC<Props> = ({ userAddress }) => {
 
             const isAuthorized = await vault.isBotAuthorized(signerAddress, BOT_ADDRESS);
             setBotAuthorized(isAuthorized);
+            onBotAuthChange?.(isAuthorized);
         } catch (error) {
             console.error('Failed to check bot authorization:', error);
             setBotAuthorized(false);
+            onBotAuthChange?.(false);
         }
     };
 

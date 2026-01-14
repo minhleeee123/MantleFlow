@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Plus, Target, Settings, Activity } from 'lucide-react';
+import { Plus, Target, Settings, Activity, HelpCircle } from 'lucide-react';
 import { TradeTrigger, TradeCondition, TradeType } from '../../types';
 
 interface Props {
     onAddTrigger: (trigger: Omit<TradeTrigger, 'id' | 'createdAt' | 'status'>) => void;
+    botAuthorized?: boolean;
 }
 
-const TriggerForm: React.FC<Props> = ({ onAddTrigger }) => {
+const TriggerForm: React.FC<Props> = ({ onAddTrigger, botAuthorized = true }) => {
     const [symbol, setSymbol] = useState('');
     const [targetPrice, setTargetPrice] = useState('');
     const [amount, setAmount] = useState('');
@@ -119,12 +120,22 @@ const TriggerForm: React.FC<Props> = ({ onAddTrigger }) => {
                     </div>
                 </div>
 
-                <button
-                    type="submit"
-                    className="w-full mt-4 bg-black text-white dark:bg-white dark:text-black py-3 font-black uppercase border-2 border-transparent hover:border-black dark:hover:border-white hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white transition-all shadow-neo-sm flex items-center justify-center gap-2 rounded-xl"
-                >
-                    <Plus className="w-5 h-5" /> Create Trigger
-                </button>
+                <div className="relative group">
+                    <button
+                        type="submit"
+                        disabled={!botAuthorized}
+                        className="w-full mt-4 bg-black text-white dark:bg-white dark:text-black py-3 font-black uppercase border-2 border-transparent hover:border-black dark:hover:border-white hover:bg-white hover:text-black dark:hover:bg-black dark:hover:text-white transition-all shadow-neo-sm flex items-center justify-center gap-2 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <Plus className="w-5 h-5" /> Create Trigger
+                        {!botAuthorized && <HelpCircle className="w-4 h-4" />}
+                    </button>
+                    {!botAuthorized && (
+                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 bg-black text-white text-xs p-3 rounded-lg invisible group-hover:visible z-50 text-center">
+                            ⚠️ Please authorize bot before creating triggers
+                            <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
+                        </div>
+                    )}
+                </div>
 
             </form>
         </div>

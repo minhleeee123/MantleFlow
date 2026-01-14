@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { parseSmartTrade } from '../../services/agents/smartTradeAgent';
 import { SmartTradePlan, TradeTrigger } from '../../types';
-import { BrainCircuit, Play, Bot, Loader2 } from 'lucide-react';
+import { BrainCircuit, Play, Bot, Loader2, HelpCircle } from 'lucide-react';
 
 interface Props {
     onAddTrigger: (trigger: Omit<TradeTrigger, 'id' | 'createdAt' | 'status'>) => Promise<void> | void;
     onSuccess?: () => void;
+    botAuthorized?: boolean;
 }
 
-const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger, onSuccess }) => {
+const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger, onSuccess, botAuthorized = true }) => {
     const [input, setInput] = useState('');
     const [isParsing, setIsParsing] = useState(false);
     const [isDeploying, setIsDeploying] = useState(false); // New state
@@ -108,14 +109,23 @@ const SmartTriggerSection: React.FC<Props> = ({ onAddTrigger, onSuccess }) => {
                                     <span className="text-sm bg-black text-white px-2 py-0.5 rounded-sm">${plan.amount}</span>
                                 </div>
                             </div>
-                            <button
-                                onClick={handleDeploy}
-                                disabled={isDeploying}
-                                className="flex items-center gap-2 bg-black text-white px-4 py-2 font-black uppercase text-sm border-2 border-transparent hover:bg-green-600 transition-colors shadow-neo-sm disabled:opacity-70 disabled:cursor-wait rounded-lg"
-                            >
-                                {isDeploying ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />}
-                                {isDeploying ? 'Deploying...' : 'Deploy Agent'}
-                            </button>
+                            <div className="relative group">
+                                <button
+                                    onClick={handleDeploy}
+                                    disabled={isDeploying || !botAuthorized}
+                                    className="flex items-center gap-2 bg-black text-white px-4 py-2 font-black uppercase text-sm border-2 border-transparent hover:bg-green-600 transition-colors shadow-neo-sm disabled:opacity-70 disabled:cursor-wait rounded-lg"
+                                >
+                                    {isDeploying ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />}
+                                    {isDeploying ? 'Deploying...' : 'Deploy Agent'}
+                                    {!botAuthorized && !isDeploying && <HelpCircle className="w-4 h-4" />}
+                                </button>
+                                {!botAuthorized && (
+                                    <div className="absolute right-0 bottom-full mb-2 w-64 bg-black text-white text-xs p-3 rounded-lg invisible group-hover:visible z-50">
+                                        ⚠️ Please authorize bot before deploying agent
+                                        <div className="absolute right-4 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-1 gap-2">
