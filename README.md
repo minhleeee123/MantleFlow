@@ -225,19 +225,19 @@ graph LR
     Frontend -->|"Sign Transactions"| Blockchain
     Backend -->|"Bot Swaps"| Blockchain
     
-    style Frontend fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
-    style Backend fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
-    style Blockchain fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
-    style UI fill:#bbdefb,stroke:#1976d2,stroke-width:2px
-    style AI fill:#bbdefb,stroke:#1976d2,stroke-width:2px
-    style WEB3 fill:#bbdefb,stroke:#1976d2,stroke-width:2px
-    style CHARTS fill:#bbdefb,stroke:#1976d2,stroke-width:2px
-    style API fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
-    style EXECUTOR fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
-    style ORM fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
-    style VAULT fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
-    style DEX fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
-    style MANTLE fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
+    style Frontend fill:#e3f2fd,stroke:#1565c0,stroke-width:3px,color:#000
+    style Backend fill:#f3e5f5,stroke:#6a1b9a,stroke-width:3px,color:#000
+    style Blockchain fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px,color:#000
+    style UI fill:#ffffff,stroke:#1976d2,stroke-width:2px,color:#000
+    style AI fill:#ffffff,stroke:#1976d2,stroke-width:2px,color:#000
+    style WEB3 fill:#ffffff,stroke:#1976d2,stroke-width:2px,color:#000
+    style CHARTS fill:#ffffff,stroke:#1976d2,stroke-width:2px,color:#000
+    style API fill:#ffffff,stroke:#7b1fa2,stroke-width:2px,color:#000
+    style EXECUTOR fill:#ffffff,stroke:#7b1fa2,stroke-width:2px,color:#000
+    style ORM fill:#ffffff,stroke:#7b1fa2,stroke-width:2px,color:#000
+    style VAULT fill:#ffffff,stroke:#388e3c,stroke-width:2px,color:#000
+    style DEX fill:#ffffff,stroke:#388e3c,stroke-width:2px,color:#000
+    style MANTLE fill:#ffffff,stroke:#2e7d32,stroke-width:2px,color:#000
 ```
 
 ### Component Flow
