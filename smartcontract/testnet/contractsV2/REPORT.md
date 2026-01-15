@@ -1,83 +1,83 @@
-# Báo Cáo: Hệ Thống DEX và Vault V2
+# Report: DEX and Vault V2 System
 
-**Ngày:** 6 Tháng 1, 2026  
-**Mạng:** Mantle Sepolia Testnet (Chain ID: 5003)  
+**Date:** January 6, 2026  
+**Network:** Mantle Sepolia Testnet (Chain ID: 5003)  
 **Deployer:** `0xE412d04DA2A211F7ADC80311CC0FF9F03440B64E`
 
 ---
 
-## 📋 Tổng Quan
+## 📋 Overview
 
-Hệ thống bao gồm 2 smart contracts tích hợp với nhau:
+The system consists of 2 integrated smart contracts:
 
-1. **SimpleDEXV2** - Sàn giao dịch phi tập trung (DEX) với liquidity pool MNT/USDT
-2. **VaultWithSwap** - Vault quản lý tài sản với tính năng swap tích hợp
+1. **SimpleDEXV2** - Decentralized Exchange (DEX) with MNT/USDT liquidity pool
+2. **VaultWithSwap** - Asset management vault with integrated swap functionality
 
 ---
 
 ## 🎯 1. SimpleDEXV2 (DEX Contract)
 
-### 📍 Thông Tin Deployment
+### 📍 Deployment Information
 
 - **Address:** `0x991E5DAB401B44cD5E6C6e5A47F547B17b5bBa5d`
 - **File:** `contractsV2/SimpleDEXV2.sol`
 - **Compiler:** Solidity 0.8.20
 - **OpenZeppelin:** 5.0.0
 
-### ⚙️ Chức Năng Chính
+### ⚙️ Main Functions
 
-#### 1. Add Liquidity (Thêm Thanh Khoản)
+#### 1. Add Liquidity
 ```solidity
 function addLiquidity(uint256 usdtAmount) external payable
 ```
-- Thêm cặp token MNT/USDT vào pool
-- Nhận liquidity token tương ứng
-- **Liquidity hiện tại:** 1,000 MNT + 5,000 USDT ✅
+- Add MNT/USDT token pair to pool
+- Receive corresponding liquidity tokens
+- **Current Liquidity:** 1,000 MNT + 5,000 USDT ✅
 
-#### 2. Remove Liquidity (Rút Thanh Khoản)
+#### 2. Remove Liquidity
 ```solidity
 function removeLiquidity(uint256 liquidity) external
 ```
-- Đốt liquidity token để nhận lại MNT và USDT
-- Tỷ lệ theo reserve hiện tại
+- Burn liquidity tokens to receive MNT and USDT back
+- Ratio based on current reserves
 
 #### 3. Swap MNT → USDT
 ```solidity
 function swapMntForUsdt(uint256 minUsdtOut) external payable
 ```
-- Swap MNT sang USDT
-- Phí giao dịch: 0.3%
-- Slippage protection với minUsdtOut
+- Swap MNT for USDT
+- Trading fee: 0.3%
+- Slippage protection with minUsdtOut
 
 #### 4. Swap USDT → MNT
 ```solidity
 function swapUsdtForMnt(uint256 usdtAmount, uint256 minMntOut) external
 ```
-- Swap USDT sang MNT
-- Phí giao dịch: 0.3%
-- Slippage protection với minMntOut
+- Swap USDT for MNT
+- Trading fee: 0.3%
+- Slippage protection with minMntOut
 
 #### 5. View Functions
 ```solidity
 function getAmountOut(bool mntToUsdt, uint256 amountIn) public view returns (uint256)
 function getPrice() public view returns (uint256 mntPerUsdt, uint256 usdtPerMnt)
 ```
-- Tính toán output amount trước khi swap
-- Xem tỷ giá hiện tại
+- Calculate output amount before swap
+- View current exchange rate
 
-### 🔧 Cơ Chế Hoạt Động
+### 🔧 Operating Mechanism
 
 **Automated Market Maker (AMM):**
-- Sử dụng công thức constant product: `x * y = k`
-- Reserves: `mntReserve` và `usdtReserve`
-- Fee: 0.3% mỗi giao dịch swap
+- Uses constant product formula: `x * y = k`
+- Reserves: `mntReserve` and `usdtReserve`
+- Fee: 0.3% per swap transaction
 
 **Liquidity Management:**
-- Tracking: `totalLiquidity` và `liquidityBalance[user]`
-- First liquidity provider nhận liquidity = sqrt(mnt * usdt)
-- Subsequent providers: liquidity tỷ lệ với reserve
+- Tracking: `totalLiquidity` and `liquidityBalance[user]`
+- First liquidity provider receives liquidity = sqrt(mnt * usdt)
+- Subsequent providers: liquidity proportional to reserves
 
-### 📊 Trạng Thái Hiện Tại
+### 📊 Current Status
 
 ```
 Reserve:
@@ -96,39 +96,39 @@ Total Liquidity: 2,236.067977499789696409 (sqrt(1000*5000))
 
 ## 🏦 2. VaultWithSwap (Vault Contract)
 
-### 📍 Thông Tin Deployment
+### 📍 Deployment Information
 
 - **Address:** `0x2D85E5E8E9C8A90609f147513B9cCc01F8deAB16`
 - **File:** `contractsV2/VaultWithSwap.sol`
 - **DEX Integration:** SimpleDEXV2 `0x991E5DAB401B44cD5E6C6e5A47F547B17b5bBa5d`
 
-### ⚙️ Chức Năng Chính
+### ⚙️ Main Functions
 
 #### 1. Deposit Functions
 ```solidity
 function depositMnt() external payable
 function depositUsdt(uint256 amount) external
 ```
-- Nạp MNT hoặc USDT vào vault
-- Balance tracking cho từng user
-- Không giới hạn số lượng
+- Deposit MNT or USDT into vault
+- Balance tracking per user
+- No deposit limits
 
 #### 2. Withdraw Functions
 ```solidity
 function withdrawMnt(uint256 amount) external
 function withdrawUsdt(uint256 amount) external
 ```
-- Rút MNT hoặc USDT từ vault
-- Kiểm tra balance trước khi rút
-- Direct transfer về user wallet
+- Withdraw MNT or USDT from vault
+- Balance verification before withdrawal
+- Direct transfer to user wallet
 
 #### 3. Swap Functions (Integrated DEX)
 ```solidity
 function swapMntToUsdt(uint256 mntAmount, uint256 minUsdtOut) external
 function swapUsdtToMnt(uint256 usdtAmount, uint256 minMntOut) external
 ```
-- Swap trực tiếp từ vault balance
-- Tích hợp với SimpleDEXV2
+- Swap directly from vault balance
+- Integrated with SimpleDEXV2
 - Automatic approval management
 - Slippage protection
 
@@ -138,22 +138,22 @@ function getUserBalances(address user) external view returns (uint256 mnt, uint2
 function estimateSwap(bool mntToUsdt, uint256 amountIn) external view returns (uint256)
 function getTotalDeposits() external view returns (uint256 mnt, uint256 usdt)
 ```
-- Xem balance của user
-- Ước tính output trước khi swap
-- Xem tổng deposits trong vault
+- View user balance
+- Estimate output before swap
+- View total deposits in vault
 
-### 🔧 Cơ Chế Hoạt Động
+### 🔧 Operating Mechanism
 
 **Deposit/Withdraw:**
-- Mapping: `mntBalances[user]` và `usdtBalances[user]`
-- Total tracking: `totalMntDeposited` và `totalUsdtDeposited`
-- User giữ quyền kiểm soát 100% assets của mình
+- Mapping: `mntBalances[user]` and `usdtBalances[user]`
+- Total tracking: `totalMntDeposited` and `totalUsdtDeposited`
+- Users retain 100% control of their assets
 
 **Integrated Swap:**
-- Gọi trực tiếp DEX contract để swap
-- Tự động approve USDT cho DEX
-- Update balance sau mỗi swap
-- Gas-efficient với safeIncreaseAllowance
+- Direct call to DEX contract for swaps
+- Automatic USDT approval for DEX
+- Balance update after each swap
+- Gas-efficient with safeIncreaseAllowance
 
 ### 📊 Test Results
 
@@ -164,7 +164,7 @@ Input:
 └── USDT: 50.0
 
 Result: ✅ SUCCESS
-└── Vault Balance: 20.0 MNT, 50.0 USDT (có 10 MNT từ test trước)
+└── Vault Balance: 20.0 MNT, 50.0 USDT (including 10 MNT from previous test)
 ```
 
 #### Test Case 2: Swap MNT → USDT
@@ -212,18 +212,18 @@ Result: ✅ SUCCESS
 
 ---
 
-## 🔐 Bảo Mật
+## 🔐 Security
 
 ### SimpleDEXV2
 ✅ ReentrancyGuard protection  
 ✅ SafeERC20 for token transfers  
-✅ Slippage protection với minOut parameters  
-✅ K value validation sau mỗi swap  
+✅ Slippage protection with minOut parameters  
+✅ K value validation after each swap  
 ✅ Liquidity overflow checks  
 
 ### VaultWithSwap
-✅ Balance validation trước withdraw  
-✅ SafeERC20 với safeIncreaseAllowance  
+✅ Balance validation before withdrawal  
+✅ SafeERC20 with safeIncreaseAllowance  
 ✅ DEX approval management  
 ✅ User balance isolation  
 ✅ Total deposits tracking  
@@ -276,7 +276,7 @@ Result: ✅ SUCCESS
 
 ### 3. Deployment Script
 **File:** `scripts/deployV2.js`
-- Compile contracts với solc
+- Compile contracts with solc
 - Deploy to Mantle testnet
 - Save ABIs and addresses
 
@@ -285,20 +285,20 @@ Result: ✅ SUCCESS
 ## 💡 Use Cases
 
 ### Liquidity Provider
-1. Add liquidity vào SimpleDEXV2
-2. Nhận liquidity tokens
-3. Earn fees từ swap transactions
-4. Remove liquidity khi cần
+1. Add liquidity to SimpleDEXV2
+2. Receive liquidity tokens
+3. Earn fees from swap transactions
+4. Remove liquidity when needed
 
 ### Trader/User
-1. Deposit assets vào VaultWithSwap
-2. Swap MNT ↔ USDT bất kỳ lúc nào
-3. Giữ balance trong vault
-4. Withdraw khi cần
+1. Deposit assets into VaultWithSwap
+2. Swap MNT ↔ USDT anytime
+3. Keep balance in vault
+4. Withdraw when needed
 
 ### Integrated Features
-- Vault users không cần interact trực tiếp với DEX
-- Automatic approval và swap execution
+- Vault users don't need to interact directly with DEX
+- Automatic approval and swap execution
 - Real-time price estimation
 - Protection against slippage
 
@@ -307,7 +307,7 @@ Result: ✅ SUCCESS
 ## 🚀 Future Enhancements
 
 ### SimpleDEXV2
-- [ ] Multi-pair support (thêm các cặp token khác)
+- [ ] Multi-pair support (add other token pairs)
 - [ ] Dynamic fee tiers
 - [ ] Liquidity mining rewards
 - [ ] Price oracle integration
@@ -362,17 +362,17 @@ console.log(`USDT: ${ethers.formatUnits(usdt, 6)}`);
 
 ---
 
-## ✅ Kết Luận
+## ✅ Conclusion
 
-Hệ thống DEX và Vault V2 đã được triển khai và test thành công trên Mantle Sepolia Testnet. Cả 2 contracts hoạt động ổn định với các tính năng:
+The DEX and Vault V2 system has been successfully deployed and tested on Mantle Sepolia Testnet. Both contracts operate stably with the following features:
 
-✅ **SimpleDEXV2:** Hoạt động như một AMM DEX với liquidity pool 1000 MNT + 5000 USDT  
-✅ **VaultWithSwap:** Quản lý assets và tích hợp swap thành công  
-✅ **Integration:** Vault gọi DEX contract mượt mà, không lỗi  
-✅ **Security:** Đầy đủ các biện pháp bảo mật cơ bản  
+✅ **SimpleDEXV2:** Functions as an AMM DEX with liquidity pool of 1000 MNT + 5000 USDT  
+✅ **VaultWithSwap:** Successfully manages assets and integrates swaps  
+✅ **Integration:** Vault calls DEX contract smoothly without errors  
+✅ **Security:** Complete basic security measures  
 ✅ **Tests:** 100% test cases passed  
 
-**Ready for Production:** Có thể deploy lên mainnet sau khi audit chuyên sâu.
+**Ready for Production:** Can be deployed to mainnet after thorough audit.
 
 ---
 
@@ -387,5 +387,4 @@ Hệ thống DEX và Vault V2 đã được triển khai và test thành công t
 
 ---
 
-*Báo cáo được tạo tự động bởi GitHub Copilot*  
 *Generated: January 6, 2026*
