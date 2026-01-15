@@ -51,30 +51,75 @@ export const UserGuide: React.FC = () => {
 
                     <div className="w-full h-px bg-gray-200 dark:bg-gray-700" />
 
-                    {/* Step 1: Wallet Setup */}
+                    {/* Step 2: Add USDT Token */}
                     <div className="flex gap-4">
                         <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold rounded-full">2</div>
-                        <div className="space-y-2">
+                        <div className="space-y-2 flex-1">
                             <h4 className="font-bold text-lg flex items-center gap-2">
-                                <Wallet className="w-4 h-4" /> Activate Smart Account
+                                <Wallet className="w-4 h-4" /> Add USDT Token to MetaMask
                             </h4>
-                            <p className="leading-relaxed">
-                                Connect your MetaMask wallet. If this is your first time, click <strong>"ACTIVATE NOW"</strong> to deploy your Abstract Account (Smart Wallet).
-                                <br />
-                                <span className="text-xs text-gray-500 italic">* This is a non-custodial smart contract that only YOU control.</span>
+                            <p className="leading-relaxed text-gray-600 dark:text-gray-400">
+                                <strong>Before connecting your wallet</strong>, you must add the USDT token to MetaMask for the app to read your balance.
                             </p>
-                            <p className="mt-2">
-                                <strong>Important:</strong> You must <strong>Deposit Funds</strong> into this Smart Wallet to trade.
-                                Use the "Deposit" tab to move MNT (for gas & trading) and USDT from your personal wallet to your Smart Wallet.
-                            </p>
+                            <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 border border-yellow-300 dark:border-yellow-700 rounded-lg">
+                                <p className="text-sm font-bold text-yellow-800 dark:text-yellow-200 mb-2">
+                                    ⚠️ Critical Step: Without adding USDT token, the app cannot scan your wallet!
+                                </p>
+                                <div className="bg-gray-100 dark:bg-black/50 p-3 border border-dashed border-gray-400 font-mono text-xs space-y-1 rounded-lg">
+                                    <div><strong>Token Symbol:</strong> USDT</div>
+                                    <div><strong>Token Address:</strong> 0xAcab8129E2cE587fD203FD770ec9ECAFA2C88080</div>
+
+                                </div>
+                            </div>
+                            <div className="mt-2 space-y-2">
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    <strong>How to add:</strong>
+                                </p>
+                                <ol className="list-decimal pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                                    <li>Open MetaMask → Switch to Mantle Sepolia Testnet</li>
+                                    <li>Click "Import tokens" at the bottom</li>
+                                    <li>Paste the USDT address above</li>
+                                    <li>Click "Add Custom Token" → "Import"</li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
 
                     <div className="w-full h-px bg-gray-200 dark:bg-gray-700" />
 
-                    {/* Step 3: Authorize Trading Bot */}
+                    {/* Step 3: Connect & Deposit */}
                     <div className="flex gap-4">
                         <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold rounded-full">3</div>
+                        <div className="space-y-2">
+                            <h4 className="font-bold text-lg flex items-center gap-2">
+                                <Wallet className="w-4 h-4" /> Connect Wallet & Deposit Funds
+                            </h4>
+                            <p className="leading-relaxed">
+                                Connect your MetaMask wallet to the app. Then deposit funds into the <strong>Vault Contract</strong> to start trading.
+                            </p>
+                            <div className="bg-blue-50 dark:bg-blue-900/20 p-3 border border-blue-300 dark:border-blue-700 rounded-lg space-y-2">
+                                <p className="text-sm">
+                                    <strong>Vault Contract:</strong> A shared smart contract where all users deposit funds. Your balance is tracked on-chain separately.
+                                </p>
+                                <p className="text-sm">
+                                    Use the <strong>"Deposit"</strong> tab to move:
+                                </p>
+                                <ul className="list-disc pl-5 text-sm space-y-1">
+                                    <li><strong>MNT</strong> - For gas fees and trading</li>
+                                    <li><strong>USDT</strong> - For trading pairs</li>
+                                </ul>
+                            </div>
+                            <div className="bg-gray-100 dark:bg-gray-800 p-2 border-l-4 border-gray-500 text-xs text-gray-700 dark:text-gray-300 mt-2 rounded-r-lg">
+                                💡 Your funds remain under YOUR control. You can withdraw anytime via the "Withdraw" tab.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="w-full h-px bg-gray-200 dark:bg-gray-700" />
+
+                    {/* Step 4: Authorize Trading Bot */}
+                    <div className="flex gap-4">
+                        <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold rounded-full">4</div>
                         <div className="space-y-2">
                             <h4 className="font-bold text-lg flex items-center gap-2 text-purple-600">
                                 <Bot className="w-4 h-4" /> Authorize Trading Bot
@@ -104,9 +149,9 @@ export const UserGuide: React.FC = () => {
 
                     <div className="w-full h-px bg-gray-200 dark:bg-gray-700" />
 
-                    {/* Step 4: Create Triggers */}
+                    {/* Step 5: Create Triggers */}
                     <div className="flex gap-4">
-                        <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold rounded-full">4</div>
+                        <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-bold rounded-full">5</div>
                         <div className="space-y-2">
                             <h4 className="font-bold text-lg flex items-center gap-2">
                                 <ShieldCheck className="w-4 h-4" /> Create & Monitor Strategies
