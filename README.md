@@ -699,14 +699,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **CoinGecko** - For comprehensive market data
 - **Binance** - For futures market data
 
----
-
-## Support
-
-- **Documentation**: [Coming Soon]
-- **Discord**: [Join our community](#)
-- **Twitter**: [@MantleFlow](#)
-- **Email**: support@mantleflow.ai
 
 ---
 
