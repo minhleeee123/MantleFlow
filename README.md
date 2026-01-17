@@ -37,6 +37,7 @@ The platform allows users to deposit funds into a smart contract vault, define t
 - **Simple Triggers** - Price-based automation (e.g., buy if price drops below X)
 - **Smart Triggers** - Multi-condition strategies combining price, RSI, volume, moving averages, sentiment, and gas fees
 - **Background Executor** - Automated worker that checks trigger conditions every 30 seconds and executes trades
+- **Email Notifications** - Instant email alerts when triggers are executed with transaction details
 
 ### Secure Smart Contract Vault
 
@@ -89,14 +90,18 @@ npm install
 
 #### Frontend (.env)
 
-Create `frontend/.env`:
+Create `frontend/.env.local`:
 
 ```env
 # Gemini AI API Key
-API_KEY=your_gemini_api_key
+GEMINI_API_KEY=your_gemini_api_key
+```
 
+Create `frontend/.env`:
+
+```env
 # Backend API URL
-VITE_API_URL=http://localhost:3001/api
+VITE_API_URL=http://localhost:8000/api
 ```
 
 #### Backend (.env)
@@ -104,28 +109,42 @@ VITE_API_URL=http://localhost:3001/api
 Create `backendV3/.env`:
 
 ```env
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/mantleflow
+# Environment
+NODE_ENV=development
+PORT=8000
+
+# Database (MySQL)
+DATABASE_URL="mysql://root:password@localhost:3306/trading_bot_v3"
 
 # JWT Authentication
-JWT_SECRET=your_super_secret_jwt_key
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
 
-# Backend Wallet (for automated swaps)
-ADMIN_PRIVATE_KEY=0xyour_private_key_here
-
-# Smart Contract Addresses
-CONTRACT_ADDRESS=0xaD893d3b35FA8cc23A24a0fdF0B79cc22a1a5E44
-USDT_ADDRESS=0x4806b944db5c5F7db4c29bb17Eaf5aE98B54cc56
-DEX_ADDRESS=0x3F8b8A4c8f4C8C1c6C8C8C8C8C8C8C8C8C8C8C8C
-
-# Mantle Network
+# Blockchain - Mantle Sepolia
 MANTLE_RPC_URL=https://rpc.sepolia.mantle.xyz
 CHAIN_ID=5003
 
-# Server Configuration
-PORT=3001
-NODE_ENV=development
+# Smart Contracts V3
+VAULT_ADDRESS=0xa9910f0214173814d1571cC64D45F9681a8500B2
+DEX_ADDRESS=0x991E5DAB401B44cD5E6C6e5A47F547B17b5bBa5d
+USDT_ADDRESS=0xAcab8129E2cE587fD203FD770ec9ECAFA2C88080
+
+# Bot Wallet (for auto-executor and delegated swaps)
+BOT_PRIVATE_KEY=your-bot-private-key-here
+
+# Email Notifications (Optional - for trigger execution alerts)
+EMAIL_USER=your-gmail-address@gmail.com
+EMAIL_PASS=your-gmail-app-password
+
+# Market Data (Optional)
+COINGECKO_API_KEY=
 ```
+
+> **📧 Email Setup Instructions:**
+> 1. Use a Gmail account for sending notifications
+> 2. Enable 2-Factor Authentication on your Google Account
+> 3. Generate an App Password: [Google Account > Security > 2-Step Verification > App Passwords](https://myaccount.google.com/apppasswords)
+> 4. Use the 16-character app password (format: `xxxx xxxx xxxx xxxx`) in `EMAIL_PASS`
+> 5. Users will receive email notifications when their triggers are executed
 
 ### Database Setup
 
@@ -148,7 +167,7 @@ cd backendV3
 npm run dev
 ```
 
-Backend will run on [http://localhost:3001](http://localhost:3001)
+Backend will run on [http://localhost:8000](http://localhost:8000)
 
 2. **Start the frontend** (in a new terminal)
 
@@ -658,13 +677,13 @@ When filing an issue, please include:
 - [x] Smart contract vault
 - [x] MetaMask integration
 - [x] Mantle Sepolia deployment
+- [x] Email notifications for trigger execution
 
 ### Phase 2: Enhanced Features (Q1 2026)
 
 - [ ] Mobile-responsive design improvements
 - [ ] Advanced charting tools
 - [ ] Multi-DEX aggregation
-- [ ] Email notifications for trigger execution
 - [ ] Stop-loss and take-profit orders
 
 ### Phase 3: Scaling (Q2 2026)
